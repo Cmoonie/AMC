@@ -43,6 +43,7 @@ zoekterm = st.text_input("Zoek op naam, project of expertise")
 if zoekterm:
     # Zoek op personen
     naam_resultaat = personen[personen["name"].str.contains(zoekterm, case=False)]
+    personen["department"].str.contains(zoekterm, case=False)
 
     # Zoek op expertise
     expertise_match = expertise[expertise["label"].str.contains(zoekterm, case=False)]

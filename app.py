@@ -12,6 +12,9 @@ api_key = os.getenv("GROQ_API_KEY") # haal de sleutel eruit
 from groq import Groq
 client = Groq(api_key=api_key)
 
+if "geselecteerde_persoon" not in st.session_state:
+    st.session_state.geselecteerde_persoon = None
+
 def genereer_samenvatting(zoekterm, resultaat):   # Haal alle namen op uit de resultaten tabel als een lijst
     namen = resultaat["name"].tolist()
     # Maak een prompt aan voor het AI model
@@ -72,6 +75,12 @@ if zoekterm:
     resultaat = pd.concat([naam_resultaat, expertise_resultaat, project_resultaat]).drop_duplicates()
     st.success(f"{len(resultaat)} onderzoeker(s) gevonden")
     st.dataframe(resultaat)
+
+    st.subheader("Gevonden onderzoekers")
+    for _, persoon in resultaat.iterrows():
+        if st.button(f"👤 {persoon['name']}"):
+            st.session_state.geselecteerde_persoon = persoon["id"]
+            st.switch_page("pages/person.py")
 
     # Toon expertise per gevonden persoon
     st.subheader("Expertise")

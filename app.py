@@ -36,14 +36,24 @@ personen_projecten = pd.read_csv("data/persons_projects.csv") #tussentabel inlad
 st.title("Spider")
 st.subheader("Zoek onderzoeksexpertise binnen Division 9")
 
+department_filter = st.selectbox(
+    "Filter op department",
+    ["Alle"] + personen["department"].unique().tolist()
+)
+
 # st.write(expertise) Debug regel
 
 zoekterm = st.text_input("Zoek op naam, project of expertise")
 
 if zoekterm:
+
+    if department_filter != "Alle":
+        personen_gefilterd = personen[personen["department"] == department_filter]
+    else:
+        personen_gefilterd = personen
     # Zoek op personen
-    naam_resultaat = personen[personen["name"].str.contains(zoekterm, case=False)|
-    personen["department"].str.contains(zoekterm, case=False)]
+    naam_resultaat = personen_gefilterd[personen_gefilterd["name"].str.contains(zoekterm, case=False)|
+    personen_gefilterd["department"].str.contains(zoekterm, case=False)]
 
     # Zoek op expertise
     expertise_match = expertise[expertise["label"].str.contains(zoekterm, case=False)]

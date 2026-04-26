@@ -86,15 +86,22 @@ if zoekterm:
     st.subheader("Expertise")
     for _, persoon in resultaat.iterrows():
         exp_ids = personen_expertise[personen_expertise["person_id"] == persoon["id"]]["expertise_id"].tolist()
-        exp_labels = expertise[expertise["id"].isin(exp_ids)]["label"].tolist()
-        st.write(f"**{persoon['name']}:** {', '.join(exp_labels)}")
+        exp_details = expertise[expertise["id"].isin(exp_ids)]
+        st.write(f"**{persoon['name']}:**")
+        for _, exp in exp_details.iterrows():
+            if st.button(f"🔬 {exp['label']}", key=f"exp_{persoon['id']}_{exp['id']}"):
+                st.session_state.geselecteerde_expertise = exp["id"]
+                st.switch_page("pages/expertise.py")
 
         # Toon projecten per gevonden persoon
     st.subheader("Projecten")
     for _, persoon in resultaat.iterrows():
         proj_ids = personen_projecten[personen_projecten["person_id"] == persoon["id"]]["project_id"].tolist()
-        proj_titels = projecten[projecten["id"].isin(proj_ids)]["title"].tolist()
-        st.write(f"**{persoon['name']}:** {', '.join(proj_titels)}")
+        proj_details = projecten[projecten["id"].isin(proj_ids)]
+        for _, project in proj_details.iterrows():
+            if st.button(f"📁 {project['title']}", key=f"proj_{persoon['id']}_{project['id']}"):
+                st.session_state.geselecteerd_project = project["id"]
+                st.switch_page("pages/project.py")   
 
     if not resultaat.empty:
         with st.spinner("Samenvatting genereren ..."):

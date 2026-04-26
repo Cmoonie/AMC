@@ -63,6 +63,20 @@ if zoekterm:
     st.success(f"{len(resultaat)} onderzoeker(s) gevonden")
     st.dataframe(resultaat)
 
+    # Toon expertise per gevonden persoon
+    st.subheader("Expertise")
+    for _, persoon in resultaat.iterrows():
+        exp_ids = personen_expertise[personen_expertise["person_id"] == persoon["id"]]["expertise_id"].tolist()
+        exp_labels = expertise[expertise["id"].isin(exp_ids)]["label"].tolist()
+        st.write(f"**{persoon['name']}:** {', '.join(exp_labels)}")
+
+        # Toon projecten per gevonden persoon
+    st.subheader("Projecten")
+    for _, persoon in resultaat.iterrows():
+        proj_ids = personen_projecten[personen_projecten["person_id"] == persoon["id"]]["project_id"].tolist()
+        proj_titels = projecten[projecten["id"].isin(proj_ids)]["title"].tolist()
+        st.write(f"**{persoon['name']}:** {', '.join(proj_titels)}")
+
     if not resultaat.empty:
         with st.spinner("Samenvatting genereren ..."):
             samenvatting = genereer_samenvatting(zoekterm, resultaat)

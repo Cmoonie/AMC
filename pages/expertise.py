@@ -1,6 +1,16 @@
 import streamlit as st
 import pandas as pd
 
+st.set_page_config(layout="wide")
+
+st.markdown("""
+    <style>
+    h1 {
+        font-size: 3rem !important;
+        margin-bottom: 2rem !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
 # Laad data
 personen = pd.read_csv("data/persons.csv")
 expertise = pd.read_csv("data/expertise.csv")
@@ -17,6 +27,7 @@ else:
     st.title(f"🔬 {exp['label']}")
 
     # Betrokken onderzoekers
+    st.divider()
     st.subheader("Onderzoekers met deze expertise")
     persoon_ids = personen_expertise[personen_expertise["expertise_id"] == expertise_id]["person_id"].tolist()
     betrokken = personen[personen["id"].isin(persoon_ids)]

@@ -49,16 +49,21 @@ else:
     st.subheader("Expertise")
     exp_ids = personen_expertise[personen_expertise["person_id"] == persoon_id]["expertise_id"].tolist()
     exp_labels = expertise[expertise["id"].isin(exp_ids)]["label"].tolist()
-    for label in exp_labels:
-        st.write(f"🔬 {label}")
+    exp_details = expertise[expertise["id"].isin(exp_ids)]
+    for _, exp in exp_details.iterrows():
+        if st.button(f"🔬 {exp['label']}", key=f"exp_{exp['id']}"):
+            st.session_state.geselecteerde_expertise = exp["id"]
+            st.switch_page("pages/expertise.py")
 
     # Projecten
     st.divider()
     st.subheader("Projecten")
     proj_ids = personen_projecten[personen_projecten["person_id"] == persoon_id]["project_id"].tolist()
     proj_details = projecten[projecten["id"].isin(proj_ids)]
-    for _, project in proj_details.iterrows():
-        st.write(f"📁 **{project['title']}** — {project['description']}")
+    for _, proj in proj_details.iterrows():
+        if st.button(f"🔬 {proj['title']}", key=f"proj_{proj['id']}"):
+            st.session_state.geselecteerde_project = proj["id"]
+            st.switch_page("pages/project.py")
 
     # Terug knop
     if st.button("← Terug naar zoeken"):

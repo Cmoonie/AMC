@@ -1,6 +1,18 @@
 import streamlit as st
 import pandas as pd
 
+#Custom CSS
+st.set_page_config(layout="wide")
+
+st.markdown("""
+    <style>
+    h1 {
+        font-size: 3rem !important;
+        margin-bottom: 2rem !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # Laad data
 personen = pd.read_csv("data/persons.csv")
 projecten = pd.read_csv("data/projects.csv")
@@ -22,6 +34,7 @@ else:
     st.write(f"🔧 **Methoden:** {project['methods']}")
 
     # Betrokken onderzoekers
+    st.divider()
     st.subheader("Betrokken onderzoekers")
     persoon_ids = personen_projecten[personen_projecten["project_id"] == project_id]["person_id"].tolist()
     betrokken = personen[personen["id"].isin(persoon_ids)]

@@ -7,7 +7,7 @@ import os                      #laad de os library om bestanden te lezen
 load_dotenv()                  # open het .env bestand
 api_key = os.getenv("GROQ_API_KEY") # haal de sleutel eruit
 #st.write(api_key) #debug regel
-st.write(st.session_state.get("rol"))
+# st.write(st.session_state.get("rol")) #debug regel
 
 from groq import Groq
 from login import login_pagina
@@ -21,13 +21,40 @@ if not st.session_state.ingelogd:
     login_pagina()
     st.stop()
 
+
+
 st.markdown("""
         <style>
         [data-testid="stSidebar"] {
             display: none;
         }
-        </style>
-    """, unsafe_allow_html=True)
+           .top-right {
+        position: fixed;
+        top: 10px;
+        right: 60px;
+        z-index: 999;
+        display: flex;
+        gap: 10px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns([8, 1, 1])
+
+with col2:
+    # Beheer knop alleen voor admin
+    if st.session_state.get("rol") == "beheerder":
+        if st.button("⚙️ Beheer"):
+            st.switch_page("pages/beheer.py")
+
+with col3:
+    # Uitloggen knop
+    if st.button("🚪 Uitloggen"):
+        st.session_state.ingelogd = False
+        st.session_state.rol = None
+        st.rerun()
+
+
 
 
 

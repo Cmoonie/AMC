@@ -7,9 +7,30 @@ import os                      #laad de os library om bestanden te lezen
 load_dotenv()                  # open het .env bestand
 api_key = os.getenv("GROQ_API_KEY") # haal de sleutel eruit
 #st.write(api_key) #debug regel
-
+st.write(st.session_state.get("rol"))
 
 from groq import Groq
+from login import login_pagina
+
+
+
+if "ingelogd" not in st.session_state:
+    st.session_state.ingelogd = False
+
+if not st.session_state.ingelogd:
+    login_pagina()
+    st.stop()
+
+st.markdown("""
+        <style>
+        [data-testid="stSidebar"] {
+            display: none;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+
+
 client = Groq(api_key=api_key)
 
 if "geselecteerde_persoon" not in st.session_state:
@@ -110,3 +131,14 @@ if zoekterm:
 
 else:
     st.info("Typ een naam, expertise of project om te zoeken.")
+
+# Uitloggen en beheer
+st.sidebar.divider()
+if st.sidebar.button("🚪 Uitloggen"):
+    st.session_state.ingelogd = False
+    st.rerun()
+
+if st.session_state.get("rol") == "beheerder":
+    if st.sidebar.button("⚙️ Beheer"):
+        st.switch_page("pages/beheer.py")
+ 

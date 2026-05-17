@@ -20,10 +20,14 @@ def login_pagina():
         if gebruikersnaam == "admin" and wachtwoord == "spider2026":
             st.session_state.ingelogd = True
             st.session_state.rol = "beheerder"
+            st.session_state.gebruikersnaam = "Admin"
+
             st.switch_page("pages/beheer.py")
         elif gebruikersnaam == "user" and wachtwoord == "spider123":
             st.session_state.ingelogd = True
             st.session_state.rol = "gebruiker"
+            st.session_state.gebruikersnaam = "Gebruiker"
+
             st.rerun()    
         else:
             st.error("Onjuiste gebruikersnaam of wachtwoord!")

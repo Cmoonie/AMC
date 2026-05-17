@@ -12,10 +12,7 @@ if "ingelogd" not in st.session_state or not st.session_state.ingelogd:
 st.set_page_config(layout="wide")
 st.markdown("""
     <style>
-    h1 {
-        font-size: 3rem !important;
-        margin-bottom: 2rem !important;
-    }
+    [data-testid="stSidebarNav"] { display: none; }
     </style>
 """, unsafe_allow_html=True)
 

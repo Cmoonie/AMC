@@ -9,6 +9,12 @@ if "ingelogd" not in st.session_state or not st.session_state.ingelogd:
 
 st.set_page_config(layout="wide")
 
+st.markdown("""
+    <style>
+    [data-testid="stSidebarNav"] { display: none; }
+    </style>
+""", unsafe_allow_html=True)
+
 st.title ("⚙️Beheer")
 st.subheader("Voeg toe, pas aan of verwijder gegevens")
 

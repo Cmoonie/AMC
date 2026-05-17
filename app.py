@@ -13,7 +13,6 @@ from groq import Groq
 from login import login_pagina
 
 
-
 if "ingelogd" not in st.session_state:
     st.session_state.ingelogd = False
 
@@ -21,41 +20,34 @@ if not st.session_state.ingelogd:
     login_pagina()
     st.stop()
 
+gebruikersnaam = st.session_state.get("gebruikersnaam", "")
+rol = st.session_state.get("rol", "")
+st.write(f"Ingelogd als: {gebruikersnaam}")
 
+
+
+# Sidebar menu
+st.sidebar.write(f"👤 **{gebruikersnaam}**")
+st.sidebar.divider()
+
+if st.sidebar.button("👤 Profiel"):
+    st.switch_page("pages/profiel.py")
+
+if st.session_state.get("rol") == "beheerder":
+    if st.sidebar.button("⚙️ Beheer"):
+        st.switch_page("pages/beheer.py")
+
+st.sidebar.divider()
+if st.sidebar.button("🚪 Uitloggen"):
+    st.session_state.ingelogd = False
+    st.session_state.rol = None
+    st.rerun()
 
 st.markdown("""
-        <style>
-        [data-testid="stSidebar"] {
-            display: none;
-        }
-           .top-right {
-        position: fixed;
-        top: 10px;
-        right: 60px;
-        z-index: 999;
-        display: flex;
-        gap: 10px;
-    }
+    <style>
+    [data-testid="stSidebarNav"] { display: none; }
     </style>
 """, unsafe_allow_html=True)
-
-col1, col2, col3 = st.columns([8, 1, 1])
-
-with col2:
-    # Beheer knop alleen voor admin
-    if st.session_state.get("rol") == "beheerder":
-        if st.button("⚙️ Beheer"):
-            st.switch_page("pages/beheer.py")
-
-with col3:
-    # Uitloggen knop
-    if st.button("🚪 Uitloggen"):
-        st.session_state.ingelogd = False
-        st.session_state.rol = None
-        st.rerun()
-
-
-
 
 
 client = Groq(api_key=api_key)
@@ -159,13 +151,5 @@ if zoekterm:
 else:
     st.info("Typ een naam, expertise of project om te zoeken.")
 
-# Uitloggen en beheer
-st.sidebar.divider()
-if st.sidebar.button("🚪 Uitloggen"):
-    st.session_state.ingelogd = False
-    st.rerun()
 
-if st.session_state.get("rol") == "beheerder":
-    if st.sidebar.button("⚙️ Beheer"):
-        st.switch_page("pages/beheer.py")
  

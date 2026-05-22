@@ -50,6 +50,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
+
+
 client = Groq(api_key=api_key)
 
 if "geselecteerde_persoon" not in st.session_state:

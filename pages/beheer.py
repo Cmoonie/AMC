@@ -7,6 +7,18 @@ if "ingelogd" not in st.session_state or not st.session_state.ingelogd:
     st.switch_page("app.py")
     st.stop()
 
+import datetime
+def log_wijziging(actie, wat):
+    wijzigingen = pd.read_csv("data/wijzigingen.csv")
+    nieuwe_rij = {
+        "datum": datetime.datetime.now().strftime("%d-%m-%Y %H:%M"),
+        "actie": actie,
+        "wat": wat,
+        "door_wie": st.session_state.get("gebruikersnaam", "onbekend")
+    }
+    wijzigingen = pd.concat([wijzigingen, pd.DataFrame([nieuwe_rij])], ignore_index=True)
+    wijzigingen.to_csv("data/wijzigingen.csv", index=False)    
+
 st.set_page_config(layout="wide")
 
 st.markdown("""
@@ -14,6 +26,21 @@ st.markdown("""
     [data-testid="stSidebarNav"] { display: none; }
     </style>
 """, unsafe_allow_html=True)
+
+
+# Sidebar
+st.sidebar.write(f"👤 **{st.session_state.get('gebruikersnaam', '')}**")
+st.sidebar.divider()
+if st.sidebar.button("📋 Geschiedenis"):
+    st.switch_page("pages/geschiedenis.py")
+st.sidebar.divider()
+if st.sidebar.button("🏠 Home"):
+    st.switch_page("app.py")
+if st.sidebar.button("🚪 Uitloggen"):
+    st.session_state.ingelogd = False
+    st.session_state.rol = None
+    st.rerun()
+
 
 st.title ("⚙️Beheer")
 st.subheader("Voeg toe, pas aan of verwijder gegevens")
@@ -77,6 +104,7 @@ with tab1:
             nieuwe_rij = {"id": nieuw_id, "name": nieuwe_naam, "department": nieuwe_department}
             personen = pd.concat([personen, pd.DataFrame([nieuwe_rij])], ignore_index=True)
             personen.to_csv("data/persons.csv", index=False)
+            log_wijziging("Toegevoegd", nieuwe_naam)
             st.success(f"{nieuwe_naam} is toegevoegd!")
             st.rerun()
         else:
@@ -104,6 +132,8 @@ with tab2:
         if bevestig_project:
             projecten = projecten[projecten["title"] != te_verwijderen_project]
             projecten.to_csv("data/projects.csv", index=False)
+            st.success(f"{te_verwijderen} is verwijderd!")
+            log_wijziging("Verwijderd", te_verwijderen_project)
             st.success(f"{te_verwijderen_project} is verwijderd!")
             st.rerun()
         else:
@@ -124,6 +154,7 @@ with tab2:
         projecten.loc[projecten["title"] == te_aanpassen_project, "title"] = nieuwe_titel_update
         projecten.loc[projecten["title"] == te_aanpassen_project, "description"] = nieuwe_desc_update
         projecten.to_csv("data/projects.csv", index=False)
+        log_wijziging("Aangepast", te_aanpassen)
         st.success(f"{te_aanpassen_project} is aangepast!")
         st.rerun()
 
@@ -140,6 +171,7 @@ with tab2:
             nieuwe_rij = {"id": nieuw_id, "title": nieuwe_titel, "description": nieuwe_beschrijving, "methods": nieuwe_methoden, "date": nieuwe_datum}
             projecten = pd.concat([projecten, pd.DataFrame([nieuwe_rij])], ignore_index=True)
             projecten.to_csv("data/projects.csv", index=False)
+            log_wijziging("Toegevoegd", nieuwe_titel)
             st.success(f"{nieuwe_titel} is toegevoegd!")
             st.rerun()
         else:
@@ -163,6 +195,7 @@ with tab3:
             nieuwe_rij = {"id": nieuw_id, "label": nieuwe_expertise}
             expertise = pd.concat([expertise, pd.DataFrame([nieuwe_rij])], ignore_index=True)
             expertise.to_csv("data/expertise.csv", index=False)
+            log_wijziging("Toegevoegd", nieuwe_expertise)
             st.success(f"{nieuwe_expertise} is toegevoegd!")
             st.rerun()
         else:
@@ -181,6 +214,7 @@ with tab3:
         if bevestig_exp:
             expertise = expertise[expertise["label"] != te_verwijderen_exp]
             expertise.to_csv("data/expertise.csv", index=False)
+            log_wijziging("Verwijderd", te_verwijderen_project)
             st.success(f"{te_verwijderen_exp} is verwijderd!")
             st.rerun()
         else:
@@ -199,5 +233,16 @@ with tab3:
     if st.button("Opslaan", key="expertise_opslaan"):
         expertise.loc[expertise["label"] == te_aanpassen_exp, "label"] = nieuwe_exp_update
         expertise.to_csv("data/expertise.csv", index=False)
+        log_wijziging("Aangepast", te_aanpassen_exp)
         st.success(f"{te_aanpassen_exp} is aangepast!")
         st.rerun()  
+
+        st.divider()
+st.subheader("📋 Wijzigingsgeschiedenis")
+
+wijzigingen = pd.read_csv("data/wijzigingen.csv")
+
+if wijzigingen.empty:
+    st.info("Nog geen wijzigingen geregistreerd.")
+else:
+    st.dataframe(wijzigingen[::-1])  # Nieuwste bovenaan

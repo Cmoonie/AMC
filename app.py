@@ -116,7 +116,7 @@ if zoekterm:
    #combineer alles
     resultaat = pd.concat([naam_resultaat, expertise_resultaat, project_resultaat]).drop_duplicates()
     st.success(f"{len(resultaat)} onderzoeker(s) gevonden")
-    st.dataframe(resultaat)
+    # st.dataframe(resultaat) debug regel
 
     st.subheader("Gevonden onderzoekers")
     for _, persoon in resultaat.iterrows():

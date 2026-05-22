@@ -1,6 +1,6 @@
 import streamlit as st
 
-
+st.set_page_config(layout="centered")
 
 def login_pagina():
     st.markdown("""

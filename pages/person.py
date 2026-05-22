@@ -26,6 +26,21 @@ personen_projecten = pd.read_csv("data/persons_projects.csv")
 # Haal geselecteerde persoon op uit session state
 if "geselecteerde_persoon" not in st.session_state or st.session_state.geselecteerde_persoon is None:
     st.warning("Geen onderzoeker geselecteerd. Ga terug naar de zoekpagina.")
+    
+    # Check of je je eigen profiel bekijkt
+    eigen_profiel = st.session_state.get("gebruikersnaam", "").lower() == persoon["name"].lower()
+
+    if eigen_profiel:
+        st.divider()
+        st.subheader("✏️ Profiel aanpassen")
+        
+        with st.expander("Klik om aan te passen"):
+            nieuwe_naam = st.text_input("Naam", value=persoon["name"])
+            nieuw_email = st.text_input("Email", value="emailadres@amsterdamumc.nl")
+            nieuwe_bio = st.text_area("Bio", value="Lorem ipsum...")
+            
+            if st.button("💾 Opslaan"):
+                st.success("✅ Profiel opgeslagen!")
     if st.button("← Terug naar zoeken"):
         st.switch_page("app.py")
 

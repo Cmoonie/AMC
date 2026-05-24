@@ -16,11 +16,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Laad data
-personen = pd.read_csv("data/persons.csv")
-expertise = pd.read_csv("data/expertise.csv")
-personen_expertise = pd.read_csv("data/persons_expertise.csv")
-projecten = pd.read_csv("data/projects.csv")
-personen_projecten = pd.read_csv("data/persons_projects.csv")
+personen = pd.read_csv("Data/persons.csv")
+expertise = pd.read_csv("Data/expertise.csv")
+personen_expertise = pd.read_csv("Data/persons_expertise.csv")
+projecten = pd.read_csv("Data/projects.csv")
+personen_projecten = pd.read_csv("Data/persons_projects.csv")
 
 # Check session state
 if "geselecteerde_persoon" not in st.session_state or st.session_state.geselecteerde_persoon is None:

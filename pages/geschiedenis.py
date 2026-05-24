@@ -34,7 +34,7 @@ if st.sidebar.button("🚪 Uitloggen"):
 st.title("📋 Wijzigingsgeschiedenis")
 st.subheader("Alle wijzigingen door beheerders")
 
-wijzigingen = pd.read_csv("data/wijzigingen.csv")
+wijzigingen = pd.read_csv("Data/wijzigingen.csv")
 
 if wijzigingen.empty:
     st.info("Nog geen wijzigingen geregistreerd.")

@@ -72,11 +72,11 @@ def genereer_samenvatting(zoekterm, resultaat):   # Haal alle namen op uit de re
 
     return response.choices[0]. message.content
 
-personen = pd.read_csv("data/persons.csv") #personen inladen
-expertise = pd.read_csv("data/expertise.csv") #expertise inladen
-personen_expertise = pd.read_csv("data/persons_expertise.csv") #tussentabel inladen
-projecten = pd.read_csv("data/projects.csv")                  #projecten inladen
-personen_projecten = pd.read_csv("data/persons_projects.csv") #tussentabel inladen
+personen = pd.read_csv("Data/persons.csv") #personen inladen
+expertise = pd.read_csv("Data/expertise.csv") #expertise inladen
+personen_expertise = pd.read_csv("Data/persons_expertise.csv") #tussentabel inladen
+projecten = pd.read_csv("Data/projects.csv")                  #projecten inladen
+personen_projecten = pd.read_csv("Data/persons_projects.csv") #tussentabel inladen
 
 st.title("Spider")
 st.subheader("Zoek onderzoeksexpertise binnen Division 9")

@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import sqlite3
+conn = sqlite3.connect("spider.db")
 
 # Authenticatie
 if "ingelogd" not in st.session_state or not st.session_state.ingelogd:
@@ -16,11 +18,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Laad data
-personen = pd.read_csv("Data/persons.csv")
-expertise = pd.read_csv("Data/expertise.csv")
-personen_expertise = pd.read_csv("Data/persons_expertise.csv")
-projecten = pd.read_csv("Data/projects.csv")
-personen_projecten = pd.read_csv("Data/persons_projects.csv")
+personen = pd.read_sql("SELECT * FROM persons" , conn)
+expertise = pd.read_sql("SELECT * FROM expertise" , conn)
+personen_expertise = pd.read_sql("SELECT * FROM persons_expertise" , conn)
+projecten = pd.read_sql("SELECT * FROM projects" , conn)
+personen_projecten = pd.read_sql("SELECT * FROM persons_projects" , conn)
 
 # Check session state
 if "geselecteerde_persoon" not in st.session_state or st.session_state.geselecteerde_persoon is None:

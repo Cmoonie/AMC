@@ -30,11 +30,31 @@ try:
     
     pubmed_robert.to_sql("publications", conn, if_exists="replace", index=False)
     pubmed_sjors.to_sql("publications", conn, if_exists="append", index=False)
-    
+
     print("Publicaties geïmporteerd!")
 except Exception as e:
     print(f"Publicaties niet gevonden: {e}")
 
+    # Wijzigingen importeren 
+wijzigingen = pd.read_csv("Data/wijzigingen.csv")
+wijzigingen.to_sql("wijzigingen", conn, if_exists="replace", index=False)
+print("Wijzigingen geïmporteerd!")
+    
+
+# Profiel data tabel aanmaken
+cursor = conn.cursor()
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS profiel_data (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        gebruikersnaam TEXT,
+        email TEXT,
+        bio TEXT,
+        expertise TEXT,
+        projecten TEXT
+    )
+""")
+conn.commit()
+print("Profiel tabel aangemaakt!")
     
 
 # Controleer of data goed is opgeslagen

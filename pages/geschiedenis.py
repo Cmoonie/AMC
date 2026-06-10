@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import sqlite3
+conn = sqlite3.connect("spider.db")
 
 # Authenticatie
 if "ingelogd" not in st.session_state or not st.session_state.ingelogd:
@@ -34,8 +36,7 @@ if st.sidebar.button("🚪 Uitloggen"):
 st.title("📋 Wijzigingsgeschiedenis")
 st.subheader("Alle wijzigingen door beheerders")
 
-wijzigingen = pd.read_csv("Data/wijzigingen.csv")
-
+wijzigingen = pd.read_sql("SELECT * FROM wijzigingen", conn)
 if wijzigingen.empty:
     st.info("Nog geen wijzigingen geregistreerd.")
 else:

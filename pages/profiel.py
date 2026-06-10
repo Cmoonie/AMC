@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import sqlite3
+conn = sqlite3.connect("spider.db")
 
 # Login check
 if "ingelogd" not in st.session_state or not st.session_state.ingelogd:
@@ -14,10 +16,26 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Sidebar
+#Gebruikersnaam ophalen
 gebruikersnaam = st.session_state.get("gebruikersnaam", "")
 rol = st.session_state.get("rol", "")
 
+# Laad profiel uit database
+cursor = conn.cursor()
+cursor.execute("SELECT * FROM profiel_data WHERE gebruikersnaam = ?", (gebruikersnaam,))
+profiel = cursor.fetchone()
+
+# Als profiel nog niet bestaat, maak het aan
+if not profiel:
+    cursor.execute("INSERT INTO profiel_data (gebruikersnaam, email, bio, expertise, projecten) VALUES (?, ?, ?, ?, ?)",
+                   (gebruikersnaam, "", "", "", ""))
+    conn.commit()
+    cursor.execute("SELECT * FROM profiel_data WHERE gebruikersnaam = ?", (gebruikersnaam,))
+    profiel = cursor.fetchone()
+
+
+
+# Sidebar
 st.sidebar.write(f"👤 **{gebruikersnaam}**")
 st.sidebar.divider()
 if st.sidebar.button("🏠 Home"):
@@ -67,63 +85,73 @@ with st.expander("Klik om aan te passen"):
 
 st.divider()
 st.subheader("🔬 Expertise")
-st.write("Jouw expertise wordt hier getoond.")
-# Toon huidige expertise
-if "profiel_expertise" not in st.session_state:
-    st.session_state.profiel_expertise = []
 
-for exp in st.session_state.profiel_expertise:
-    st.write(f"🔬 {exp}")
+# Laad expertise uit database
+expertise_opgeslagen = profiel[4] if profiel[4] else ""
+expertise_lijst = expertise_opgeslagen.split(",") if expertise_opgeslagen else []
 
-# Expertise toevoegen
+for exp in expertise_lijst:
+    if exp:
+        st.write(f"🔬 {exp}")
+
 with st.expander("➕ Expertise toevoegen"):
     nieuwe_exp = st.text_input("Expertise", key="nieuwe_exp")
     if st.button("Toevoegen", key="exp_toevoegen"):
         if nieuwe_exp:
-            st.session_state.profiel_expertise.append(nieuwe_exp)
+            expertise_lijst.append(nieuwe_exp)
+            cursor.execute("UPDATE profiel_data SET expertise = ? WHERE gebruikersnaam = ?",
+                           (",".join(expertise_lijst), gebruikersnaam))
+            conn.commit()
             st.success(f"✅ {nieuwe_exp} toegevoegd!")
             st.rerun()
 
 # Expertise wijzigen
-if st.session_state.profiel_expertise:
+if expertise_lijst:
     with st.expander("✏️ Expertise wijzigen"):
-        te_wijzigen_exp = st.selectbox("Selecteer expertise", st.session_state.profiel_expertise, key="wijzig_exp_select")
+        te_wijzigen_exp = st.selectbox("Selecteer expertise", expertise_lijst, key="wijzig_exp_select")
         gewijzigde_exp = st.text_input("Nieuwe naam", value=te_wijzigen_exp, key="gewijzigde_exp")
         if st.button("Opslaan", key="exp_wijzigen"):
-            index = st.session_state.profiel_expertise.index(te_wijzigen_exp)
-            st.session_state.profiel_expertise[index] = gewijzigde_exp
+            index = expertise_lijst.index(te_wijzigen_exp)
+            expertise_lijst[index] = gewijzigde_exp
+            cursor.execute("UPDATE profiel_data SET expertise = ? WHERE gebruikersnaam = ?",
+                           (",".join(expertise_lijst), gebruikersnaam))
+            conn.commit()
             st.success(f"✅ Gewijzigd naar {gewijzigde_exp}!")
-            st.rerun()            
+            st.rerun()           
 
 st.divider()
 st.subheader("📁 Projecten")
-st.write("Jouw projecten worden hier getoond.")
 
-# Toon huidige projecten
-if "profiel_projecten" not in st.session_state:
-    st.session_state.profiel_projecten = []
+# Laad projecten uit database
+projecten_opgeslagen = profiel[5] if profiel[5] else ""
+projecten_lijst = projecten_opgeslagen.split(",") if projecten_opgeslagen else []
 
-for proj in st.session_state.profiel_projecten:
-    st.write(f"📁 {proj}")
+for proj in projecten_lijst:
+    if proj:
+        st.write(f"📁 {proj}")
 
-# Project toevoegen
 with st.expander("➕ Project toevoegen"):
     nieuw_proj = st.text_input("Projectnaam", key="nieuw_proj")
     if st.button("Toevoegen", key="proj_toevoegen"):
         if nieuw_proj:
-            st.session_state.profiel_projecten.append(nieuw_proj)
+            projecten_lijst.append(nieuw_proj)
+            cursor.execute("UPDATE profiel_data SET projecten = ? WHERE gebruikersnaam = ?",
+                           (",".join(projecten_lijst), gebruikersnaam))
+            conn.commit()
             st.success(f"✅ {nieuw_proj} toegevoegd!")
             st.rerun()
 
 # Project wijzigen
-if st.session_state.profiel_projecten:
+if projecten_lijst:
     with st.expander("✏️ Project wijzigen"):
-        te_wijzigen_proj = st.selectbox("Selecteer project", st.session_state.profiel_projecten, key="wijzig_proj_select")
+        te_wijzigen_proj = st.selectbox("Selecteer project", projecten_lijst, key="wijzig_proj_select")
         gewijzigd_proj = st.text_input("Nieuwe naam", value=te_wijzigen_proj, key="gewijzigd_proj")
         if st.button("Opslaan", key="proj_wijzigen"):
-            index = st.session_state.profiel_projecten.index(te_wijzigen_proj)
-            st.session_state.profiel_projecten[index] = gewijzigd_proj
-            st.success(f"✅ Gewijzigd naar {gewijzigd_proj}!")
+            index = projecten_lijst.index(te_wijzigen_proj)
+            projecten_lijst[index] = gewijzigd_proj
+            cursor.execute("UPDATE profiel_data SET projecten = ? WHERE gebruikersnaam = ?",
+                           (",".join(projecten_lijst), gebruikersnaam))
+            conn.commit()
             st.rerun()            
 
 st.divider()

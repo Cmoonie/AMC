@@ -122,6 +122,15 @@ if expertise_lijst:
 st.divider()
 st.subheader("📁 Projecten")
 
+# Toon projecten uit database
+conn2 = sqlite3.connect("spider.db")
+alle_projecten = pd.read_sql("SELECT * FROM projects", conn2)
+
+for _, project in alle_projecten.iterrows():
+    if st.button(f"📁 {project['title']}", key=f"prof_proj_{project['id']}"):
+        st.session_state.geselecteerd_project = project["id"]
+        st.switch_page("pages/project.py")
+
 # Laad projecten uit database
 projecten_opgeslagen = profiel[5] if profiel[5] else ""
 projecten_lijst = projecten_opgeslagen.split(",") if projecten_opgeslagen else []

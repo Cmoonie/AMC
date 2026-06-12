@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 import sqlite3
+from sentence_transformers import SentenceTransformer
+import numpy as np
+import json
 
 # Database verbinding
 conn = sqlite3.connect("spider.db")
@@ -26,7 +29,6 @@ if not st.session_state.ingelogd:
 
 gebruikersnaam = st.session_state.get("gebruikersnaam", "")
 rol = st.session_state.get("rol", "")
-st.write(f"Ingelogd als: {gebruikersnaam}")
 
 
 
@@ -57,6 +59,32 @@ st.markdown("""
 
 
 client = Groq(api_key=api_key)
+
+# Laad embedding model
+@st.cache_resource
+def laad_model():
+    return SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
+
+model = laad_model()
+
+def semantisch_zoeken(zoekterm, top_n=5):
+    # Maak embedding van zoekterm
+    zoek_embedding = model.encode(zoekterm)
+    
+    # Laad alle embeddings uit database
+    embeddings_df = pd.read_sql("SELECT pmid, embedding FROM publication_embeddings", conn)
+    
+    scores = []
+    for _, rij in embeddings_df.iterrows():
+        pub_embedding = np.array(json.loads(rij["embedding"]))
+        score = np.dot(zoek_embedding, pub_embedding) / (np.linalg.norm(zoek_embedding) * np.linalg.norm(pub_embedding))
+        scores.append((rij["pmid"], float(score)))
+    
+    # Sorteer op score
+    scores.sort(key=lambda x: x[1], reverse=True)
+    top_pmids = [s[0] for s in scores[:top_n]]
+    
+    return top_pmids
 
 if "geselecteerde_persoon" not in st.session_state:
     st.session_state.geselecteerde_persoon = None
@@ -94,7 +122,6 @@ department_filter = st.selectbox(
 # st.write(expertise) Debug regel
 
 zoekterm = st.text_input("Zoek op naam, project of expertise")
-
 if zoekterm:
 
     if department_filter != "Alle":
@@ -120,6 +147,17 @@ if zoekterm:
    
    #combineer alles
     resultaat = pd.concat([naam_resultaat, expertise_resultaat, project_resultaat]).drop_duplicates()
+
+    # Semantisch zoeken via publicaties
+    top_pmids = semantisch_zoeken(zoekterm)
+    semantische_resultaten = pd.read_sql(f"""
+        SELECT DISTINCT p.* FROM persons p
+        JOIN publications pub ON LOWER(pub.authors) LIKE LOWER('%' || p.name || '%')
+        WHERE pub.pmid IN ({','.join(['?']*len(top_pmids))})
+    """, conn, params=top_pmids)
+    
+    # Voeg toe aan resultaten
+    resultaat = pd.concat([resultaat, semantische_resultaten]).drop_duplicates()
     st.success(f"{len(resultaat)} onderzoeker(s) gevonden")
     # st.dataframe(resultaat) debug regel
 
@@ -145,10 +183,13 @@ if zoekterm:
     for _, persoon in resultaat.iterrows():
         proj_ids = personen_projecten[personen_projecten["person_id"] == persoon["id"]]["project_id"].tolist()
         proj_details = projecten[projecten["id"].isin(proj_ids)]
+        # st.write(proj_details[["id", "title"]])
         for _, project in proj_details.iterrows():
             if st.button(f"📁 {project['title']}", key=f"proj_{persoon['id']}_{project['id']}"):
                 st.session_state.geselecteerd_project = project["id"]
-                st.switch_page("pages/project.py")   
+                st.switch_page("pages/project.py") 
+
+           
 
     if not resultaat.empty:
         with st.spinner("Samenvatting genereren ..."):

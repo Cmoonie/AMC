@@ -3,6 +3,33 @@ import pandas as pd
 import sqlite3
 conn = sqlite3.connect("spider.db")
 
+from groq import Groq
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+api_key = os.getenv("GROQ_API_KEY")
+client = Groq(api_key=api_key)
+
+def genereer_bio(naam):
+    publicaties = pd.read_sql(f"""
+        SELECT title, abstract FROM publications 
+        WHERE authors LIKE '%{naam}%'
+        LIMIT 5
+    """, conn)
+    
+    if publicaties.empty:
+        return None
+    
+    titels = publicaties["title"].tolist()
+    prompt = f"Geef een korte bio van 2-3 zinnen over onderzoeker {naam} op basis van deze publicaties: {titels}"
+    
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return response.choices[0].message.content
+
 # Authenticatie
 if "ingelogd" not in st.session_state or not st.session_state.ingelogd:
     st.warning("Je moet eerst inloggen!")
@@ -42,8 +69,10 @@ else:
     st.title(persoon["name"])
     col1, col2 = st.columns([2, 1])
     with col1:
-        st.subheader(persoon["department"])
-        st.write("Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
+         st.subheader(persoon["department"])
+         bio = genereer_bio(persoon["name"]) 
+    if bio:
+        st.write(bio)       
     with col2:
         st.image("https://picsum.photos/300/400", width=300)
 

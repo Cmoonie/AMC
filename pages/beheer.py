@@ -125,7 +125,8 @@ with tab2:
             st.rerun()
         else:
             st.error("Vink de bevestiging aan!")
-
+            
+if len(projecten) > 0:
     st.divider()
     st.subheader("✏️ Project aanpassen")
     project_opties2 = projecten["title"].tolist()
@@ -197,6 +198,7 @@ with tab3:
         else:
             st.error("Vink de bevestiging aan!")
 
+if len(projecten) > 0:
     st.divider()
     st.subheader("✏️ Expertise aanpassen")
     expertise_opties2 = expertise["label"].tolist()

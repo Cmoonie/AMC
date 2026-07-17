@@ -1,0 +1,1054 @@
+PMID- 21622664
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20111025
+LR  - 20250529
+IS  - 1367-4811 (Electronic)
+IS  - 1367-4803 (Linking)
+VI  - 27
+IP  - 14
+DP  - 2011 Jul 15
+TI  - RightField: embedding ontology annotation in spreadsheets.
+PG  - 2021-2
+LID - 10.1093/bioinformatics/btr312 [doi]
+AB  - MOTIVATION: In the Life Sciences, guidelines, checklists and ontologies 
+      describing what metadata is required for the interpretation and reuse of 
+      experimental data are emerging. Data producers, however, may have little 
+      experience in the use of such standards and require tools to support this form of 
+      data annotation. RESULTS: RightField is an open source application that provides 
+      a mechanism for embedding ontology annotation support for Life Science data in 
+      Excel spreadsheets. Individual cells, columns or rows can be restricted to 
+      particular ranges of allowed classes or instances from chosen ontologies. The 
+      RightField-enabled spreadsheet presents selected ontology terms to the users as a 
+      simple drop-down list, enabling scientists to consistently annotate their data. 
+      The result is 'semantic annotation by stealth', with an annotation process that 
+      is less error-prone, more efficient, and more consistent with community 
+      standards. AVAILABILITY AND IMPLEMENTATION: RightField is open source under a BSD 
+      license and freely available from http://www.rightfield.org.uk
+FAU - Wolstencroft, Katy
+AU  - Wolstencroft K
+AD  - School of Computer Science, Schloß-Wolfsbrunnenweg 35, 69118 Heidelberg, Germany. 
+      kwolstencroft@cs.man.ac.uk
+FAU - Owen, Stuart
+AU  - Owen S
+FAU - Horridge, Matthew
+AU  - Horridge M
+FAU - Krebs, Olga
+AU  - Krebs O
+FAU - Mueller, Wolfgang
+AU  - Mueller W
+FAU - Snoep, Jacky L
+AU  - Snoep JL
+FAU - du Preez, Franco
+AU  - du Preez F
+FAU - Goble, Carole
+AU  - Goble C
+LA  - eng
+GR  - BB/G010218/1/BB_/Biotechnology and Biological Sciences Research Council/United 
+      Kingdom
+GR  - BBG0102181/BB_/Biotechnology and Biological Sciences Research Council/United 
+      Kingdom
+PT  - Journal Article
+PT  - Research Support, Non-U.S. Gov't
+DEP - 20110526
+PL  - England
+TA  - Bioinformatics
+JT  - Bioinformatics (Oxford, England)
+JID - 9808944
+SB  - IM
+MH  - Abstracting and Indexing
+MH  - Classification/methods
+MH  - Information Management/*methods
+MH  - *Software
+MH  - User-Computer Interface
+EDAT- 2011/05/31 06:00
+MHDA- 2011/10/26 06:00
+CRDT- 2011/05/31 06:00
+PHST- 2011/05/31 06:00 [entrez]
+PHST- 2011/05/31 06:00 [pubmed]
+PHST- 2011/10/26 06:00 [medline]
+AID - btr312 [pii]
+AID - 10.1093/bioinformatics/btr312 [doi]
+PST - ppublish
+SO  - Bioinformatics. 2011 Jul 15;27(14):2021-2. doi: 10.1093/bioinformatics/btr312. 
+      Epub 2011 May 26.
+
+PMID- 19060304
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20090203
+LR  - 20081229
+IS  - 1477-4054 (Electronic)
+IS  - 1467-5463 (Linking)
+VI  - 9
+IP  - 6
+DP  - 2008 Nov
+TI  - Data curation + process curation=data integration + science.
+PG  - 506-17
+LID - 10.1093/bib/bbn034 [doi]
+AB  - In bioinformatics, we are familiar with the idea of curated data as a 
+      prerequisite for data integration. We neglect, often to our cost, the curation 
+      and cataloguing of the processes that we use to integrate and analyse our data. 
+      Programmatic access to services, for data and processes, means that compositions 
+      of services can be made that represent the in silico experiments or processes 
+      that bioinformaticians perform. Data integration through workflows depends on 
+      being able to know what services exist and where to find those services. The 
+      large number of services and the operations they perform, their arbitrary naming 
+      and lack of documentation, however, mean that they can be difficult to use. The 
+      workflows themselves are composite processes that could be pooled and reused but 
+      only if they too can be found and understood. Thus appropriate curation, 
+      including semantic mark-up, would enable processes to be found, maintained and 
+      consequently used more easily. This broader view on semantic annotation is vital 
+      for full data integration that is necessary for the modern scientific analyses in 
+      biology. This article will brief the community on the current state of the art 
+      and the current challenges for process curation, both within and without the Life 
+      Sciences.
+FAU - Goble, Carole
+AU  - Goble C
+AD  - School of Computer Science, University of Manchester, Oxford Road, Manchester, 
+      M13 9PL, UK.
+FAU - Stevens, Robert
+AU  - Stevens R
+FAU - Hull, Duncan
+AU  - Hull D
+FAU - Wolstencroft, Katy
+AU  - Wolstencroft K
+FAU - Lopez, Rodrigo
+AU  - Lopez R
+LA  - eng
+GR  - BB/F01046X/1/Biotechnology and Biological Sciences Research Council/United 
+      Kingdom
+GR  - BB/F010540/1/Biotechnology and Biological Sciences Research Council/United 
+      Kingdom
+PT  - Journal Article
+PT  - Research Support, Non-U.S. Gov't
+DEP - 20081206
+PL  - England
+TA  - Brief Bioinform
+JT  - Briefings in bioinformatics
+JID - 100912837
+SB  - IM
+MH  - *Computational Biology
+MH  - *Database Management Systems
+MH  - Humans
+MH  - Information Storage and Retrieval/*methods
+MH  - Programming Languages
+MH  - Reproducibility of Results
+MH  - Semantics
+MH  - Software
+MH  - Systems Integration
+MH  - User-Computer Interface
+EDAT- 2008/12/09 09:00
+MHDA- 2009/02/04 09:00
+CRDT- 2008/12/09 09:00
+PHST- 2008/12/09 09:00 [pubmed]
+PHST- 2009/02/04 09:00 [medline]
+PHST- 2008/12/09 09:00 [entrez]
+AID - bbn034 [pii]
+AID - 10.1093/bib/bbn034 [doi]
+PST - ppublish
+SO  - Brief Bioinform. 2008 Nov;9(6):506-17. doi: 10.1093/bib/bbn034. Epub 2008 Dec 6.
+
+PMID- 34514430
+OWN - NLM
+STAT- PubMed-not-MEDLINE
+LR  - 20240908
+IS  - 2641-6573 (Electronic)
+IS  - 2641-6573 (Linking)
+VI  - 2
+IP  - 2
+DP  - 2021 Jun
+TI  - Design of a FAIR digital data health infrastructure in Africa for COVID-19 
+      reporting and research.
+PG  - e10050
+LID - 10.1002/ggn2.10050 [doi]
+LID - e10050
+AB  - The limited volume of COVID-19 data from Africa raises concerns for global genome 
+      research, which requires a diversity of genotypes for accurate disease 
+      prediction, including on the provenance of the new SARS-CoV-2 mutations. The 
+      Virus Outbreak Data Network (VODAN)-Africa studied the possibility of increasing 
+      the production of clinical data, finding concerns about data ownership, and the 
+      limited use of health data for quality treatment at point of care. To address 
+      this, VODAN Africa developed an architecture to record clinical health data and 
+      research data collected on the incidence of COVID-19, producing these as human- 
+      and machine-readable data objects in a distributed architecture of locally 
+      governed, linked, human- and machine-readable data. This architecture supports 
+      analytics at the point of care and-through data visiting, across facilities-for 
+      generic analytics. An algorithm was run across FAIR Data Points to visit the 
+      distributed data and produce aggregate findings. The FAIR data architecture is 
+      deployed in Uganda, Ethiopia, Liberia, Nigeria, Kenya, Somalia, Tanzania, 
+      Zimbabwe, and Tunisia.
+CI  - © 2021 The Authors. Advanced Genetics published by Wiley Periodicals LLC.
+FAU - van Reisen, Mirjam
+AU  - van Reisen M
+AD  - Leiden University Leiden Netherlands.
+AD  - Leiden University Medical Centre (LUMC) Leiden University Leiden Netherlands.
+AD  - Leiden Institute of Advanced Computer Science (LIACS) Leiden University Leiden 
+      Netherlands.
+AD  - Faculty of Humanities and Digital Sciences Tilburg University Tilburg 
+      Netherlands.
+FAU - Oladipo, Francisca
+AU  - Oladipo F
+AD  - Kampala International University Kampala Uganda.
+FAU - Stokmans, Mia
+AU  - Stokmans M
+AD  - Faculty of Humanities and Digital Sciences Tilburg University Tilburg 
+      Netherlands.
+FAU - Mpezamihgo, Mouhamed
+AU  - Mpezamihgo M
+AD  - Kampala International University Kampala Uganda.
+FAU - Folorunso, Sakinat
+AU  - Folorunso S
+AD  - Department of Computer Science Olabisi Onabanjo University Ago Iwoye Nigeria.
+FAU - Schultes, Erik
+AU  - Schultes E
+AD  - Go-FAIR Foundation Leiden Netherlands.
+FAU - Basajja, Mariam
+AU  - Basajja M
+AD  - Leiden University Leiden Netherlands.
+AD  - Leiden Institute of Advanced Computer Science (LIACS) Leiden University Leiden 
+      Netherlands.
+FAU - Aktau, Aliya
+AU  - Aktau A
+AD  - Faculty of Humanities and Digital Sciences Tilburg University Tilburg 
+      Netherlands.
+FAU - Amare, Samson Yohannes
+AU  - Amare SY
+AD  - School of Public Health Mekelle University Mek'ele Ethiopia.
+FAU - Taye, Getu Tadele
+AU  - Taye GT
+AD  - Faculty of Humanities and Digital Sciences Tilburg University Tilburg 
+      Netherlands.
+AD  - Department of Health informatics, School of Public Health Mekelle University 
+      Mek'ele Ethiopia.
+FAU - Purnama Jati, Putu Hadi
+AU  - Purnama Jati PH
+AD  - Faculty of Humanities and Digital Sciences Tilburg University Tilburg 
+      Netherlands.
+AD  - Badan Pusat Statistik Central Jakarta Indonesia.
+FAU - Chindoza, Kudakwashe
+AU  - Chindoza K
+AD  - Faculty of Humanities and Digital Sciences Tilburg University Tilburg 
+      Netherlands.
+AD  - Department of Computer Science Great Zimbabwe University Masvingo Zimbabwe.
+FAU - Wirtz, Morgane
+AU  - Wirtz M
+AD  - Faculty of Humanities and Digital Sciences Tilburg University Tilburg 
+      Netherlands.
+FAU - Ghardallou, Meriem
+AU  - Ghardallou M
+AD  - Department of Community Medicine Université de Sousse Sousse Tunisia.
+FAU - van Stam, Gertjan
+AU  - van Stam G
+AD  - SolidarMed Masvingo Zimbabwe.
+FAU - Ayele, Wondimu
+AU  - Ayele W
+AD  - Department of Biostatistics and Epidemiology, School of Public health College of 
+      Health Sciences Addis Ababa University Addis Ababa Ethiopia.
+FAU - Nalugala, Reginald
+AU  - Nalugala R
+AD  - Tangaza University College Nairobi Kenya.
+FAU - Abdullahi, Ibrahim
+AU  - Abdullahi I
+AD  - Ibrahim Badamasi Babangida University Lapai Nigeria.
+FAU - Osigwe, Obinna
+AU  - Osigwe O
+AD  - Kampala International University Kampala Uganda.
+FAU - Graybeal, John
+AU  - Graybeal J
+AD  - Stanford Center for Biomedical Informatics Research Stanford University Stanford 
+      California USA.
+FAU - Medhanyie, Araya Abrha
+AU  - Medhanyie AA
+AD  - Department of Reproductive health, School of Public Health Mekelle University 
+      Mek'ele Ethiopia.
+FAU - Kawu, Abdullahi Abubakar
+AU  - Kawu AA
+AD  - Ibrahim Badamasi Babangida University Lapai Nigeria.
+FAU - Liu, Fenghong
+AU  - Liu F
+AD  - Chinese Academy of Science Beijing China.
+FAU - Wolstencroft, Katy
+AU  - Wolstencroft K
+AD  - Leiden University Leiden Netherlands.
+FAU - Flikkenschild, Erik
+AU  - Flikkenschild E
+AD  - Leiden University Medical Centre (LUMC) Leiden University Leiden Netherlands.
+FAU - Lin, Yi
+AU  - Lin Y
+AD  - Leiden University Leiden Netherlands.
+FAU - Stocker, Joëlle
+AU  - Stocker J
+AD  - Department of Geosciences Utrecht University Utrecht Netherlands.
+FAU - Musen, Mark A
+AU  - Musen MA
+AD  - Stanford Center for Biomedical Informatics Research Stanford University Stanford 
+      California USA.
+LA  - eng
+PT  - Journal Article
+DEP - 20210611
+PL  - United States
+TA  - Adv Genet (Hoboken)
+JT  - Advanced genetics (Hoboken, N.J.)
+JID - 101774320
+PMC - PMC8420285
+OTO - NOTNLM
+OT  - data science
+OT  - ethical
+OT  - health information
+OT  - knowledge capture
+OT  - legal and social implications
+OT  - medical informatics
+OT  - population genetics
+OT  - social health care
+OT  - viral genomes
+COIS- All authors declare they have no competing interests.
+EDAT- 2021/09/14 06:00
+MHDA- 2021/09/14 06:01
+PMCR- 2021/06/11
+CRDT- 2021/09/13 07:03
+PHST- 2021/03/30 00:00 [received]
+PHST- 2021/05/20 00:00 [revised]
+PHST- 2021/05/21 00:00 [accepted]
+PHST- 2021/09/13 07:03 [entrez]
+PHST- 2021/09/14 06:00 [pubmed]
+PHST- 2021/09/14 06:01 [medline]
+PHST- 2021/06/11 00:00 [pmc-release]
+AID - GGN210050 [pii]
+AID - 10.1002/ggn2.10050 [doi]
+PST - ppublish
+SO  - Adv Genet (Hoboken). 2021 Jun;2(2):e10050. doi: 10.1002/ggn2.10050. Epub 2021 Jun 
+      11.
+
+PMID- 20214801
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20100922
+LR  - 20250529
+IS  - 1474-760X (Electronic)
+IS  - 1465-6906 (Print)
+IS  - 1474-7596 (Linking)
+VI  - 11
+IP  - 3
+DP  - 2010
+TI  - XGAP: a uniform and extensible data model and software platform for genotype and 
+      phenotype experiments.
+PG  - R27
+LID - 10.1186/gb-2010-11-3-r27 [doi]
+AB  - We present an extensible software model for the genotype and phenotype community, 
+      XGAP. Readers can download a standard XGAP (http://www.xgap.org) or auto-generate 
+      a custom version using MOLGENIS with programming interfaces to R-software and 
+      web-services or user interfaces for biologists. XGAP has simple load formats for 
+      any type of genotype, epigenotype, transcript, protein, metabolite or other 
+      phenotype data. Current functionality includes tools ranging from eQTL analysis 
+      in mouse to genome-wide association studies in humans.
+FAU - Swertz, Morris A
+AU  - Swertz MA
+AD  - Genomics Coordination Center, Department of Genetics, University Medical Center 
+      Groningen and University of Groningen, Groningen, The Netherlands. 
+      m.a.swertz@rug.nl
+FAU - Velde, K Joeri van der
+AU  - Velde KJ
+FAU - Tesson, Bruno M
+AU  - Tesson BM
+FAU - Scheltema, Richard A
+AU  - Scheltema RA
+FAU - Arends, Danny
+AU  - Arends D
+FAU - Vera, Gonzalo
+AU  - Vera G
+FAU - Alberts, Rudi
+AU  - Alberts R
+FAU - Dijkstra, Martijn
+AU  - Dijkstra M
+FAU - Schofield, Paul
+AU  - Schofield P
+FAU - Schughart, Klaus
+AU  - Schughart K
+FAU - Hancock, John M
+AU  - Hancock JM
+FAU - Smedley, Damian
+AU  - Smedley D
+FAU - Wolstencroft, Katy
+AU  - Wolstencroft K
+FAU - Goble, Carole
+AU  - Goble C
+FAU - de Brock, Engbert O
+AU  - de Brock EO
+FAU - Jones, Andrew R
+AU  - Jones AR
+FAU - Parkinson, Helen E
+AU  - Parkinson HE
+CN  - Coordination of Mouse Informatics Resources (CASIMIR)
+CN  - Genotype-To-Phenotype (GEN2PHEN) Consortiums
+FAU - Jansen, Ritsert C
+AU  - Jansen RC
+LA  - eng
+GR  - MC_U142684171/MRC_/Medical Research Council/United Kingdom
+PT  - Journal Article
+PT  - Research Support, Non-U.S. Gov't
+DEP - 20100309
+PL  - England
+TA  - Genome Biol
+JT  - Genome biology
+JID - 100960660
+SB  - IM
+MH  - Animals
+MH  - Genetic Association Studies/*methods
+MH  - Genomics/*methods
+MH  - Humans
+MH  - Mice
+MH  - *Models, Genetic
+MH  - Quantitative Trait Loci/genetics
+MH  - *Software
+PMC - PMC2864567
+EDAT- 2010/03/11 06:00
+MHDA- 2010/09/24 06:00
+PMCR- 2010/03/09
+CRDT- 2010/03/11 06:00
+PHST- 2009/07/14 00:00 [received]
+PHST- 2009/12/17 00:00 [revised]
+PHST- 2010/03/09 00:00 [accepted]
+PHST- 2010/03/11 06:00 [entrez]
+PHST- 2010/03/11 06:00 [pubmed]
+PHST- 2010/09/24 06:00 [medline]
+PHST- 2010/03/09 00:00 [pmc-release]
+AID - gb-2010-11-3-r27 [pii]
+AID - 10.1186/gb-2010-11-3-r27 [doi]
+PST - ppublish
+SO  - Genome Biol. 2010;11(3):R27. doi: 10.1186/gb-2010-11-3-r27. Epub 2010 Mar 9.
+
+PMID- 21943917
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20120123
+LR  - 20250529
+IS  - 1557-7988 (Electronic)
+IS  - 0076-6879 (Linking)
+VI  - 500
+DP  - 2011
+TI  - The SEEK: a platform for sharing data and models in systems biology.
+PG  - 629-55
+LID - 10.1016/B978-0-12-385118-5.00029-3 [doi]
+AB  - Systems biology research is typically performed by multidisciplinary groups of 
+      scientists, often in large consortia and in distributed locations. The data 
+      generated in these projects tend to be heterogeneous and often involves 
+      high-throughput "omics" analyses. Models are developed iteratively from data 
+      generated in the projects and from the literature. Consequently, there is a 
+      growing requirement for exchanging experimental data, mathematical models, and 
+      scientific protocols between consortium members and a necessity to record and 
+      share the outcomes of experiments and the links between data and models. The 
+      overall output of a research consortium is also a valuable commodity in its own 
+      right. The research and associated data and models should eventually be available 
+      to the whole community for reuse and future analysis. The SEEK is an open-source, 
+      Web-based platform designed for the management and exchange of systems biology 
+      data and models. The SEEK was originally developed for the SysMO (systems biology 
+      of microorganisms) consortia, but the principles and objectives are applicable to 
+      any systems biology project. The SEEK provides an index of consortium resources 
+      and acts as gateway to other tools and services commonly used in the community. 
+      For example, the model simulation tool, JWS Online, has been integrated into the 
+      SEEK, and a plug-in to PubMed allows publications to be linked to supporting data 
+      and author profiles in the SEEK. The SEEK is a pragmatic solution to data 
+      management which encourages, but does not force, researchers to share and 
+      disseminate their data to community standard formats. It provides tools to assist 
+      with management and annotation as well as incentives and added value for 
+      following these recommendations. Data exchange and reuse rely on sufficient 
+      annotation, consistent metadata descriptions, and the use of standard exchange 
+      formats for models, data, and the experiments they are derived from. In this 
+      chapter, we present the SEEK platform, its functionalities, and the methods 
+      employed for lowering the barriers to adoption of standard formats. As the 
+      production of biological data continues to grow, in systems biology and in the 
+      life sciences in general, the need to record, manage, and exploit this wealth of 
+      information in the future is increasing. We promote the SEEK as a data and model 
+      management tool that can be adapted to the specific needs of a particular systems 
+      biology project.
+CI  - Copyright © 2011 Elsevier Inc. All rights reserved.
+FAU - Wolstencroft, Katy
+AU  - Wolstencroft K
+AD  - School of Computer Science, University of Manchester, Manchester, United Kingdom.
+FAU - Owen, Stuart
+AU  - Owen S
+FAU - du Preez, Franco
+AU  - du Preez F
+FAU - Krebs, Olga
+AU  - Krebs O
+FAU - Mueller, Wolfgang
+AU  - Mueller W
+FAU - Goble, Carole
+AU  - Goble C
+FAU - Snoep, Jacky L
+AU  - Snoep JL
+LA  - eng
+GR  - BB/G010218/1/BB_/Biotechnology and Biological Sciences Research Council/United 
+      Kingdom
+GR  - BBG0102181/BB_/Biotechnology and Biological Sciences Research Council/United 
+      Kingdom
+PT  - Journal Article
+PT  - Research Support, Non-U.S. Gov't
+PL  - United States
+TA  - Methods Enzymol
+JT  - Methods in enzymology
+JID - 0212271
+SB  - IM
+MH  - Animals
+MH  - Humans
+MH  - *Information Dissemination
+MH  - Information Management
+MH  - *Models, Biological
+MH  - *Online Systems
+MH  - Software
+MH  - Systems Biology
+MH  - Terminology as Topic
+MH  - User-Computer Interface
+EDAT- 2011/09/29 06:00
+MHDA- 2012/01/24 06:00
+CRDT- 2011/09/28 06:00
+PHST- 2011/09/28 06:00 [entrez]
+PHST- 2011/09/29 06:00 [pubmed]
+PHST- 2012/01/24 06:00 [medline]
+AID - B978-0-12-385118-5.00029-3 [pii]
+AID - 10.1016/B978-0-12-385118-5.00029-3 [doi]
+PST - ppublish
+SO  - Methods Enzymol. 2011;500:629-55. doi: 10.1016/B978-0-12-385118-5.00029-3.
+
+PMID- 19112082
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20090203
+LR  - 20250529
+IS  - 1477-4054 (Electronic)
+IS  - 1467-5463 (Linking)
+VI  - 9
+IP  - 6
+DP  - 2008 Nov
+TI  - Solutions for data integration in functional genomics: a critical assessment and 
+      case study.
+PG  - 532-44
+LID - 10.1093/bib/bbn040 [doi]
+AB  - The torrent of data emerging from the application of new technologies to 
+      functional genomics and systems biology can no longer be contained within the 
+      traditional modes of data sharing and publication with the consequence that data 
+      is being deposited in, distributed across and disseminated through an increasing 
+      number of databases. The resulting fragmentation poses serious problems for the 
+      model organism community which increasingly rely on data mining and computational 
+      approaches that require gathering of data from a range of sources. In the light 
+      of these problems, the European Commission has funded a coordination action, 
+      CASIMIR (coordination and sustainability of international mouse informatics 
+      resources), with a remit to assess the technical and social aspects of database 
+      interoperability that currently prevent the full realization of the potential of 
+      data integration in mouse functional genomics. In this article, we assess the 
+      current problems with interoperability, with particular reference to mouse 
+      functional genomics, and critically review the technologies that can be deployed 
+      to overcome them. We describe a typical use-case where an investigator wishes to 
+      gather data on variation, genomic context and metabolic pathway involvement for 
+      genes discovered in a genome-wide screen. We go on to develop an automated 
+      approach involving an in silico experimental workflow tool, Taverna, using web 
+      services, BioMart and MOLGENIS technologies for data retrieval. Finally, we focus 
+      on the current impediments to adopting such an approach in a wider context, and 
+      strategies to overcome them.
+FAU - Smedley, Damian
+AU  - Smedley D
+AD  - European Bioinformatics Institute, Wellcome Trust Genome Campus, Hinxton, 
+      Cambridge, CB10 1SD, UK. damian@ebi.ac.uk.
+FAU - Swertz, Morris A
+AU  - Swertz MA
+FAU - Wolstencroft, Katy
+AU  - Wolstencroft K
+FAU - Proctor, Glenn
+AU  - Proctor G
+FAU - Zouberakis, Michael
+AU  - Zouberakis M
+FAU - Bard, Jonathan
+AU  - Bard J
+FAU - Hancock, John M
+AU  - Hancock JM
+FAU - Schofield, Paul
+AU  - Schofield P
+LA  - eng
+GR  - MC_U142684171/MRC_/Medical Research Council/United Kingdom
+GR  - MC_UP_1502/1/MRC_/Medical Research Council/United Kingdom
+PT  - Journal Article
+PT  - Research Support, Non-U.S. Gov't
+PL  - England
+TA  - Brief Bioinform
+JT  - Briefings in bioinformatics
+JID - 100912837
+SB  - IM
+MH  - Animals
+MH  - Computational Biology/*methods
+MH  - *Database Management Systems
+MH  - *Databases, Genetic
+MH  - Genomics/*methods
+MH  - Humans
+MH  - Information Storage and Retrieval
+MH  - Mice
+MH  - Software
+MH  - User-Computer Interface
+EDAT- 2008/12/30 09:00
+MHDA- 2009/02/04 09:00
+CRDT- 2008/12/30 09:00
+PHST- 2008/12/30 09:00 [entrez]
+PHST- 2008/12/30 09:00 [pubmed]
+PHST- 2009/02/04 09:00 [medline]
+AID - bbn040 [pii]
+AID - 10.1093/bib/bbn040 [doi]
+PST - ppublish
+SO  - Brief Bioinform. 2008 Nov;9(6):532-44. doi: 10.1093/bib/bbn040.
+
+PMID- 21210984
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20110527
+LR  - 20211020
+IS  - 1471-2105 (Electronic)
+IS  - 1471-2105 (Linking)
+VI  - 11 Suppl 12
+IP  - Suppl 12
+DP  - 2010 Dec 21
+TI  - Community-driven computational biology with Debian Linux.
+PG  - S5
+LID - 10.1186/1471-2105-11-S12-S5 [doi]
+AB  - BACKGROUND: The Open Source movement and its technologies are popular in the 
+      bioinformatics community because they provide freely available tools and 
+      resources for research. In order to feed the steady demand for updates on 
+      software and associated data, a service infrastructure is required for sharing 
+      and providing these tools to heterogeneous computing environments. RESULTS: The 
+      Debian Med initiative provides ready and coherent software packages for medical 
+      informatics and bioinformatics. These packages can be used together in Taverna 
+      workflows via the UseCase plugin to manage execution on local or remote machines. 
+      If such packages are available in cloud computing environments, the underlying 
+      hardware and the analysis pipelines can be shared along with the software. 
+      CONCLUSIONS: Debian Med closes the gap between developers and users. It provides 
+      a simple method for offering new releases of software and data resources, thus 
+      provisioning a local infrastructure for computational biology. For geographically 
+      distributed teams it can ensure they are working on the same versions of tools, 
+      in the same conditions. This contributes to the world-wide networking of 
+      researchers.
+FAU - Möller, Steffen
+AU  - Möller S
+AD  - University Clinics of Schleswig-Holstein, Department of Dermatology, formerly 
+      University of Lübeck, Institute for Neuro- andBioinformatics, Ratzeburger Allee 
+      160, 23530 Lübeck, Germany. moeller@debian.org
+FAU - Krabbenhöft, Hajo Nils
+AU  - Krabbenhöft HN
+FAU - Tille, Andreas
+AU  - Tille A
+FAU - Paleino, David
+AU  - Paleino D
+FAU - Williams, Alan
+AU  - Williams A
+FAU - Wolstencroft, Katy
+AU  - Wolstencroft K
+FAU - Goble, Carole
+AU  - Goble C
+FAU - Holland, Richard
+AU  - Holland R
+FAU - Belhachemi, Dominique
+AU  - Belhachemi D
+FAU - Plessy, Charles
+AU  - Plessy C
+LA  - eng
+PT  - Journal Article
+PT  - Research Support, Non-U.S. Gov't
+DEP - 20101221
+PL  - England
+TA  - BMC Bioinformatics
+JT  - BMC bioinformatics
+JID - 100965194
+SB  - IM
+MH  - Computational Biology/*methods
+MH  - Internet
+MH  - *Software
+PMC - PMC3040531
+EDAT- 2011/01/19 06:00
+MHDA- 2011/05/28 06:00
+PMCR- 2010/12/21
+CRDT- 2011/01/08 06:00
+PHST- 2011/01/08 06:00 [entrez]
+PHST- 2011/01/19 06:00 [pubmed]
+PHST- 2011/05/28 06:00 [medline]
+PHST- 2010/12/21 00:00 [pmc-release]
+AID - 1471-2105-11-S12-S5 [pii]
+AID - 10.1186/1471-2105-11-S12-S5 [doi]
+PST - epublish
+SO  - BMC Bioinformatics. 2010 Dec 21;11 Suppl 12(Suppl 12):S5. doi: 
+      10.1186/1471-2105-11-S12-S5.
+
+PMID- 21439139
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20110526
+LR  - 20191112
+IS  - 1473-9879 (Print)
+IS  - 1473-9879 (Linking)
+VI  - 22
+IP  - 2
+DP  - 2011 Mar
+TI  - A taste of rural Highlands and Islands general practice: evaluation of remote 
+      placements in GP specialty training.
+PG  - 83-9
+AB  - BACKGROUND: Despite being home to the most remote GP practices in the UK, the 
+      Highlands and Islands GPST programme offers its trainees limited opportunity to 
+      gain experience in remote general practice. In an attempt to remedy this 
+      situation, a pilot of short remote placements was carried out in spring/summer 
+      2010. AIMS: The aims of the pilot were to assess the placements' feasibility 
+      including level of interest from GPSTs and remote GPs; evaluate the perceived 
+      benefits to GPSTs and their hosts; and consider the impact such placements might 
+      have on recruitment to remote and rural general practice. METHODS: Following the 
+      placements, semi-structured interviews were conducted with participating GPSTs 
+      and host GPs. In addition, written statements were collated from interested GPSTs 
+      prior to their placement indicating why they wished to take part. Parties who had 
+      expressed an interest but for whom a placement did not take place were asked to 
+      complete a follow-up questionnaire. FINDINGS: Placements were highly valued by 
+      both GPSTs and their host GPs. In particular, the GPSTs valued being able to 'put 
+      themselves in the shoes of a remote GP' and being able to discuss potential 
+      career pathways with a remote practitioner. The participating GPSTs all had 
+      pre-existing interests in a career in remote and rural general practice, but 
+      found this was reinforced by their remote placement experience. Sufficient host 
+      GPs were identified to accommodate all of the interested GPSTs and placements 
+      were successfully organised despite a limited budget. Difficulties obtaining 
+      study leave did hinder some GPSTs, and this consideration along with resource 
+      limitations are potential barriers to the scheme being continued in the future. 
+      CONCLUSIONS: Remote placements are valued by GPSTs considering a career in remote 
+      and rural general practice and tend to reinforce their interest in this area. 
+      However, it is unknown whether this will impact on recruitment. Inviting GPSTs 
+      from outwith the North of Scotland to experience a remote placement might allow 
+      them an insight into remote and rural general practice that is not possible from 
+      their host deanery. The benefits of a remote placement to GPSTs without a 
+      pre-existing interest in remote and rural general practice have not been 
+      assessed.
+FAU - Wolstencroft, Katy
+AU  - Wolstencroft K
+AD  - Centre for Health Sciences, Inverness, UK. kwolstencroft@nhs.net
+FAU - Macvicar, Ronald
+AU  - Macvicar R
+LA  - eng
+PT  - Journal Article
+PT  - Research Support, Non-U.S. Gov't
+PL  - England
+TA  - Educ Prim Care
+JT  - Education for primary care : an official publication of the Association of Course 
+      Organisers, National Association of GP Tutors, World Organisation of Family 
+      Doctors
+JID - 101141280
+SB  - IM
+MH  - Education, Medical, Graduate/*organization & administration
+MH  - General Practice/*education/organization & administration
+MH  - Hebrides
+MH  - Humans
+MH  - Life Style
+MH  - Primary Health Care/organization & administration
+MH  - Rural Population
+MH  - Scotland
+EDAT- 2011/03/29 06:00
+MHDA- 2011/05/27 06:00
+CRDT- 2011/03/29 06:00
+PHST- 2011/03/29 06:00 [entrez]
+PHST- 2011/03/29 06:00 [pubmed]
+PHST- 2011/05/27 06:00 [medline]
+AID - 10.1080/14739879.2011.11493973 [doi]
+PST - ppublish
+SO  - Educ Prim Care. 2011 Mar;22(2):83-9. doi: 10.1080/14739879.2011.11493973.
+
+PMID- 16845108
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20060829
+LR  - 20220409
+IS  - 1362-4962 (Electronic)
+IS  - 0305-1048 (Print)
+IS  - 0305-1048 (Linking)
+VI  - 34
+IP  - Web Server issue
+DP  - 2006 Jul 1
+TI  - Taverna: a tool for building and running workflows of services.
+PG  - W729-32
+AB  - Taverna is an application that eases the use and integration of the growing 
+      number of molecular biology tools and databases available on the web, especially 
+      web services. It allows bioinformaticians to construct workflows or pipelines of 
+      services to perform a range of different analyses, such as sequence analysis and 
+      genome annotation. These high-level workflows can integrate many different 
+      resources into a single analysis. Taverna is available freely under the terms of 
+      the GNU Lesser General Public License (LGPL) from 
+      http://taverna.sourceforge.net/.
+FAU - Hull, Duncan
+AU  - Hull D
+AD  - School of Computer Science, University of Manchester, M13 9PL, UK. 
+      duncan.hull@cs.man.ac.uk
+FAU - Wolstencroft, Katy
+AU  - Wolstencroft K
+FAU - Stevens, Robert
+AU  - Stevens R
+FAU - Goble, Carole
+AU  - Goble C
+FAU - Pocock, Mathew R
+AU  - Pocock MR
+FAU - Li, Peter
+AU  - Li P
+FAU - Oinn, Tom
+AU  - Oinn T
+LA  - eng
+PT  - Journal Article
+PT  - Research Support, Non-U.S. Gov't
+PL  - England
+TA  - Nucleic Acids Res
+JT  - Nucleic acids research
+JID - 0411011
+SB  - IM
+MH  - Computational Biology
+MH  - *Databases, Genetic
+MH  - Genomics
+MH  - Internet
+MH  - Sequence Analysis
+MH  - *Software
+MH  - *Systems Integration
+MH  - User-Computer Interface
+PMC - PMC1538887
+EDAT- 2006/07/18 09:00
+MHDA- 2006/08/30 09:00
+PMCR- 2006/07/14
+CRDT- 2006/07/18 09:00
+PHST- 2006/07/18 09:00 [pubmed]
+PHST- 2006/08/30 09:00 [medline]
+PHST- 2006/07/18 09:00 [entrez]
+PHST- 2006/07/14 00:00 [pmc-release]
+AID - 34/suppl_2/W729 [pii]
+AID - 10.1093/nar/gkl320 [doi]
+PST - ppublish
+SO  - Nucleic Acids Res. 2006 Jul 1;34(Web Server issue):W729-32. doi: 
+      10.1093/nar/gkl320.
+
+PMID- 22373396
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20141106
+LR  - 20250529
+IS  - 1471-2105 (Electronic)
+IS  - 1471-2105 (Linking)
+VI  - 13 Suppl 1
+IP  - Suppl 1
+DP  - 2012 Jan 25
+TI  - Populous: a tool for building OWL ontologies from templates.
+PG  - S5
+LID - 10.1186/1471-2105-13-S1-S5 [doi]
+AB  - BACKGROUND: Ontologies are being developed for the life sciences to standardise 
+      the way we describe and interpret the wealth of data currently being generated. 
+      As more ontology based applications begin to emerge, tools are required that 
+      enable domain experts to contribute their knowledge to the growing pool of 
+      ontologies. There are many barriers that prevent domain experts engaging in the 
+      ontology development process and novel tools are needed to break down these 
+      barriers to engage a wider community of scientists. RESULTS: We present Populous, 
+      a tool for gathering content with which to construct an ontology. Domain experts 
+      need to add content, that is often repetitive in its form, but without having to 
+      tackle the underlying ontological representation. Populous presents users with a 
+      table based form in which columns are constrained to take values from particular 
+      ontologies. Populated tables are mapped to patterns that can then be used to 
+      automatically generate the ontology's content. These forms can be exported as 
+      spreadsheets, providing an interface that is much more familiar to many 
+      biologists. CONCLUSIONS: Populous's contribution is in the knowledge gathering 
+      stage of ontology development; it separates knowledge gathering from the 
+      conceptualisation and axiomatisation, as well as separating the user from the 
+      standard ontology authoring environments. Populous is by no means a replacement 
+      for standard ontology editing tools, but instead provides a useful platform for 
+      engaging a wider community of scientists in the mass production of ontology 
+      content.
+FAU - Jupp, Simon
+AU  - Jupp S
+FAU - Horridge, Matthew
+AU  - Horridge M
+FAU - Iannone, Luigi
+AU  - Iannone L
+FAU - Klein, Julie
+AU  - Klein J
+FAU - Owen, Stuart
+AU  - Owen S
+FAU - Schanstra, Joost
+AU  - Schanstra J
+FAU - Wolstencroft, Katy
+AU  - Wolstencroft K
+FAU - Stevens, Robert
+AU  - Stevens R
+LA  - eng
+GR  - BB/G010218/1/BB_/Biotechnology and Biological Sciences Research Council/United 
+      Kingdom
+GR  - BBG0102181/BB_/Biotechnology and Biological Sciences Research Council/United 
+      Kingdom
+PT  - Journal Article
+PT  - Research Support, Non-U.S. Gov't
+DEP - 20120125
+PL  - England
+TA  - BMC Bioinformatics
+JT  - BMC bioinformatics
+JID - 100965194
+SB  - IM
+MH  - *Biological Ontologies
+MH  - Computational Biology/*methods
+MH  - Databases, Factual
+MH  - Semantics
+MH  - Software
+MH  - User-Computer Interface
+PMC - PMC3471341
+EDAT- 2012/03/01 06:00
+MHDA- 2014/11/07 06:00
+PMCR- 2012/01/25
+CRDT- 2012/03/01 06:00
+PHST- 2012/03/01 06:00 [entrez]
+PHST- 2012/03/01 06:00 [pubmed]
+PHST- 2014/11/07 06:00 [medline]
+PHST- 2012/01/25 00:00 [pmc-release]
+AID - 1471-2105-13-S1-S5 [pii]
+AID - 10.1186/1471-2105-13-S1-S5 [doi]
+PST - epublish
+SO  - BMC Bioinformatics. 2012 Jan 25;13 Suppl 1(Suppl 1):S5. doi: 
+      10.1186/1471-2105-13-S1-S5.
+
+PMID- 20484378
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20100927
+LR  - 20240516
+IS  - 1362-4962 (Electronic)
+IS  - 0305-1048 (Print)
+IS  - 0305-1048 (Linking)
+VI  - 38
+IP  - Web Server issue
+DP  - 2010 Jul
+TI  - BioCatalogue: a universal catalogue of web services for the life sciences.
+PG  - W689-94
+LID - 10.1093/nar/gkq394 [doi]
+AB  - The use of Web Services to enable programmatic access to on-line bioinformatics 
+      is becoming increasingly important in the Life Sciences. However, their number, 
+      distribution and the variable quality of their documentation can make their 
+      discovery and subsequent use difficult. A Web Services registry with information 
+      on available services will help to bring together service providers and their 
+      users. The BioCatalogue (http://www.biocatalogue.org/) provides a common 
+      interface for registering, browsing and annotating Web Services to the Life 
+      Science community. Services in the BioCatalogue can be described and searched in 
+      multiple ways based upon their technical types, bioinformatics categories, user 
+      tags, service providers or data inputs and outputs. They are also subject to 
+      constant monitoring, allowing the identification of service problems and changes 
+      and the filtering-out of unavailable or unreliable resources. The system is 
+      accessible via a human-readable 'Web 2.0'-style interface and a programmatic Web 
+      Service interface. The BioCatalogue follows a community approach in which all 
+      services can be registered, browsed and incrementally documented with annotations 
+      by any member of the scientific community.
+FAU - Bhagat, Jiten
+AU  - Bhagat J
+AD  - School of Computer Science, The University of Manchester, Manchester, M13 9PL, 
+      UK.
+FAU - Tanoh, Franck
+AU  - Tanoh F
+FAU - Nzuobontane, Eric
+AU  - Nzuobontane E
+FAU - Laurent, Thomas
+AU  - Laurent T
+FAU - Orlowski, Jerzy
+AU  - Orlowski J
+FAU - Roos, Marco
+AU  - Roos M
+FAU - Wolstencroft, Katy
+AU  - Wolstencroft K
+FAU - Aleksejevs, Sergejs
+AU  - Aleksejevs S
+FAU - Stevens, Robert
+AU  - Stevens R
+FAU - Pettifer, Steve
+AU  - Pettifer S
+FAU - Lopez, Rodrigo
+AU  - Lopez R
+FAU - Goble, Carole A
+AU  - Goble CA
+LA  - eng
+GR  - BB/F01046X/1/Biotechnology and Biological Sciences Research Council/United 
+      Kingdom
+GR  - BB/F010540/1/Biotechnology and Biological Sciences Research Council/United 
+      Kingdom
+PT  - Journal Article
+PT  - Research Support, Non-U.S. Gov't
+DEP - 20100519
+PL  - England
+TA  - Nucleic Acids Res
+JT  - Nucleic acids research
+JID - 0411011
+SB  - IM
+MH  - *Biological Science Disciplines
+MH  - *Catalogs as Topic
+MH  - Computational Biology
+MH  - Internet
+MH  - *Software
+MH  - User-Computer Interface
+PMC - PMC2896129
+EDAT- 2010/05/21 06:00
+MHDA- 2010/09/29 06:00
+PMCR- 2010/05/19
+CRDT- 2010/05/21 06:00
+PHST- 2010/05/21 06:00 [entrez]
+PHST- 2010/05/21 06:00 [pubmed]
+PHST- 2010/09/29 06:00 [medline]
+PHST- 2010/05/19 00:00 [pmc-release]
+AID - gkq394 [pii]
+AID - 10.1093/nar/gkq394 [doi]
+PST - ppublish
+SO  - Nucleic Acids Res. 2010 Jul;38(Web Server issue):W689-94. doi: 
+      10.1093/nar/gkq394. Epub 2010 May 19.
+
+PMID- 22942004
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20120927
+LR  - 20120903
+IS  - 0926-9630 (Print)
+IS  - 0926-9630 (Linking)
+VI  - 175
+DP  - 2012
+TI  - Opening new gateways to workflows for life scientists.
+PG  - 131-41
+AB  - The combination of highly complex biology problems and varying IT skills among 
+      life scientists poses a unique challenge in designing bioinformatics programs. 
+      The set of tools and initiatives described in this work shows new ways of making 
+      life science workflows more accessible to the community. Our aim is to help 
+      bioinformaticians help biologists. We present how to make Taverna workflows 
+      available from within Galaxy, both widely used bioinformatics platforms. Calling 
+      Galaxy tools from Taverna is also discussed. In addition, we describe a web 
+      application that allows a user to run arbitrary Taverna workflows by only using a 
+      web browser.
+FAU - Karasavvas, Konstantinos
+AU  - Karasavvas K
+AD  - Netherlands Bioinformatics Centre, Nijmegen, The Netherlands. 
+      kostas.karasavvas@nbic.nl
+FAU - Wolstencroft, Katy
+AU  - Wolstencroft K
+FAU - Mina, Eleni
+AU  - Mina E
+FAU - Cruickshank, Don
+AU  - Cruickshank D
+FAU - Williams, Alan
+AU  - Williams A
+FAU - De Roure, David
+AU  - De Roure D
+FAU - Goble, Carole
+AU  - Goble C
+FAU - Roos, Marco
+AU  - Roos M
+LA  - eng
+PT  - Journal Article
+PL  - Netherlands
+TA  - Stud Health Technol Inform
+JT  - Studies in health technology and informatics
+JID - 9214582
+MH  - *Biological Science Disciplines
+MH  - Health Services Research/*methods
+MH  - Information Dissemination/*methods
+MH  - Information Storage and Retrieval/*methods
+MH  - *Internet
+MH  - Semantics
+MH  - *User-Computer Interface
+MH  - *Workflow
+EDAT- 2012/09/04 06:00
+MHDA- 2012/09/28 06:00
+CRDT- 2012/09/04 06:00
+PHST- 2012/09/04 06:00 [entrez]
+PHST- 2012/09/04 06:00 [pubmed]
+PHST- 2012/09/28 06:00 [medline]
+PST - ppublish
+SO  - Stud Health Technol Inform. 2012;175:131-41.

@@ -1,0 +1,903 @@
+PMID- 38955417
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20240702
+LR  - 20240705
+IS  - 2051-1426 (Electronic)
+IS  - 2051-1426 (Linking)
+VI  - 12
+IP  - 7
+DP  - 2024 Jul 1
+TI  - Mapping the complexity and diversity of tertiary lymphoid structures in primary 
+      and peritoneal metastatic gastric cancer.
+LID - 10.1136/jitc-2024-009243 [doi]
+LID - e009243
+AB  - BACKGROUND: Tertiary lymphoid structures (TLSs) are thought to stimulate 
+      antitumor immunity and positively impact prognosis and response to immune 
+      checkpoint blockade. In gastric cancers (GCs), however, TLSs are predominantly 
+      found in GC with poor prognosis and limited treatment response. We, therefore, 
+      hypothesize that immune cell composition and function of TLS depends on tumor 
+      location and the tumor immune environment. METHODS: Spatial transcriptomics and 
+      immunohistochemistry were used to characterize the phenotype of CD45(+) immune 
+      cells inside and outside of TLS using archival resection specimens from GC 
+      primary tumors and peritoneal metastases. RESULTS: We identified significant 
+      intrapatient and interpatient diversity of the cellular composition and 
+      maturation status of TLS in GC. Tumor location (primary vs metastatic site) 
+      accounted for the majority of differences in TLS maturity, as TLS in peritoneal 
+      metastases were predominantly immature. This was associated with higher levels of 
+      tumor-infiltrating macrophages and Tregs and less plasma cells compared with 
+      tumors with mature TLS. Furthermore, mature TLSs were characterized by 
+      overexpression of antitumor immune pathways such as B cell-related pathways, MHC 
+      class II antigen presentation while immature TLS were associated with protumor 
+      pathways, including T cell exhaustion and enhancement of DNA repair pathways in 
+      the corresponding cancer. CONCLUSION: The observation that GC-derived peritoneal 
+      metastases often contain immature TLS which are associated with immune 
+      suppressive regulatory tumor-infiltrating leucocytes, is in keeping with the lack 
+      of response to immune checkpoint blockade and the poor prognostic features of 
+      peritoneal metastatic GC, which needs to be taken into account when optimizing 
+      immunomodulatory strategies for metastatic GC.
+CI  - © Author(s) (or their employer(s)) 2024. Re-use permitted under CC BY-NC. No 
+      commercial re-use. See rights and permissions. Published by BMJ.
+FAU - Groen-van Schooten, Tessa S
+AU  - Groen-van Schooten TS
+AD  - Department of Medical Oncology, Amsterdam UMC Locatie VUmc, Amsterdam, The 
+      Netherlands.
+AD  - Oncode Institute, Amsterdam, The Netherlands.
+FAU - Franco Fernandez, Rosalia
+AU  - Franco Fernandez R
+AUID- ORCID: 0000-0002-6409-3918
+AD  - Oncode Institute, Amsterdam, The Netherlands.
+AD  - Department of Gastroenterology and Hepatology & Tytgat Institute for Liver and 
+      Intestinal Research, Amsterdam UMC Locatie AMC, Amsterdam, The Netherlands.
+FAU - van Grieken, Nicole C T
+AU  - van Grieken NCT
+AD  - Cancer Biology and Immunology, Cancer Centre Amsterdam, Amsterdam, The 
+      Netherlands.
+AD  - Department of Pathology, Amsterdam UMC Locatie VUmc, Amsterdam, The Netherlands.
+FAU - Bos, Emma N
+AU  - Bos EN
+AD  - Department of Medical Oncology, Amsterdam UMC Locatie VUmc, Amsterdam, The 
+      Netherlands.
+AD  - Oncode Institute, Amsterdam, The Netherlands.
+FAU - Seidel, Jens
+AU  - Seidel J
+AD  - Department of Medical Oncology, Amsterdam UMC Locatie VUmc, Amsterdam, The 
+      Netherlands.
+AD  - Oncode Institute, Amsterdam, The Netherlands.
+FAU - Saris, Job
+AU  - Saris J
+AD  - Oncode Institute, Amsterdam, The Netherlands.
+AD  - Department of Gastroenterology and Hepatology & Tytgat Institute for Liver and 
+      Intestinal Research, Amsterdam UMC Locatie AMC, Amsterdam, The Netherlands.
+FAU - Martínez-Ciarpaglini, Carolina
+AU  - Martínez-Ciarpaglini C
+AD  - Medical Oncology, INCLIVA, Valencia, Spain.
+AD  - CIBERONC, Madrid, Spain.
+FAU - Fleitas, Tania C
+AU  - Fleitas TC
+AUID- ORCID: 0000-0002-2789-9082
+AD  - Medical Oncology, INCLIVA, Valencia, Spain.
+FAU - Thommen, Daniela S
+AU  - Thommen DS
+AUID- ORCID: 0000-0002-7431-2854
+AD  - Oncode Institute, Amsterdam, The Netherlands.
+AD  - Molecular Oncology and Immunology, Netherlands Cancer Institute, Amsterdam, The 
+      Netherlands.
+FAU - de Gruijl, Tanja D
+AU  - de Gruijl TD
+AD  - Department of Medical Oncology, Amsterdam UMC Locatie VUmc, Amsterdam, The 
+      Netherlands.
+AD  - Cancer Biology and Immunology, Cancer Centre Amsterdam, Amsterdam, The 
+      Netherlands.
+FAU - Grootjans, Joep
+AU  - Grootjans J
+AD  - Oncode Institute, Amsterdam, The Netherlands.
+AD  - Department of Gastroenterology and Hepatology & Tytgat Institute for Liver and 
+      Intestinal Research, Amsterdam UMC Locatie AMC, Amsterdam, The Netherlands.
+FAU - Derks, Sarah
+AU  - Derks S
+AUID- ORCID: 0000-0002-4547-7457
+AD  - Department of Medical Oncology, Amsterdam UMC Locatie VUmc, Amsterdam, The 
+      Netherlands s.derks@amsterdamumc.nl.
+AD  - Oncode Institute, Amsterdam, The Netherlands.
+LA  - eng
+PT  - Journal Article
+DEP - 20240701
+PL  - England
+TA  - J Immunother Cancer
+JT  - Journal for immunotherapy of cancer
+JID - 101620585
+SB  - IM
+MH  - Humans
+MH  - *Stomach Neoplasms/pathology/immunology
+MH  - *Tertiary Lymphoid Structures/immunology
+MH  - *Peritoneal Neoplasms/secondary/immunology
+MH  - Male
+MH  - Female
+MH  - Tumor Microenvironment
+PMC - PMC11218001
+OTO - NOTNLM
+OT  - Adenocarcinoma
+OT  - B cell
+OT  - Gastric Cancer
+OT  - Immunosuppression
+OT  - Tumor microenvironment - TME
+COIS- Competing interests: None declared.
+EDAT- 2024/07/03 00:42
+MHDA- 2024/07/03 00:43
+PMCR- 2024/07/01
+CRDT- 2024/07/02 20:53
+PHST- 2024/06/13 00:00 [accepted]
+PHST- 2024/07/03 00:43 [medline]
+PHST- 2024/07/03 00:42 [pubmed]
+PHST- 2024/07/02 20:53 [entrez]
+PHST- 2024/07/01 00:00 [pmc-release]
+AID - jitc-2024-009243 [pii]
+AID - 10.1136/jitc-2024-009243 [doi]
+PST - epublish
+SO  - J Immunother Cancer. 2024 Jul 1;12(7):e009243. doi: 10.1136/jitc-2024-009243.
+
+PMID- 41862756
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20260711
+LR  - 20260711
+IS  - 2662-8465 (Electronic)
+IS  - 2662-8465 (Linking)
+VI  - 6
+IP  - 3
+DP  - 2026 Mar
+TI  - Spontaneous aging-associated inflammation and genome instability in the immune 
+      system of turquoise killifish.
+PG  - 665-681
+LID - 10.1038/s43587-026-01086-2 [doi]
+AB  - Turquoise killifish (Nothobranchius furzeri) are naturally short-lived 
+      vertebrates that recapitulate key aspects of human aging. However, the molecular 
+      and cellular causes of systemic aging in killifish are poorly understood. Here we 
+      ask whether killifish undergo age-dependent changes in the main hematopoietic 
+      organ (kidney marrow), which may contribute to systemic aging. To characterize 
+      immune aging in killifish, we used single-cell RNA sequencing, cytometry and 
+      functional in vitro assays on kidney marrow cells from young-adult and old 
+      killifish, together with proteomic profiling of both kidney marrow-derived cells 
+      and plasma. We show that old killifish display increased markers of inflammation; 
+      while immune progenitor-like cell clusters from adult killifish display markers 
+      of active proliferation and replication-independent DNA repair, immune cell 
+      progenitors from old killifish display increased markers of DNA damage. Within 
+      less than 10 weeks, killifish exhibit age-related transformations within the 
+      immune system, underscoring the value of killifish for developing 
+      immune-system-targeted antiaging interventions.
+CI  - © 2026. The Author(s).
+FAU - Morabito, Gabriele
+AU  - Morabito G
+AD  - Max Planck Institute for Biology of Ageing, Cologne, Germany.
+AD  - Leibniz Institute on Aging, Fritz Lipmann Institute (FLI), Jena, Germany.
+FAU - Dönertas, Handan Melike
+AU  - Dönertas HM
+AUID- ORCID: 0000-0002-9788-6535
+AD  - Max Planck Institute for Biology of Ageing, Cologne, Germany.
+AD  - Leibniz Institute on Aging, Fritz Lipmann Institute (FLI), Jena, Germany.
+AD  - Cluster of Excellence Balance of the Microverse, Jena, Germany.
+FAU - Sperti, Luca
+AU  - Sperti L
+AD  - Leibniz Institute on Aging, Fritz Lipmann Institute (FLI), Jena, Germany.
+FAU - Seidel, Jens
+AU  - Seidel J
+AUID- ORCID: 0009-0009-8039-4524
+AD  - Max Planck Institute for Biology of Ageing, Cologne, Germany.
+FAU - Poursadegh Zonouzi, Aysan
+AU  - Poursadegh Zonouzi A
+AD  - Max Planck Institute for Biology of Ageing, Cologne, Germany.
+FAU - Poeschla, Michael
+AU  - Poeschla M
+AD  - Max Planck Institute for Biology of Ageing, Cologne, Germany.
+FAU - Valenzano, Dario Riccardo
+AU  - Valenzano DR
+AUID- ORCID: 0000-0002-8761-8289
+AD  - Max Planck Institute for Biology of Ageing, Cologne, Germany. 
+      dvalenzano@leibniz-fli.de.
+AD  - Leibniz Institute on Aging, Fritz Lipmann Institute (FLI), Jena, Germany. 
+      dvalenzano@leibniz-fli.de.
+AD  - Cluster of Excellence Balance of the Microverse, Jena, Germany. 
+      dvalenzano@leibniz-fli.de.
+AD  - Friedrich Schiller University, Jena, Germany. dvalenzano@leibniz-fli.de.
+LA  - eng
+GR  - CRC1310/Massachusetts Department of Fish and Game (DFG)/
+PT  - Journal Article
+DEP - 20260320
+PL  - United States
+TA  - Nat Aging
+JT  - Nature aging
+JID - 101773306
+RN  - Nothobranchius furzeri
+SB  - IM
+MH  - Animals
+MH  - *Aging/immunology/genetics
+MH  - *Inflammation/genetics/immunology
+MH  - *Fundulidae/immunology/genetics
+MH  - *Genomic Instability
+MH  - *Immune System
+MH  - DNA Damage
+MH  - Killifishes
+PMC - PMC13004682
+COIS- Competing interests: The authors declare no competing interests.
+EDAT- 2026/03/21 06:30
+MHDA- 2026/03/21 06:31
+PMCR- 2026/03/20
+CRDT- 2026/03/21 00:27
+PHST- 2023/09/07 00:00 [received]
+PHST- 2026/02/02 00:00 [accepted]
+PHST- 2026/03/21 06:31 [medline]
+PHST- 2026/03/21 06:30 [pubmed]
+PHST- 2026/03/21 00:27 [entrez]
+PHST- 2026/03/20 00:00 [pmc-release]
+AID - 10.1038/s43587-026-01086-2 [pii]
+AID - 1086 [pii]
+AID - 10.1038/s43587-026-01086-2 [doi]
+PST - ppublish
+SO  - Nat Aging. 2026 Mar;6(3):665-681. doi: 10.1038/s43587-026-01086-2. Epub 2026 Mar 
+      20.
+
+PMID- 30057748
+OWN - NLM
+STAT- PubMed-not-MEDLINE
+LR  - 20230926
+IS  - 2046-1402 (Print)
+IS  - 2046-1402 (Electronic)
+IS  - 2046-1402 (Linking)
+VI  - 7
+DP  - 2018
+TI  - The role of the gut microbiome during host ageing.
+LID - F1000 Faculty Rev-1086 [pii]
+LID - 10.12688/f1000research.15121.1 [doi]
+AB  - Gut microbial communities participate in key aspects of host biology, including 
+      development, nutrient absorption, immunity and disease. During host ageing, 
+      intestinal microbes undergo dramatic changes in composition and function and can 
+      shift from commensal to pathogenic. However, whether they play a causal role in 
+      host ageing and life span has remained an open question for a long time. Recent 
+      work in model organisms has revealed for the first time that gut microbes can 
+      modulate ageing, opening new questions and opportunities to uncover novel 
+      ageing-modulating mechanisms and to design anti-ageing interventions by targeting 
+      the gut microbiota.
+FAU - Seidel, Jens
+AU  - Seidel J
+AD  - Max Planck Institute for Biology of Ageing, Cologne, Germany.
+FAU - Valenzano, Dario Riccardo
+AU  - Valenzano DR
+AUID- ORCID: 0000-0002-8761-8289
+AD  - Max Planck Institute for Biology of Ageing, Cologne, Germany.
+AD  - CECAD, University of Cologne, Cologne, Germany.
+LA  - eng
+PT  - Journal Article
+PT  - Review
+DEP - 20180716
+PL  - England
+TA  - F1000Res
+JT  - F1000Research
+JID - 101594320
+PMC - PMC6051225
+OTO - NOTNLM
+OT  - ageing
+OT  - longevity
+OT  - microbiome
+OT  - microbiota
+COIS- No competing interests were disclosed.No competing interests were disclosed.No 
+      competing interests were disclosed.
+EDAT- 2018/07/31 06:00
+MHDA- 2018/07/31 06:01
+PMCR- 2018/07/16
+CRDT- 2018/07/31 06:00
+PHST- 2018/07/09 00:00 [accepted]
+PHST- 2018/07/31 06:00 [entrez]
+PHST- 2018/07/31 06:00 [pubmed]
+PHST- 2018/07/31 06:01 [medline]
+PHST- 2018/07/16 00:00 [pmc-release]
+AID - F1000 Faculty Rev-1086 [pii]
+AID - 10.12688/f1000research.15121.1 [doi]
+PST - epublish
+SO  - F1000Res. 2018 Jul 16;7:F1000 Faculty Rev-1086. doi: 
+      10.12688/f1000research.15121.1. eCollection 2018.
+
+PMID- 36669862
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20230504
+LR  - 20230703
+IS  - 1559-6095 (Electronic)
+IS  - 1559-6095 (Linking)
+VI  - 2023
+IP  - 5
+DP  - 2023 May 2
+TI  - Sequencing the Immunoglobulin Heavy-Chain Locus (IgH) in Turquoise Killifish 
+      (Nothobranchius furzeri).
+PG  - pdb.prot107750
+LID - 10.1101/pdb.prot107750 [doi]
+AB  - B cells undergo a process of somatic recombination leading to the synthesis of a 
+      staggering diversity of transmembrane and secreted antibodies. This process dates 
+      back to the evolution of jawed vertebrates and is pivotal to the origin of 
+      lymphocyte-based adaptive immune responses. Here, we optimized a sequencing-based 
+      protocol to characterize B-cell-specific IgH transcripts from bulk RNA in the 
+      African turquoise killifish, an emerging model organism characterized by 
+      naturally short life span and by a vast range of age-dependent dysfunctions.
+CI  - © 2023 Cold Spring Harbor Laboratory Press.
+FAU - Seidel, Jens
+AU  - Seidel J
+AD  - Max Planck Institute for Biology of Ageing, 50931 Cologne, Germany; and Leibniz 
+      Institute on Aging, Fritz Lipmann Institute, 07745 Jena, Germany.
+FAU - Bradshaw, William John
+AU  - Bradshaw WJ
+AD  - Max Planck Institute for Biology of Ageing, 50931 Cologne, Germany; and Leibniz 
+      Institute on Aging, Fritz Lipmann Institute, 07745 Jena, Germany.
+FAU - Valenzano, Dario Riccardo
+AU  - Valenzano DR
+AD  - Max Planck Institute for Biology of Ageing, 50931 Cologne, Germany; and Leibniz 
+      Institute on Aging, Fritz Lipmann Institute, 07745 Jena, Germany 
+      dvalenzano@leibniz-fli.de.
+LA  - eng
+PT  - Journal Article
+DEP - 20230502
+PL  - United States
+TA  - Cold Spring Harb Protoc
+JT  - Cold Spring Harbor protocols
+JID - 101524530
+RN  - 0 (Immunoglobulins)
+RN  - Nothobranchius furzeri
+SB  - IM
+MH  - Immunoglobulins
+MH  - Killifishes
+MH  - *Cyprinodontiformes/genetics
+MH  - *Fundulidae/physiology
+MH  - Longevity
+MH  - Animals
+EDAT- 2023/01/21 06:00
+MHDA- 2023/05/04 12:42
+CRDT- 2023/01/20 21:13
+PHST- 2023/05/04 12:42 [medline]
+PHST- 2023/01/21 06:00 [pubmed]
+PHST- 2023/01/20 21:13 [entrez]
+AID - pdb.prot107750 [pii]
+AID - 10.1101/pdb.prot107750 [doi]
+PST - epublish
+SO  - Cold Spring Harb Protoc. 2023 May 2;2023(5):pdb.prot107750. doi: 
+      10.1101/pdb.prot107750.
+
+PMID- 37019605
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20231005
+LR  - 20231005
+IS  - 1559-6095 (Electronic)
+IS  - 1559-6095 (Linking)
+VI  - 2023
+IP  - 10
+DP  - 2023 Oct 3
+TI  - Taxonomic Profiling of Fecal and Intestinal Microbiota in the African Turquoise 
+      Killifish Nothobranchius furzeri.
+PG  - 755-62
+LID - 10.1101/pdb.prot107749 [doi]
+AB  - Killifish are emerging as a new laboratory system in which to study a range of 
+      questions, from the genetic basis of embryo dormancy to life history trait 
+      evolution, age-dependent neurodegeneration, and the connection between microbial 
+      community structure and biology of aging. Over the past decade, advances in 
+      high-throughput sequencing have helped uncover the vast diversity of microbial 
+      communities present in environmental samples and on host epithelia. Here, we 
+      describe an optimized protocol to study the taxonomic composition of intestinal 
+      and fecal microbiota in laboratory-raised as well as natural killifish 
+      populations and provide comprehensive step-by-step instructions for tissue 
+      sampling, high-throughput genomic DNA extraction, and the generation of 16S V3V4 
+      rRNA and 16S V4 rRNA gene libraries.
+CI  - © 2023 Cold Spring Harbor Laboratory Press.
+FAU - Seidel, Jens
+AU  - Seidel J
+AD  - Max Planck Institute for Biology of Ageing CECAD, University of Cologne, 50931 
+      Cologne, Germany.
+FAU - Popkes, Miriam
+AU  - Popkes M
+AD  - Max Planck Institute for Biology of Ageing CECAD, University of Cologne, 50931 
+      Cologne, Germany.
+FAU - Valenzano, Dario Riccardo
+AU  - Valenzano DR
+AD  - Max Planck Institute for Biology of Ageing CECAD, University of Cologne, 50931 
+      Cologne, Germany dvalenzano@leibniz-fli.de.
+LA  - eng
+PT  - Journal Article
+DEP - 20231003
+PL  - United States
+TA  - Cold Spring Harb Protoc
+JT  - Cold Spring Harbor protocols
+JID - 101524530
+RN  - 0 (RNA, Ribosomal, 16S)
+RN  - Nothobranchius furzeri
+SB  - IM
+EIN - Cold Spring Harb Protoc. 2023 Oct 3;2023(10):pdb.corr108388. doi: 
+      10.1101/pdb.corr108388. PMID: 37328302
+MH  - *Fundulidae/genetics
+MH  - Killifishes
+MH  - Aging
+MH  - RNA, Ribosomal, 16S/genetics
+MH  - Genomics
+MH  - *Gastrointestinal Microbiome/genetics
+MH  - Animals
+EDAT- 2023/04/06 06:00
+MHDA- 2023/10/05 06:44
+CRDT- 2023/04/05 21:02
+PHST- 2023/10/05 06:44 [medline]
+PHST- 2023/04/06 06:00 [pubmed]
+PHST- 2023/04/05 21:02 [entrez]
+AID - pdb.prot107749 [pii]
+AID - 10.1101/pdb.prot107749 [doi]
+PST - epublish
+SO  - Cold Spring Harb Protoc. 2023 Oct 3;2023(10):755-62. doi: 10.1101/pdb.prot107749.
+
+PMID- 37328302
+OWN - NLM
+STAT- PubMed-not-MEDLINE
+LR  - 20231003
+IS  - 1559-6095 (Electronic)
+IS  - 1559-6095 (Linking)
+VI  - 2023
+IP  - 10
+DP  - 2023 Oct 3
+TI  - Corrigendum: Taxonomic Profiling of Fecal and Intestinal Microbiota in the 
+      African Turquoise Killifish Nothobranchius furzeri.
+PG  - pdb.corr108388
+LID - 10.1101/pdb.corr108388 [doi]
+FAU - Seidel, Jens
+AU  - Seidel J
+FAU - Popkes, Miriam
+AU  - Popkes M
+FAU - Valenzano, Dario Riccardo
+AU  - Valenzano DR
+LA  - eng
+PT  - Journal Article
+PT  - Published Erratum
+DEP - 20231003
+PL  - United States
+TA  - Cold Spring Harb Protoc
+JT  - Cold Spring Harbor protocols
+JID - 101524530
+SB  - IM
+EFR - Cold Spring Harb Protoc. 2023 Oct 3;2023(10):755-62. doi: 10.1101/pdb.prot107749. 
+      PMID: 37019605
+EDAT- 2023/06/17 05:11
+MHDA- 2023/06/17 05:12
+CRDT- 2023/06/16 21:53
+PHST- 2023/06/17 05:12 [medline]
+PHST- 2023/06/17 05:11 [pubmed]
+PHST- 2023/06/16 21:53 [entrez]
+AID - pdb.corr108388 [pii]
+AID - 10.1101/pdb.corr108388 [doi]
+PST - epublish
+SO  - Cold Spring Harb Protoc. 2023 Oct 3;2023(10):pdb.corr108388. doi: 
+      10.1101/pdb.corr108388.
+
+PMID- 38638445
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20240422
+LR  - 20260602
+IS  - 1664-3224 (Electronic)
+IS  - 1664-3224 (Linking)
+VI  - 15
+DP  - 2024
+TI  - Phenotypic immune characterization of gastric and esophageal adenocarcinomas 
+      reveals profound immune suppression in esophageal tumor locations.
+PG  - 1372272
+LID - 10.3389/fimmu.2024.1372272 [doi]
+LID - 1372272
+AB  - BACKGROUND: Tumors in the distal esophagus (EAC), gastro-esophageal junction 
+      including cardia (GEJAC), and stomach (GAC) develop in close proximity and show 
+      strong similarities on a molecular and cellular level. However, recent clinical 
+      data showed that the effectiveness of chemo-immunotherapy is limited to a subset 
+      of GEAC patients and that EACs and GEJACs generally benefit less from checkpoint 
+      inhibition compared to GACs. As the composition of the tumor immune 
+      microenvironment drives response to (immuno)therapy we here performed a detailed 
+      immune analysis of a large series of GEACs to facilitate the development of a 
+      more individualized immunomodulatory strategy. METHODS: Extensive 
+      immunophenotyping was performed by 14-color flow cytometry in a prospective study 
+      to detail the immune composition of untreated gastro-esophageal cancers (n=104) 
+      using fresh tumor biopsies of 35 EACs, 38 GEJACs and 31 GACs. The immune cell 
+      composition of GEACs was characterized and correlated with clinicopathologic 
+      features such as tumor location, MSI and HER2 status. The spatial immune 
+      architecture of a subset of tumors (n=30) was evaluated using multiplex 
+      immunohistochemistry (mIHC) which allowed us to determine the tumor infiltration 
+      status of CD3+, CD8+, FoxP3+, CD163+ and Ki67+ cells. RESULTS: Immunophenotyping 
+      revealed that the tumor immune microenvironment of GEACs is heterogeneous and 
+      that immune suppressive cell populations such as monocytic myeloid-derived 
+      suppressor cells (mMDSC) are more abundant in EACs compared to GACs (p<0.001). In 
+      contrast, GACs indicated a proinflammatory microenvironment with elevated 
+      frequencies of proliferating (Ki67+) CD4 Th cells (p<0.001), Ki67+ CD8 T cells 
+      (p=0.002), and CD8 effector memory-T cells (p=0.024). Differences between EACs 
+      and GACs were confirmed by mIHC analyses showing lower densities of tumor- and 
+      stroma-infiltrating Ki67+ CD8 T cells in EAC compared to GAC (both p=0.021). 
+      DISCUSSIONS: This comprehensive immune phenotype study of a large series of 
+      untreated GEACs, identified that tumors with an esophageal tumor location have 
+      more immune suppressive features compared to tumors in the gastro-esophageal 
+      junction or stomach which might explain the location-specific responses to 
+      checkpoint inhibitors in this disease. These findings provide an important 
+      rationale for stratification according to tumor location in clinical studies and 
+      the development of location-dependent immunomodulatory treatment approaches.
+CI  - Copyright © 2024 Groen-van Schooten, Harrasser, Seidel, Bos, Fleitas, van Mourik, 
+      Pouw, Goedegebuure, Doeve, Sanders, Bos, van Berge Henegouwen, Thijssen, van 
+      Grieken, van Laarhoven, de Gruijl and Derks.
+FAU - Groen-van Schooten, Tessa S
+AU  - Groen-van Schooten TS
+AD  - Department of Medical Oncology, Amsterdam University Medical Center (UMC) 
+      location Vrije Universiteit Amsterdam, Amsterdam, Netherlands.
+AD  - Cancer Biology and Immunology, Cancer Center Amsterdam, Amsterdam, Netherlands.
+AD  - Oncode Institute, Utrecht, Netherlands.
+FAU - Harrasser, Micaela
+AU  - Harrasser M
+AD  - Department of Medical Oncology, Amsterdam University Medical Center (UMC) 
+      location Vrije Universiteit Amsterdam, Amsterdam, Netherlands.
+AD  - Cancer Biology and Immunology, Cancer Center Amsterdam, Amsterdam, Netherlands.
+AD  - Oncode Institute, Utrecht, Netherlands.
+FAU - Seidel, Jens
+AU  - Seidel J
+AD  - Department of Medical Oncology, Amsterdam University Medical Center (UMC) 
+      location Vrije Universiteit Amsterdam, Amsterdam, Netherlands.
+AD  - Cancer Biology and Immunology, Cancer Center Amsterdam, Amsterdam, Netherlands.
+AD  - Oncode Institute, Utrecht, Netherlands.
+FAU - Bos, Emma N
+AU  - Bos EN
+AD  - Department of Medical Oncology, Amsterdam University Medical Center (UMC) 
+      location Vrije Universiteit Amsterdam, Amsterdam, Netherlands.
+AD  - Cancer Biology and Immunology, Cancer Center Amsterdam, Amsterdam, Netherlands.
+AD  - Oncode Institute, Utrecht, Netherlands.
+FAU - Fleitas, Tania
+AU  - Fleitas T
+AD  - Medical Oncology Department, Instituto Investigación Sanitaria INCLIVA (INCLIVA), 
+      Hospital Clínico Universitario de Valencia, Universitat de Valencia, Valencia, 
+      Spain.
+FAU - van Mourik, Monique
+AU  - van Mourik M
+AD  - Department of Medical Oncology, Amsterdam University Medical Center (UMC) 
+      location Vrije Universiteit Amsterdam, Amsterdam, Netherlands.
+AD  - Cancer Biology and Immunology, Cancer Center Amsterdam, Amsterdam, Netherlands.
+FAU - Pouw, Roos E
+AU  - Pouw RE
+AD  - Department of Gastroenterology, Amsterdam University Medical Center (UMC) 
+      location Vrije Universiteit Amsterdam, Amsterdam, Netherlands.
+FAU - Goedegebuure, Ruben S A
+AU  - Goedegebuure RSA
+AD  - Department of Medical Oncology, Amsterdam University Medical Center (UMC) 
+      location Vrije Universiteit Amsterdam, Amsterdam, Netherlands.
+AD  - Cancer Biology and Immunology, Cancer Center Amsterdam, Amsterdam, Netherlands.
+FAU - Doeve, Benthe H
+AU  - Doeve BH
+AD  - Department of Medical Oncology, Amsterdam University Medical Center (UMC) 
+      location Vrije Universiteit Amsterdam, Amsterdam, Netherlands.
+AD  - Cancer Biology and Immunology, Cancer Center Amsterdam, Amsterdam, Netherlands.
+FAU - Sanders, Jasper
+AU  - Sanders J
+AD  - Department of Medical Oncology, Amsterdam University Medical Center (UMC) 
+      location Vrije Universiteit Amsterdam, Amsterdam, Netherlands.
+AD  - Cancer Biology and Immunology, Cancer Center Amsterdam, Amsterdam, Netherlands.
+AD  - Oncode Institute, Utrecht, Netherlands.
+FAU - Bos, Joris
+AU  - Bos J
+AD  - Department of Medical Oncology, Amsterdam University Medical Center (UMC) 
+      location Vrije Universiteit Amsterdam, Amsterdam, Netherlands.
+AD  - Cancer Biology and Immunology, Cancer Center Amsterdam, Amsterdam, Netherlands.
+AD  - Oncode Institute, Utrecht, Netherlands.
+FAU - van Berge Henegouwen, Mark I
+AU  - van Berge Henegouwen MI
+AD  - Cancer Biology and Immunology, Cancer Center Amsterdam, Amsterdam, Netherlands.
+AD  - Department of Surgery, Amsterdam University Medical Center (UMC), University of 
+      Amsterdam, Amsterdam, Netherlands.
+FAU - Thijssen, Victor L J L
+AU  - Thijssen VLJL
+AD  - Cancer Biology and Immunology, Cancer Center Amsterdam, Amsterdam, Netherlands.
+AD  - Amsterdam University Medical Center (UMC) location Vrije Universiteit Amsterdam, 
+      Radiation Oncology, Amsterdam, Netherlands.
+AD  - Laboratory for Experimental Oncology and Radiobiology, Center for Experimental 
+      and Molecular Medicine, Amsterdam, Netherlands.
+FAU - van Grieken, Nicole C T
+AU  - van Grieken NCT
+AD  - Cancer Biology and Immunology, Cancer Center Amsterdam, Amsterdam, Netherlands.
+AD  - Department of Pathology, Amsterdam UMC location Vrije Universiteit Amsterdam, 
+      Amsterdam, Netherlands.
+FAU - van Laarhoven, Hanneke W M
+AU  - van Laarhoven HWM
+AD  - Imaging and Biomarkers, Cancer Center Amsterdam, Amsterdam, Netherlands.
+AD  - Department of Medical Oncology, Amsterdam University Medical Center (UMC), 
+      University of Amsterdam, Amsterdam, Netherlands.
+FAU - de Gruijl, Tanja D
+AU  - de Gruijl TD
+AD  - Department of Medical Oncology, Amsterdam University Medical Center (UMC) 
+      location Vrije Universiteit Amsterdam, Amsterdam, Netherlands.
+AD  - Cancer Biology and Immunology, Cancer Center Amsterdam, Amsterdam, Netherlands.
+FAU - Derks, Sarah
+AU  - Derks S
+AD  - Department of Medical Oncology, Amsterdam University Medical Center (UMC) 
+      location Vrije Universiteit Amsterdam, Amsterdam, Netherlands.
+AD  - Cancer Biology and Immunology, Cancer Center Amsterdam, Amsterdam, Netherlands.
+AD  - Oncode Institute, Utrecht, Netherlands.
+LA  - eng
+PT  - Journal Article
+PT  - Research Support, Non-U.S. Gov't
+DEP - 20240404
+PL  - Switzerland
+TA  - Front Immunol
+JT  - Frontiers in immunology
+JID - 101560960
+RN  - 0 (Ki-67 Antigen)
+RN  - Adenocarcinoma Of Esophagus
+SB  - IM
+MH  - Humans
+MH  - Ki-67 Antigen/genetics
+MH  - Prospective Studies
+MH  - *Esophageal Neoplasms/pathology
+MH  - *Adenocarcinoma
+MH  - Esophagogastric Junction/pathology
+MH  - Phenotype
+MH  - Tumor Microenvironment
+PMC - PMC11024289
+OTO - NOTNLM
+OT  - HER2
+OT  - MSI
+OT  - biomarkers
+OT  - single cell flow cytometry
+OT  - tumor microenvironment
+COIS- TdG has a consultant or advisory role in Mendus, GE Healthcare, and LAVA 
+      Therapeutics, is a co-founder and holds stock of LAVA Therapeutics, and received 
+      research funding from Idera Pharmaceuticals. MIH is consultant for Viatris, 
+      Johnson & Johnson, Alesi Surgical, BBraun, Stryker and Medtronic. All fees paid 
+      to institution. HL has consultant or advisory role in BMS, Lilly, MSD, Nordic 
+      Pharma, Servier and receives research funding/medication: Bayer, BMS, Celgene, 
+      Janssen, Lilly, Merck, Nordic Pharma, Philips, Roche, Servier. RP has a 
+      consulting role for Medtronic BV and MicroTech Europe; speaker fee for Pentax. TF 
+      declares institutional research funding from Genentech, Adapt immune, Roche, 
+      Beigene, Astelas, BMS, Daichii Sanyo, Amgen and speaker fees from Astrazeneca, 
+      Amgen, Bayer, BMS, Lilly, MSD and Servier. SD reports: a consultant or advisory 
+      role for BMS (related to checkpoint inhibitors); research funding, medication 
+      supply, or both from Incyte (related to checkpoint inhibitors); and speaker roles 
+      for Servier, BMS, and Benecke. SD reports: a consultant or advisory role for BMS 
+      (related to checkpoint inhibitors); research funding, medication supply, or both 
+      from Incyte (related to checkpoint inhibitors); and speaker roles for Servier, 
+      BMS, and Benecke. The remaining authors declare that the research was conducted 
+      in the absence of any commercial or financial relationships that could be 
+      construed as a potential conflict of interest.
+EDAT- 2024/04/19 06:43
+MHDA- 2024/04/22 06:45
+PMCR- 2024/01/01
+CRDT- 2024/04/19 03:40
+PHST- 2024/01/17 00:00 [received]
+PHST- 2024/03/18 00:00 [accepted]
+PHST- 2024/04/22 06:45 [medline]
+PHST- 2024/04/19 06:43 [pubmed]
+PHST- 2024/04/19 03:40 [entrez]
+PHST- 2024/01/01 00:00 [pmc-release]
+AID - 10.3389/fimmu.2024.1372272 [doi]
+PST - epublish
+SO  - Front Immunol. 2024 Apr 4;15:1372272. doi: 10.3389/fimmu.2024.1372272. 
+      eCollection 2024.
+
+PMID- 29708537
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20180723
+LR  - 20181202
+IS  - 1940-087X (Electronic)
+IS  - 1940-087X (Linking)
+IP  - 134
+DP  - 2018 Apr 11
+TI  - A Protocol for Laboratory Housing of Turquoise Killifish (Nothobranchius 
+      furzeri).
+LID - 10.3791/57073 [doi]
+LID - 57073
+AB  - The development of husbandry practices in non-model laboratory fish used for 
+      experimental purposes has greatly benefited from the establishment of reference 
+      fish model systems, such as zebrafish and medaka. In recent years, an emerging 
+      fish - the turquoise killifish (Nothobranchius furzeri) - has been adopted by a 
+      growing number of research groups in the fields of biology of aging and ecology. 
+      With a captive life span of 4 - 8 months, this species is the shortest-lived 
+      vertebrate raised in captivity and allows the scientific community to test - in a 
+      short time - experimental interventions that can lead to alterations of the aging 
+      rate and life expectancy. Given the unique biology of this species, characterized 
+      by embryonic diapause, explosive sexual maturation, marked morphological and 
+      behavioral sexual dimorphism - and their relatively short adult life span - ad 
+      hoc husbandry practices are in urgent demand. This protocol reports a set of key 
+      husbandry measures that allow optimal turquoise killifish laboratory care, 
+      enabling the scientific community to adopt this species as a powerful laboratory 
+      animal model.
+FAU - Dodzian, Joanna
+AU  - Dodzian J
+AD  - Max Planck Institute for the Biology of Ageing; International Institute of 
+      Molecular and Cell Biology in Warsaw.
+FAU - Kean, Sam
+AU  - Kean S
+AD  - Max Planck Institute for the Biology of Ageing.
+FAU - Seidel, Jens
+AU  - Seidel J
+AD  - Max Planck Institute for the Biology of Ageing.
+FAU - Valenzano, Dario Riccardo
+AU  - Valenzano DR
+AD  - Max Planck Institute for the Biology of Ageing; CECAD, University of Cologne; 
+      dvalenzano@age.mpg.de.
+LA  - eng
+PT  - Journal Article
+PT  - Video-Audio Media
+DEP - 20180411
+PL  - United States
+TA  - J Vis Exp
+JT  - Journal of visualized experiments : JoVE
+JID - 101313252
+SB  - IM
+MH  - Animals
+MH  - *Fishes
+MH  - Laboratories
+MH  - *Models, Animal
+PMC - PMC5933446
+EDAT- 2018/05/01 06:00
+MHDA- 2018/07/24 06:00
+PMCR- 2018/04/11
+CRDT- 2018/05/01 06:00
+PHST- 2018/05/01 06:00 [entrez]
+PHST- 2018/05/01 06:00 [pubmed]
+PHST- 2018/07/24 06:00 [medline]
+PHST- 2018/04/11 00:00 [pmc-release]
+AID - 57073 [pii]
+AID - 10.3791/57073 [doi]
+PST - epublish
+SO  - J Vis Exp. 2018 Apr 11;(134):57073. doi: 10.3791/57073.
+
+PMID- 41999960
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20260715
+LR  - 20260715
+IS  - 1521-7035 (Electronic)
+IS  - 1521-6616 (Linking)
+VI  - 285
+DP  - 2026 Jun
+TI  - A trophoblast glycoprotein specific 5T4-Vδ2 bispecific T cell engager recruits 
+      Vγ9Vδ2-T cells for tumor-selective cytotoxicity across solid malignancies.
+PG  - 110707
+LID - S1521-6616(26)00045-8 [pii]
+LID - 10.1016/j.clim.2026.110707 [doi]
+AB  - 5T4 is an oncofetal antigen that is aberrantly expressed across a wide range of 
+      malignancies, but only sparsely present in healthy adult tissues. Its 
+      tumor-preferential expression pattern has been linked to 
+      epithelial-to-mesenchymal transition, invasion, and poor clinical outcome in 
+      various tumors, making 5T4 an attractive therapeutic target. Bispecific T-cell 
+      engagers (bsTCEs) have achieved major clinical success in hematological 
+      malignancies, yet efficacy in solid tumors has been limited by challenges 
+      including on-target off-tumor toxicity. Bispecific Vγ9Vδ2-T cell engagers may 
+      overcome this challenge by combining potent anti-tumor activity with reduced 
+      toxicity. Here, we developed high-affinity 5T4-specific VHHs and linked them to a 
+      Vδ2 TCR-specific VHH to generate a bsTCE which engages Vγ9Vδ2-T cells to 
+      5T4-expressing tumors and triggers robust proinflammatory cytokine production and 
+      target cell lysis. We demonstrate that 5T4 is expressed in the majority of 
+      evaluated solid malignancies and that the 5T4-Vδ2 bsTCE elicits strong Vγ9Vδ2-T 
+      cell-mediated anti-tumor activity in both 2D and 3D patient-derived preclinical 
+      tumor models. Importantly, when tested against healthy 5T4-expressing tissue, the 
+      bsTCE did not trigger Vγ9Vδ2-T cell cytotoxicity, underscoring its 
+      tumor-preferential activity. These findings support the 5T4-Vδ2 bsTCE as a 
+      promising immunotherapeutic candidate for broad clinical application in (solid) 
+      tumors.
+CI  - Copyright © 2026 The Authors. Published by Elsevier Inc. All rights reserved.
+FAU - de Jong, Milon
+AU  - de Jong M
+AD  - Department of Medical Oncology, Amsterdam UMC, Vrije Universiteit Amsterdam, 
+      Amsterdam, the Netherlands; Cancer Center Amsterdam, Cancer Biology and 
+      Immunology, Amsterdam, the Netherlands; Amsterdam institute for Infection and 
+      Immunity, Amsterdam, the Netherlands.
+FAU - Žiberna, Rok
+AU  - Žiberna R
+AD  - Department of Medical Oncology, Amsterdam UMC, Vrije Universiteit Amsterdam, 
+      Amsterdam, the Netherlands; Cancer Center Amsterdam, Cancer Biology and 
+      Immunology, Amsterdam, the Netherlands; Amsterdam institute for Infection and 
+      Immunity, Amsterdam, the Netherlands; Oncode Institute, Amsterdam, the 
+      Netherlands.
+FAU - Veth, Myrthe
+AU  - Veth M
+AD  - Department of Medical Oncology, Amsterdam UMC, Vrije Universiteit Amsterdam, 
+      Amsterdam, the Netherlands; Cancer Center Amsterdam, Cancer Biology and 
+      Immunology, Amsterdam, the Netherlands; Amsterdam institute for Infection and 
+      Immunity, Amsterdam, the Netherlands.
+FAU - Michielon, Elisabetta
+AU  - Michielon E
+AD  - Department of Medical Oncology, Amsterdam UMC, Vrije Universiteit Amsterdam, 
+      Amsterdam, the Netherlands; Cancer Center Amsterdam, Cancer Biology and 
+      Immunology, Amsterdam, the Netherlands; Amsterdam institute for Infection and 
+      Immunity, Amsterdam, the Netherlands.
+FAU - Myrda, Julia
+AU  - Myrda J
+AD  - Department of Medical Oncology, Amsterdam UMC, Vrije Universiteit Amsterdam, 
+      Amsterdam, the Netherlands; Cancer Center Amsterdam, Cancer Biology and 
+      Immunology, Amsterdam, the Netherlands; Amsterdam institute for Infection and 
+      Immunity, Amsterdam, the Netherlands.
+FAU - Seidel, Jens
+AU  - Seidel J
+AD  - Department of Medical Oncology, Amsterdam UMC, Vrije Universiteit Amsterdam, 
+      Amsterdam, the Netherlands; Cancer Center Amsterdam, Cancer Biology and 
+      Immunology, Amsterdam, the Netherlands; Amsterdam institute for Infection and 
+      Immunity, Amsterdam, the Netherlands.
+FAU - Akbarzadeh, Maryam
+AU  - Akbarzadeh M
+AD  - Department of Medical Oncology, Amsterdam UMC, Vrije Universiteit Amsterdam, 
+      Amsterdam, the Netherlands; Cancer Center Amsterdam, Cancer Biology and 
+      Immunology, Amsterdam, the Netherlands; Amsterdam institute for Infection and 
+      Immunity, Amsterdam, the Netherlands; Oncode Institute, Amsterdam, the 
+      Netherlands.
+FAU - van Helden, Pauline M
+AU  - van Helden PM
+AD  - Lava Therapeutics, Utrecht, the Netherlands.
+FAU - Vis, André N
+AU  - Vis AN
+AD  - Department of Urology, Amsterdam UMC, Vrije Universiteit Amsterdam, Amsterdam, 
+      the Netherlands.
+FAU - Derks, Sarah
+AU  - Derks S
+AD  - Department of Medical Oncology, Amsterdam UMC, Vrije Universiteit Amsterdam, 
+      Amsterdam, the Netherlands; Cancer Center Amsterdam, Cancer Biology and 
+      Immunology, Amsterdam, the Netherlands; Oncode Institute, Amsterdam, the 
+      Netherlands.
+FAU - Lameris, Roeland
+AU  - Lameris R
+AD  - Department of Medical Oncology, Amsterdam UMC, Vrije Universiteit Amsterdam, 
+      Amsterdam, the Netherlands; Cancer Center Amsterdam, Cancer Biology and 
+      Immunology, Amsterdam, the Netherlands.
+FAU - de Gruijl, Tanja D
+AU  - de Gruijl TD
+AD  - Department of Medical Oncology, Amsterdam UMC, Vrije Universiteit Amsterdam, 
+      Amsterdam, the Netherlands; Cancer Center Amsterdam, Cancer Biology and 
+      Immunology, Amsterdam, the Netherlands; Amsterdam institute for Infection and 
+      Immunity, Amsterdam, the Netherlands.
+FAU - van der Vliet, Hans J
+AU  - van der Vliet HJ
+AD  - Department of Medical Oncology, Amsterdam UMC, Vrije Universiteit Amsterdam, 
+      Amsterdam, the Netherlands; Cancer Center Amsterdam, Cancer Biology and 
+      Immunology, Amsterdam, the Netherlands; Lava Therapeutics, Utrecht, the 
+      Netherlands. Electronic address: jj.vandervliet@amsterdamumc.nl.
+LA  - eng
+PT  - Journal Article
+DEP - 20260416
+PL  - United States
+TA  - Clin Immunol
+JT  - Clinical immunology (Orlando, Fla.)
+JID - 100883537
+RN  - 0 (Receptors, Antigen, T-Cell, gamma-delta)
+RN  - 0 (trophoblastic glycoprotein 5T4, human)
+RN  - 0 (Antibodies, Bispecific)
+RN  - 0 (Membrane Glycoproteins)
+SB  - IM
+MH  - Humans
+MH  - Animals
+MH  - *Receptors, Antigen, T-Cell, gamma-delta/immunology
+MH  - Mice
+MH  - Cell Line, Tumor
+MH  - *T-Lymphocytes/immunology
+MH  - *Antibodies, Bispecific/immunology
+MH  - *Neoplasms/immunology/therapy
+MH  - Cytotoxicity, Immunologic
+MH  - Female
+MH  - Membrane Glycoproteins
+OTO - NOTNLM
+OT  - 5T4 antigen
+OT  - Bispecific T cell engagers
+OT  - Single-domain antibody
+OT  - Solid malignancies
+OT  - Vγ9Vδ2-T cells
+COIS- Declaration of competing interest MdJ, MV, EM, and RL were funded by LAVA 
+      Therapeutics NV. PvH and HvdV were employees of LAVA Therapeutics NV. TdG is 
+      scientific advisor to Immunicum and LAVA Therapeutics NV. SD has an advisory role 
+      for BMS (related to checkpoint inhibitors), receives research funding, medication 
+      supply, or both from Incyte, and has a speaker role for Servier, BMS, and 
+      Benecke. All other authors declare that the research was conducted in the absence 
+      of any commercial or financial relationships that could be construed as a 
+      potential conflict of interest.
+EDAT- 2026/04/19 13:11
+MHDA- 2026/05/21 05:33
+CRDT- 2026/04/18 19:14
+PHST- 2025/12/29 00:00 [received]
+PHST- 2026/04/11 00:00 [revised]
+PHST- 2026/04/14 00:00 [accepted]
+PHST- 2026/05/21 05:33 [medline]
+PHST- 2026/04/19 13:11 [pubmed]
+PHST- 2026/04/18 19:14 [entrez]
+AID - S1521-6616(26)00045-8 [pii]
+AID - 10.1016/j.clim.2026.110707 [doi]
+PST - ppublish
+SO  - Clin Immunol. 2026 Jun;285:110707. doi: 10.1016/j.clim.2026.110707. Epub 2026 Apr 
+      16.

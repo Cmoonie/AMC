@@ -1,0 +1,196 @@
+PMID- 40380571
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20250517
+LR  - 20250517
+IS  - 1879-8365 (Electronic)
+IS  - 0926-9630 (Linking)
+VI  - 327
+DP  - 2025 May 15
+TI  - MONALISA: A Privacy-Preserving Infrastructure Supporting Liquid Biopsies to 
+      Monitor Relapsed Neuroblastoma.
+PG  - 773-774
+LID - 10.3233/SHTI250462 [doi]
+AB  - The survival rate for high-risk neuroblastoma remains below 50%. Current 
+      monitoring methods are costly, invasive, and stressful for patients. MONALISA 
+      will evaluate liquid biopsies as a minimally invasive alternative, to enable 
+      frequent sampling and consequently early detection of genetic tumour markers. 
+      MONALISA leverages an advanced privacy-preserving data management infrastructure, 
+      including the SIOPEN BIOPORTAL, the EUPID Services, and patient reported outcome 
+      measures, providing a model for other paediatric cancers.
+FAU - Hayn, Dieter
+AU  - Hayn D
+AD  - AIT Austrian Institute of Technology GmbH, Graz, Austria.
+FAU - Sandner, Emanuel
+AU  - Sandner E
+AD  - AIT Austrian Institute of Technology GmbH, Graz, Austria.
+FAU - Jammerbund, Bernhard
+AU  - Jammerbund B
+AD  - AIT Austrian Institute of Technology GmbH, Graz, Austria.
+FAU - Okuyan, E Sarper
+AU  - Okuyan ES
+AD  - Amsterdam UMC, location University of Amsterdam, Center for Experimental and 
+      Molecular Medicine, Laboratory of Experimental Oncology and Radiobiology, 
+      Amsterdam, the Netherlands.
+AD  - Cancer Center Amsterdam, Amsterdam, the Netherlands.
+FAU - Koster, Jan
+AU  - Koster J
+AD  - Amsterdam UMC, location University of Amsterdam, Center for Experimental and 
+      Molecular Medicine, Laboratory of Experimental Oncology and Radiobiology, 
+      Amsterdam, the Netherlands.
+AD  - Cancer Center Amsterdam, Amsterdam, the Netherlands.
+FAU - Wittens, Mandy M J
+AU  - Wittens MMJ
+AD  - imec-SMIT, Vrije Universiteit Brussel, Brussels, Belgium.
+FAU - Tytgat, Godelieve A M
+AU  - Tytgat GAM
+AD  - Princess Máxima Center for Pediatric Oncology, Utrecht, the Netherlands.
+FAU - Taschner-Mandl, Sabine
+AU  - Taschner-Mandl S
+AD  - St. Anna Children's Cancer Research Institute (CCRI), Vienna, Austria.
+FAU - Schleiermacher, Gudrun
+AU  - Schleiermacher G
+AD  - Institute Curie, Paris, France.
+LA  - eng
+PT  - Journal Article
+PL  - Netherlands
+TA  - Stud Health Technol Inform
+JT  - Studies in health technology and informatics
+JID - 9214582
+RN  - 0 (Biomarkers, Tumor)
+SB  - IM
+MH  - *Neuroblastoma/pathology/diagnosis/genetics/blood
+MH  - Humans
+MH  - Liquid Biopsy/methods
+MH  - *Neoplasm Recurrence, Local/diagnosis/pathology
+MH  - *Biomarkers, Tumor/blood
+MH  - *Confidentiality
+OTO - NOTNLM
+OT  - Liquid Biopsy
+OT  - Paediatric Oncology
+OT  - Privacy-Preserving Record Linkage
+OT  - Rare disease
+OT  - Secondary Use
+EDAT- 2025/05/17 17:03
+MHDA- 2025/05/17 17:04
+CRDT- 2025/05/17 01:03
+PHST- 2025/05/17 17:04 [medline]
+PHST- 2025/05/17 17:03 [pubmed]
+PHST- 2025/05/17 01:03 [entrez]
+AID - SHTI250462 [pii]
+AID - 10.3233/SHTI250462 [doi]
+PST - ppublish
+SO  - Stud Health Technol Inform. 2025 May 15;327:773-774. doi: 10.3233/SHTI250462.
+
+PMID- 41601187
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20260701
+LR  - 20260701
+IS  - 1549-960X (Electronic)
+IS  - 1549-9596 (Linking)
+VI  - 66
+IP  - 3
+DP  - 2026 Feb 9
+TI  - Fragment-Guided New Therapeutic Molecule Discovery and Mapping of Clinically 
+      Relevant Interactomes.
+PG  - 1482-1497
+LID - 10.1021/acs.jcim.5c02503 [doi]
+AB  - Therapeutic interventions for complex diseases depend on the targeted modulation 
+      of key pathological pathways. While growing clinical needs continue to drive 
+      advancements in the drug discovery space, current strategies primarily rely on 
+      searching large volumes of chemical data without addressing the specific 
+      contributions of molecular features. Moreover, both clinicians and researchers 
+      recognize the need for improved drug discovery methods and characterization that 
+      could aid in clinical strategy selection. To address these challenges, we propose 
+      a new perspective on targeted therapy development as well as interactome mapping, 
+      utilizing molecular fragments. The present study focuses on therapeutic areas 
+      that represent emerging targets, namely JAK2 and GLP-1R, both of which have broad 
+      clinical potential. We developed a new self-adjusting neural network that enabled 
+      us to discover novel therapeutic candidates with improved in silico binding 
+      profiles, gain additional insights into drug-target binding that were not 
+      previously reported, and identify new metabolic trajectories. Importantly, our 
+      work revealed that even a small compound library can effectively generate lead 
+      candidates, expediting the search and exploration process. In addition, the 
+      fragment-guided bridging of chemical and biological spaces has revealed new 
+      opportunities for drug repurposing efforts and a means of improving the 
+      prediction of side effects. We concluded our study with insights into the recent 
+      high-profile clinical trial failure of danuglipron and how this could have been 
+      prevented with our methodology. Thus, building a robust in silico pipeline with 
+      integrated screening data can significantly reduce costs and guide therapy 
+      adoption. Furthermore, our proposed strategy highlights promising avenues for the 
+      discovery of new therapeutics and the development of clinical interventions.
+FAU - Kanapeckaitė, Austė
+AU  - Kanapeckaitė A
+AUID- ORCID: 0000-0001-6829-4082
+AD  - Columbia University Irving Medical Center, 630 W. 168th St., New York, New York 
+      10032, United States.
+AD  - Faculty of Medicine, Vilnius University, M. K. Čiurlionio g. 21, LT-03101 
+      Vilnius, Lithuania.
+FAU - Okuyan, Sarper
+AU  - Okuyan S
+AD  - Laboratory for Experimental Oncology and Radiobiology (LEXOR), Cancer Center 
+      Amsterdam, Amsterdam UMC and University of Amsterdam, Meibergdreef 9, 1105 AZ 
+      Amsterdam, The Netherlands.
+FAU - Wagg, David James
+AU  - Wagg DJ
+AD  - Department of Mechanical Engineering, University of Sheffield, SheffieldS1 3JD, 
+      U.K.
+AD  - The Alan Turing Institute, London NW1 2DB, U.K.
+FAU - Koster, Jan
+AU  - Koster J
+AD  - Laboratory for Experimental Oncology and Radiobiology (LEXOR), Cancer Center 
+      Amsterdam, Amsterdam UMC and University of Amsterdam, Meibergdreef 9, 1105 AZ 
+      Amsterdam, The Netherlands.
+FAU - Jančorienė, Ligita
+AU  - Jančorienė L
+AD  - Institute of Clinical Medicine, Department of Infectious Diseases and 
+      Dermatovenerology, Faculty of Medicine, Vilnius University, M. K. Čiurlionio g. 
+      21, LT-03101 Vilnius, Lithuania.
+FAU - Sakalauskaitė, Indrė
+AU  - Sakalauskaitė I
+AD  - Faculty of Medicine, Vilnius University, M. K. Čiurlionio g. 21, LT-03101 
+      Vilnius, Lithuania.
+AD  - Vilnius University Hospital Santaros Clinics, Santariškių g. 2, LT-08661 Vilnius, 
+      Lithuania.
+FAU - Brasiu̅nienė, Birutė
+AU  - Brasiu̅nienė B
+AD  - Faculty of Medicine, Vilnius University, M. K. Čiurlionio g. 21, LT-03101 
+      Vilnius, Lithuania.
+AD  - Center of Medical Oncology, National Cancer Center of Vilnius University Hospital 
+      Santaros Clinics, Santariškių g. 2, LT-08661 Vilnius, Lithuania.
+FAU - Townsend-Nicholson, Andrea
+AU  - Townsend-Nicholson A
+AUID- ORCID: 0000-0002-7250-2208
+AD  - Research Department of Structural & Molecular Biology, Division of Biosciences, 
+      University College London, London WC1E 6BT, U.K.
+LA  - eng
+PT  - Journal Article
+DEP - 20260127
+PL  - United States
+TA  - J Chem Inf Model
+JT  - Journal of chemical information and modeling
+JID - 101230060
+RN  - EC 2.7.10.2 (Janus Kinase 2)
+RN  - 0 (Glucagon-Like Peptide-1 Receptor)
+RN  - 0 (Small Molecule Libraries)
+RN  - 0 (Ligands)
+SB  - IM
+MH  - *Drug Discovery/methods
+MH  - Humans
+MH  - Janus Kinase 2/metabolism/antagonists & inhibitors/chemistry
+MH  - Glucagon-Like Peptide-1 Receptor/metabolism/chemistry
+MH  - Neural Networks, Computer
+MH  - *Small Molecule Libraries/pharmacology/chemistry
+MH  - Ligands
+MH  - Protein Binding
+EDAT- 2026/01/28 07:48
+MHDA- 2026/02/09 06:30
+CRDT- 2026/01/28 02:24
+PHST- 2026/02/09 06:30 [medline]
+PHST- 2026/01/28 07:48 [pubmed]
+PHST- 2026/01/28 02:24 [entrez]
+AID - 10.1021/acs.jcim.5c02503 [doi]
+PST - ppublish
+SO  - J Chem Inf Model. 2026 Feb 9;66(3):1482-1497. doi: 10.1021/acs.jcim.5c02503. Epub 
+      2026 Jan 27.

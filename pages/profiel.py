@@ -119,49 +119,8 @@ if expertise_lijst:
             st.success(f"✅ Gewijzigd naar {gewijzigde_exp}!")
             st.rerun()           
 
-st.divider()
-st.subheader("📁 Projecten")
 
-# Toon projecten uit database
-conn2 = sqlite3.connect("spider.db")
-alle_projecten = pd.read_sql("SELECT * FROM projects", conn2)
-
-for _, project in alle_projecten.iterrows():
-    if st.button(f"📁 {project['title']}", key=f"prof_proj_{project['id']}"):
-        st.session_state.geselecteerd_project = project["id"]
-        st.switch_page("pages/project.py")
-
-# Laad projecten uit database
-projecten_opgeslagen = profiel[5] if profiel[5] else ""
-projecten_lijst = projecten_opgeslagen.split(",") if projecten_opgeslagen else []
-
-for proj in projecten_lijst:
-    if proj:
-        st.write(f"📁 {proj}")
-
-with st.expander("➕ Project toevoegen"):
-    nieuw_proj = st.text_input("Projectnaam", key="nieuw_proj")
-    if st.button("Toevoegen", key="proj_toevoegen"):
-        if nieuw_proj:
-            projecten_lijst.append(nieuw_proj)
-            cursor.execute("UPDATE profiel_data SET projecten = ? WHERE gebruikersnaam = ?",
-                           (",".join(projecten_lijst), gebruikersnaam))
-            conn.commit()
-            st.success(f"✅ {nieuw_proj} toegevoegd!")
-            st.rerun()
-
-# Project wijzigen
-if projecten_lijst:
-    with st.expander("✏️ Project wijzigen"):
-        te_wijzigen_proj = st.selectbox("Selecteer project", projecten_lijst, key="wijzig_proj_select")
-        gewijzigd_proj = st.text_input("Nieuwe naam", value=te_wijzigen_proj, key="gewijzigd_proj")
-        if st.button("Opslaan", key="proj_wijzigen"):
-            index = projecten_lijst.index(te_wijzigen_proj)
-            projecten_lijst[index] = gewijzigd_proj
-            cursor.execute("UPDATE profiel_data SET projecten = ? WHERE gebruikersnaam = ?",
-                           (",".join(projecten_lijst), gebruikersnaam))
-            conn.commit()
-            st.rerun()            
+    
 
 st.divider()
 st.subheader("🎙️ Bestanden & Opnames")

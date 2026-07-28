@@ -107,9 +107,7 @@ def genereer_samenvatting(zoekterm, resultaat):   # Haal alle namen op uit de re
 personen = pd.read_sql("SELECT * FROM persons", conn) #personen inladen
 expertise = pd.read_sql("SELECT * FROM expertise", conn) #expertise inladen
 personen_expertise = pd.read_sql("SELECT * FROM persons_expertise", conn) #tussentabel inladen
-projecten = pd.read_sql("SELECT * FROM projects", conn)
-#projecten inladen
-personen_projecten = pd.read_sql("SELECT * FROM persons_projects", conn) #tussentabel inladen
+
 
 st.title("Spider")
 st.subheader("Zoek onderzoeksexpertise binnen Division 9")
@@ -139,14 +137,10 @@ if zoekterm:
     expertise_resultaat = personen[personen["id"].isin(personen_ids)]
    
 
-    # Zoek op projecten
-    project_match = projecten[projecten["title"].str.contains(zoekterm, case=False) | projecten["description"].str.contains(zoekterm, case=False)]
-    project_ids = project_match["id"].tolist()
-    personen_ids_project = personen_projecten[personen_projecten["project_id"].isin(project_ids)]["person_id"].tolist()
-    project_resultaat = personen[personen["id"].isin(personen_ids_project)]
+ 
    
    #combineer alles
-    resultaat = pd.concat([naam_resultaat, expertise_resultaat, project_resultaat]).drop_duplicates()
+    resultaat = pd.concat([naam_resultaat, expertise_resultaat]).drop_duplicates()
 
     # Semantisch zoeken via publicaties
     top_pmids = semantisch_zoeken(zoekterm)
@@ -162,46 +156,27 @@ if zoekterm:
     # Voeg toe aan resultaten
     resultaat = pd.concat([resultaat, semantische_resultaten]).drop_duplicates()
     st.success(f"{len(resultaat)} onderzoeker(s) gevonden")
-    # st.dataframe(resultaat) debug regel
 
+    # Gevonden onderzoekers
     st.subheader("Gevonden onderzoekers")
     for _, persoon in resultaat.iterrows():
-        if st.button(f"👤 {persoon['name']}"):
+        if st.button(f"👤 {persoon['name']}", key=f"persoon_{persoon['id']}"):
             st.session_state.geselecteerde_persoon = persoon["id"]
             st.switch_page("pages/person.py")
 
-    # Toon expertise per gevonden persoon
-st.subheader("Expertise")
-for _, persoon in resultaat.iterrows():
-    exp_ids = personen_expertise[personen_expertise["person_id"] == persoon["id"]]["expertise_id"].tolist()
-    exp_details = expertise[expertise["id"].isin(exp_ids)]
-    if not exp_details.empty:
-        st.write(f"**{persoon['name']}:**")
-        for _, exp in exp_details.iterrows():
-            if st.button(f"🔬 {exp['label']}", key=f"exp_{persoon['id']}_{exp['id']}"):
-                st.session_state.geselecteerde_expertise = exp["id"]
-                st.switch_page("pages/expertise.py")
-
-        # Toon projecten per gevonden persoon
-    st.subheader("Projecten")
+    # Expertise — apart blok buiten de loop hierboven
+    st.subheader("Expertise")
     for _, persoon in resultaat.iterrows():
-        proj_ids = personen_projecten[personen_projecten["person_id"] == persoon["id"]]["project_id"].tolist()
-        proj_details = projecten[projecten["id"].isin(proj_ids)]
-        # st.write(proj_details[["id", "title"]])
-        for _, project in proj_details.iterrows():
-            if st.button(f"📁 {project['title']}", key=f"proj_{persoon['id']}_{project['id']}"):
-                st.session_state.geselecteerd_project = project["id"]
-                st.switch_page("pages/project.py") 
-
-           
+        exp_ids = personen_expertise[personen_expertise["person_id"] == persoon["id"]]["expertise_id"].tolist()
+        exp_details = expertise[expertise["id"].isin(exp_ids)]
+        if not exp_details.empty:
+            st.write(f"**{persoon['name']}:**")
+            for _, exp in exp_details.iterrows():
+                if st.button(f"🔬 {exp['label']}", key=f"exp_{persoon['id']}_{exp['id']}"):
+                    st.session_state.geselecteerde_expertise = exp["id"]
+                    st.switch_page("pages/expertise.py")
 
     if not resultaat.empty:
         with st.spinner("Samenvatting genereren ..."):
             samenvatting = genereer_samenvatting(zoekterm, resultaat)
             st.info(samenvatting)
-
-else:
-    st.info("Typ een naam, expertise of project om te zoeken.")
-
-
- 

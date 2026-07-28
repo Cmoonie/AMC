@@ -48,8 +48,7 @@ st.markdown("""
 personen = pd.read_sql("SELECT * FROM persons" , conn)
 expertise = pd.read_sql("SELECT * FROM expertise" , conn)
 personen_expertise = pd.read_sql("SELECT * FROM persons_expertise" , conn)
-projecten = pd.read_sql("SELECT * FROM projects" , conn)
-personen_projecten = pd.read_sql("SELECT * FROM persons_projects" , conn)
+
 
 # Check session state
 if "geselecteerde_persoon" not in st.session_state or st.session_state.geselecteerde_persoon is None:
@@ -86,15 +85,7 @@ else:
             st.session_state.geselecteerde_expertise = exp["id"]
             st.switch_page("pages/expertise.py")
 
-    # Projecten
-    st.divider()
-    st.subheader("Projecten")
-    proj_ids = personen_projecten[personen_projecten["person_id"] == persoon_id]["project_id"].tolist()
-    proj_details = projecten[projecten["id"].isin(proj_ids)]
-    for _, proj in proj_details.iterrows():
-        if st.button(f"📁 {proj['title']}", key=f"proj_{proj['id']}"):
-            st.session_state.geselecteerde_project = proj["id"]
-            st.switch_page("pages/project.py")
+
 
     # Terug knop onderaan
     if st.button("← Terug naar zoeken", key="terug_onder"):

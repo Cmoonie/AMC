@@ -144,22 +144,7 @@ if len(projecten) > 0:
         st.rerun()
 
     st.divider()
-    st.subheader("➕ Project toevoegen")
-    nieuwe_titel = st.text_input("Titel")
-    nieuwe_beschrijving = st.text_input("Beschrijving")
-    nieuwe_methoden = st.text_input("Methoden")
-    nieuwe_datum = st.date_input("Datum")
-    if st.button("Toevoegen", key="project_toevoegen"):
-        if nieuwe_titel and nieuwe_beschrijving:
-            cursor = conn.cursor()
-            cursor.execute("INSERT INTO projects (title, description, methods, date) VALUES (?, ?, ?, ?)",
-                           (nieuwe_titel, nieuwe_beschrijving, nieuwe_methoden, str(nieuwe_datum)))
-            conn.commit()
-            log_wijziging("Toegevoegd", nieuwe_titel)
-            st.success(f"{nieuwe_titel} is toegevoegd!")
-            st.rerun()
-        else:
-            st.error("Vul minimaal titel en beschrijving in!")
+
 
 with tab3:
     st.subheader("Expertise beheren")

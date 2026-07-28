@@ -37,7 +37,11 @@ st.sidebar.write(f"👤 **{gebruikersnaam}**")
 st.sidebar.divider()
 
 if st.sidebar.button("👤 Profiel"):
-    st.switch_page("pages/profiel.py")
+    st.switch_page("pages/my_profile.py")
+
+st.sidebar.divider()    
+if st.sidebar.button("🕸️ Kennisgraaf"):
+    st.switch_page("pages/knowledgegraph.py")
 
 if st.session_state.get("rol") == "beheerder":
     if st.sidebar.button("⚙️ Beheer"):
@@ -162,7 +166,7 @@ if zoekterm:
     for _, persoon in resultaat.iterrows():
         if st.button(f"👤 {persoon['name']}", key=f"persoon_{persoon['id']}"):
             st.session_state.geselecteerde_persoon = persoon["id"]
-            st.switch_page("pages/person.py")
+            st.switch_page("pages/researcher.py")
 
     # Expertise — apart blok buiten de loop hierboven
     st.subheader("Expertise")

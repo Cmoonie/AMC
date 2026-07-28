@@ -67,7 +67,7 @@ def laad_model():
 
 model = laad_model()
 
-def semantisch_zoeken(zoekterm, top_n=5):
+def semantisch_zoeken(zoekterm, top_n=15):
     # Maak embedding van zoekterm
     zoek_embedding = model.encode(zoekterm)
     
@@ -151,10 +151,13 @@ if zoekterm:
     # Semantisch zoeken via publicaties
     top_pmids = semantisch_zoeken(zoekterm)
     semantische_resultaten = pd.read_sql(f"""
-        SELECT DISTINCT p.* FROM persons p
-        JOIN publications pub ON LOWER(pub.authors) LIKE LOWER('%' || p.name || '%')
-        WHERE pub.pmid IN ({','.join(['?']*len(top_pmids))})
-    """, conn, params=top_pmids)
+    SELECT DISTINCT p.* FROM persons p
+    JOIN publications pub ON (
+        LOWER(pub.authors) LIKE LOWER('%' || p.name || '%')
+        OR LOWER(pub.authors) LIKE LOWER('%' || SUBSTR(p.name, INSTR(p.name, ' ') + 1) || '%')
+    )
+    WHERE pub.pmid IN ({','.join(['?']*len(top_pmids))})
+""", conn, params=top_pmids)    
     
     # Voeg toe aan resultaten
     resultaat = pd.concat([resultaat, semantische_resultaten]).drop_duplicates()
@@ -168,10 +171,11 @@ if zoekterm:
             st.switch_page("pages/person.py")
 
     # Toon expertise per gevonden persoon
-    st.subheader("Expertise")
-    for _, persoon in resultaat.iterrows():
-        exp_ids = personen_expertise[personen_expertise["person_id"] == persoon["id"]]["expertise_id"].tolist()
-        exp_details = expertise[expertise["id"].isin(exp_ids)]
+st.subheader("Expertise")
+for _, persoon in resultaat.iterrows():
+    exp_ids = personen_expertise[personen_expertise["person_id"] == persoon["id"]]["expertise_id"].tolist()
+    exp_details = expertise[expertise["id"].isin(exp_ids)]
+    if not exp_details.empty:
         st.write(f"**{persoon['name']}:**")
         for _, exp in exp_details.iterrows():
             if st.button(f"🔬 {exp['label']}", key=f"exp_{persoon['id']}_{exp['id']}"):

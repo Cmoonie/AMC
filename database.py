@@ -5,6 +5,26 @@ import pandas as pd
 # Als het bestand niet bestaat, maakt Python het automatisch aan
 conn = sqlite3.connect("spider.db")
 
+cursor = conn.cursor()
+
+# Reset alle tabellen
+cursor.execute("DROP TABLE IF EXISTS persons_expertise")
+cursor.execute("DROP TABLE IF EXISTS expertise")
+cursor.execute("""
+    CREATE TABLE expertise (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        label TEXT UNIQUE
+    )
+""")
+cursor.execute("""
+    CREATE TABLE persons_expertise (
+        person_id INTEGER,
+        expertise_id INTEGER
+    )
+""")
+conn.commit()
+print("Tabellen gereset!")
+
 print("Database verbinding gemaakt!")
 
 
@@ -104,8 +124,22 @@ try:
     print("Martijn Schut publicaties geïmporteerd!")
 except Exception as e:
     print(f"Fout: {e}")
-    
 
+ # Verwijder lege expertise koppelingen
+cursor.execute("DELETE FROM persons_expertise WHERE expertise_id IS NULL")
+conn.commit()
+print("Lege expertise koppelingen verwijderd!")   
+
+# Verwijder ook persons_expertise helemaal en maak opnieuw aan
+cursor.execute("DROP TABLE IF EXISTS persons_expertise")
+cursor.execute("""
+    CREATE TABLE persons_expertise (
+        person_id INTEGER,
+        expertise_id INTEGER
+    )
+""")
+conn.commit()
+print("Persons expertise tabel opnieuw aangemaakt!")
 
 # Sluit verbinding
 conn.close()

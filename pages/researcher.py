@@ -12,9 +12,10 @@ api_key = os.getenv("GROQ_API_KEY")
 client = Groq(api_key=api_key)
 
 def genereer_bio(naam):
+    naam_sql = naam.replace("'", "''")
     publicaties = pd.read_sql(f"""
         SELECT title, abstract FROM publications 
-        WHERE authors LIKE '%{naam}%'
+        WHERE authors LIKE '%{naam_sql}%'
         LIMIT 5
     """, conn)
     

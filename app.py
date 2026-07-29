@@ -185,10 +185,24 @@ if zoekterm:
 
     # Gevonden onderzoekers
     st.subheader("Gevonden onderzoekers")
+    lopende = pd.read_sql("SELECT leider_id FROM lopende_projecten", conn)
+    actieve_leiders = lopende["leider_id"].tolist()
+
     for _, persoon in resultaat.iterrows():
-        if st.button(f"👤 {persoon['name']}", key=f"persoon_{persoon['id']}"):
-            st.session_state.geselecteerde_persoon = persoon["id"]
-            st.switch_page("pages/onderzoeker.py")
+        label = f"🟢 {persoon['name']}" if persoon["id"] in actieve_leiders else f"👤 {persoon['name']}"
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            if st.button(label, key=f"persoon_{persoon['id']}"):
+                st.session_state.geselecteerde_persoon = persoon["id"]
+                st.switch_page("pages/onderzoeker.py")
+        with col2:
+            if persoon["id"] in actieve_leiders:
+                if st.button("🔬 Project", key=f"project_{persoon['id']}"):
+                    # Haal project op van deze persoon
+                    project = pd.read_sql(f"SELECT id FROM lopende_projecten WHERE leider_id = {persoon['id']} LIMIT 1", conn)
+                    if not project.empty:
+                        st.session_state.geselecteerd_lopend_project = int(project.iloc[0]["id"])
+                        st.switch_page("pages/lopend_project.py")                
 
     # Expertise — apart blok buiten de loop hierboven
     st.subheader("Expertise")

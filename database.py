@@ -140,6 +140,40 @@ cursor.execute("""
 """)
 conn.commit()
 print("Persons expertise tabel opnieuw aangemaakt!")
+# Lopende projecten tabel aanmaken
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS lopende_projecten (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        naam TEXT,
+        beschrijving TEXT,
+        leider_id INTEGER,
+        datum TEXT
+    )
+""")
+
+# Deelnemers tabel aanmaken
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS project_deelnemers (
+        project_id INTEGER,
+        persoon_id INTEGER
+    )
+""")
+conn.commit()
+print("Lopende projecten tabel aangemaakt!")
+
+# Gebruikers tabel aanmaken
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS gebruikers (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        naam TEXT,
+        gebruikersnaam TEXT UNIQUE,
+        wachtwoord TEXT,
+        afdeling TEXT,
+        rol TEXT DEFAULT 'gebruiker'
+    )
+""")
+conn.commit()
+print("Gebruikers tabel aangemaakt!")
 
 # Sluit verbinding
 conn.close()

@@ -95,6 +95,31 @@ else:
             st.session_state.geselecteerde_expertise = exp["id"]
             st.switch_page("pages/expertise.py")
 
+
+# Lopende projecten
+    st.divider()
+    st.subheader("🔬 Lopende projecten")
+    
+    lopende = pd.read_sql(f"SELECT * FROM lopende_projecten WHERE leider_id = {persoon_id}", conn)
+    
+    if lopende.empty:
+        st.write("Geen lopende projecten.")
+    else:
+        for _, project in lopende.iterrows():
+            st.write(f"🟢 **{project['naam']}** — {project['beschrijving'][:80]}")
+            if st.button("➕ Aanmelden", key=f"aanmeld_{project['id']}"):
+                gebruikersnaam = st.session_state.get("gebruikersnaam", "")
+                cursor = conn.cursor()
+                cursor.execute("SELECT id FROM persons WHERE name = ?", (gebruikersnaam,))
+                result = cursor.fetchone()
+                eigen_id = result[0] if result else None
+                if eigen_id:
+                    cursor.execute("INSERT INTO project_deelnemers (project_id, persoon_id) VALUES (?, ?)",
+                                   (project["id"], eigen_id))
+                    conn.commit()
+                    st.success("✅ Aangemeld!")
+                    st.rerun()            
+
     # Publicaties
     st.divider()
     st.subheader("📄 Publicaties")

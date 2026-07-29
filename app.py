@@ -124,7 +124,8 @@ department_filter = st.selectbox(
 # st.write(expertise) Debug regel
 if "laatste_zoekterm" not in st.session_state:
     st.session_state.laatste_zoekterm = ""
-zoekterm = st.text_input("Zoek op naam, project of expertise")
+zoekterm = st.text_input("Zoek op naam, project of expertise", 
+                          value=st.session_state.laatste_zoekterm)  
 if zoekterm:
     st.session_state.laatste_zoekterm = zoekterm
 if zoekterm:

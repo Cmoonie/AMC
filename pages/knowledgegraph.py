@@ -31,7 +31,9 @@ st.title("🕸️ Kennisgraaf")
 st.subheader("Verbanden tussen onderzoekers en expertise")
 
 # Database verbinding
-conn = sqlite3.connect("spider.db")
+import os
+db_path = os.path.join(os.path.dirname(__file__), "spider.db")
+conn = sqlite3.connect(db_path)
 personen = pd.read_sql("SELECT * FROM persons", conn)
 expertise = pd.read_sql("SELECT * FROM expertise", conn)
 personen_expertise = pd.read_sql("SELECT * FROM persons_expertise", conn)

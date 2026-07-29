@@ -16,8 +16,7 @@ import os                      #laad de os library om bestanden te lezen
 
 load_dotenv()                  # open het .env bestand
 api_key = os.getenv("GROQ_API_KEY") # haal de sleutel eruit
-#st.write(api_key) #debug regel
-# st.write(st.session_state.get("rol")) #debug regel
+
 
 from groq import Groq
 from login import login_pagina
@@ -35,27 +34,30 @@ rol = st.session_state.get("rol", "")
 
 
 
-# Sidebar menu
+# Sidebar menu navigatie voor ingelogde gebruiker
 st.sidebar.write(f"👤 **{gebruikersnaam}**")
 st.sidebar.divider()
 
+# Knop naar eigen profielpagina
 if st.sidebar.button("👤 Profiel"):
     st.switch_page("pages/my_profile.py")
 
+# Knop naar kennisgraaf pagina
 st.sidebar.divider()    
 if st.sidebar.button("🕸️ Kennisgraaf"):
     st.switch_page("pages/knowledgegraph.py")
 
+# Beheer knop alleen zichtbaar voor beheerder
 if st.session_state.get("rol") == "beheerder":
     if st.sidebar.button("⚙️ Beheer"):
         st.switch_page("pages/beheer.py")
-
+# Uitloggen — reset sessie en herlaad pagina
 st.sidebar.divider()
 if st.sidebar.button("🚪 Uitloggen"):
     st.session_state.ingelogd = False
     st.session_state.rol = None
     st.rerun()
-
+# Verberg automatische Streamlit navigatie in sidebar
 st.markdown("""
     <style>
     [data-testid="stSidebarNav"] { display: none; }
@@ -64,7 +66,7 @@ st.markdown("""
 
 
 
-
+# Maak verbinding met Groq AI client
 client = Groq(api_key=api_key)
 
 # Laad embedding model
@@ -93,14 +95,26 @@ def semantisch_zoeken(zoekterm, top_n=15):
     
     return top_pmids
 
+# Initialiseer geselecteerde persoon als leeg
 if "geselecteerde_persoon" not in st.session_state:
     st.session_state.geselecteerde_persoon = None
 
-def genereer_samenvatting(zoekterm, resultaat):   # Haal alle namen op uit de resultaten tabel als een lijst
+def genereer_samenvatting(zoekterm, resultaat, taal="Nederlands"):
+        # Haal namen op uit zoekresultaten
     namen = resultaat["name"].tolist()
-    # Maak een prompt aan voor het AI model
-    # f-string zodat we variabelen kunnen invoegen in de tekst
-    prompt = f" Een gebruiker zoekt naar ' {zoekterm}'.De colgende onderzoekers zijn gevonden:     {namen}. Geef een korte samenvatting in 2 zinnen over wie deze onderzoekers zijn en wat ze doen."
+
+       # Maak prompt op basis van gekozen taal 
+    if taal == "Nederlands":
+        prompt = f"Een gebruiker zoekt naar '{zoekterm}'. De volgende onderzoekers zijn gevonden: {namen}. Geef een korte samenvatting in 2 zinnen in het Nederlands."
+    else:
+        prompt = f"A user searches for '{zoekterm}'. The following researchers were found: {namen}. Give a short summary in 2 sentences in English."
+        
+        # Stuur prompt naar Groq AI en ontvang antwoord
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return response.choices[0].message.content
 
 # Stuur de prompt naar Groq en wacht op een antwoord
     response = client.chat.completions.create(
@@ -123,11 +137,18 @@ department_filter = st.selectbox(
     "Filter op department",
     ["Alle"] + personen["department"].unique().tolist()
 )
+# Taal selectie
+if "taal" not in st.session_state:
+    st.session_state.taal = "Nederlands"
 
-# st.write(expertise) Debug regel
+taal = st.radio("🌐 Taal / Language:", ["Nederlands", "English"], 
+                horizontal=True,
+                index=0 if st.session_state.taal == "Nederlands" else 1)
+st.session_state.taal = taal
+
 if "laatste_zoekterm" not in st.session_state:
     st.session_state.laatste_zoekterm = ""
-zoekterm = st.text_input("Zoek op naam, project of expertise", 
+zoekterm = st.text_input("Zoek op naam, project of expertise" if taal == "Nederlands" else "Search by name, project or expertise", 
                           value=st.session_state.laatste_zoekterm)  
 if zoekterm:
     st.session_state.laatste_zoekterm = zoekterm
@@ -147,7 +168,7 @@ if zoekterm:
     personen_ids = personen_expertise[personen_expertise["expertise_id"].isin(expertise_ids)]["person_id"].tolist()
     expertise_resultaat = personen[personen["id"].isin(personen_ids)]
    
-
+    taal = st.radio("Taal samenvatting:", ["Nederlands", "English"], horizontal=True)
  
    
    #combineer alles

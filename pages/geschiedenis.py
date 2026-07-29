@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
 import sqlite3
-conn = sqlite3.connect("spider.db")
+import os
+db_path = os.path.join(os.path.dirname(__file__), "spider.db")
+conn = sqlite3.connect(db_path)
 
 # Authenticatie
 if "ingelogd" not in st.session_state or not st.session_state.ingelogd:

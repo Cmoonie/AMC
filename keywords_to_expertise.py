@@ -30,8 +30,13 @@ for _, persoon in personen.iterrows():
     for _, pub in publicaties.iterrows():
         if pub["keywords"]:
             for keyword in pub["keywords"].split(";"):
-                keyword = keyword.strip().lower()
-                if keyword and len(keyword) > 2:
+               keyword = keyword.strip().lower()
+                # Fix encoding problemen zoals â€™ → '
+               try:
+                    keyword = keyword.encode('latin-1').decode('utf-8')
+               except:
+                    pass
+               if keyword and len(keyword) > 2:
                     alle_keywords.add(keyword)
     
     # Voeg top 10 keywords toe als expertise

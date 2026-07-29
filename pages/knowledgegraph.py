@@ -32,7 +32,7 @@ st.subheader("Verbanden tussen onderzoekers en expertise")
 
 # Database verbinding
 import os
-db_path = os.path.join(os.path.dirname(__file__), "spider.db")
+db_path = os.path.join(os.path.dirname(__file__),"..", "spider.db")
 conn = sqlite3.connect(db_path)
 personen = pd.read_sql("SELECT * FROM persons", conn)
 expertise = pd.read_sql("SELECT * FROM expertise", conn)

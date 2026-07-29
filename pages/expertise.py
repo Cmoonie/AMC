@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import sqlite3
 import os
-db_path = os.path.join(os.path.dirname(__file__), "spider.db")
+db_path = os.path.join(os.path.dirname(__file__),"..", "spider.db")
 conn = sqlite3.connect(db_path)
 
 #Aunthenticatie

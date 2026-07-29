@@ -40,12 +40,12 @@ st.sidebar.divider()
 
 # Knop naar eigen profielpagina
 if st.sidebar.button("👤 Profiel"):
-    st.switch_page("pages/my_profile.py")
+    st.switch_page("pages/mijn_profiel.py")
 
 # Knop naar kennisgraaf pagina
 st.sidebar.divider()    
 if st.sidebar.button("🕸️ Kennisgraaf"):
-    st.switch_page("pages/knowledgegraph.py")
+    st.switch_page("pages/kennisgraaf.py")
 
 # Beheer knop alleen zichtbaar voor beheerder
 if st.session_state.get("rol") == "beheerder":
@@ -116,14 +116,6 @@ def genereer_samenvatting(zoekterm, resultaat, taal="Nederlands"):
     )
     return response.choices[0].message.content
 
-# Stuur de prompt naar Groq en wacht op een antwoord
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[{"role": "user", "content": prompt}]
-    )
-    # Geef de tekst terug uit het eerste antwoord van het model
-
-    return response.choices[0]. message.content
 
 personen = pd.read_sql("SELECT * FROM persons", conn) #personen inladen
 expertise = pd.read_sql("SELECT * FROM expertise", conn) #expertise inladen
@@ -141,11 +133,14 @@ department_filter = st.selectbox(
 if "taal" not in st.session_state:
     st.session_state.taal = "Nederlands"
 
-taal = st.radio("🌐 Taal / Language:", ["Nederlands", "English"], 
-                horizontal=True,
-                index=0 if st.session_state.taal == "Nederlands" else 1)
-st.session_state.taal = taal
+# taal = st.radio("🌐 Taal / Language:", ["Nederlands", "English"], #taalknop uitgeschakeld -  te veel werk om alles te vertalen.
+                # horizontal=True,
+                # index=0 if st.session_state.taal == "Nederlands" else 1)
+# st.session_state.taal = taal
 
+
+# Taal standaard Nederlands
+taal = "Nederlands"
 if "laatste_zoekterm" not in st.session_state:
     st.session_state.laatste_zoekterm = ""
 zoekterm = st.text_input("Zoek op naam, project of expertise" if taal == "Nederlands" else "Search by name, project or expertise", 
@@ -168,7 +163,6 @@ if zoekterm:
     personen_ids = personen_expertise[personen_expertise["expertise_id"].isin(expertise_ids)]["person_id"].tolist()
     expertise_resultaat = personen[personen["id"].isin(personen_ids)]
    
-    taal = st.radio("Taal samenvatting:", ["Nederlands", "English"], horizontal=True)
  
    
    #combineer alles
@@ -194,7 +188,7 @@ if zoekterm:
     for _, persoon in resultaat.iterrows():
         if st.button(f"👤 {persoon['name']}", key=f"persoon_{persoon['id']}"):
             st.session_state.geselecteerde_persoon = persoon["id"]
-            st.switch_page("pages/researcher.py")
+            st.switch_page("pages/onderzoeker.py")
 
     # Expertise — apart blok buiten de loop hierboven
     st.subheader("Expertise")

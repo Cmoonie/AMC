@@ -28,6 +28,17 @@ def login_pagina():
             st.session_state.rol = "gebruiker"
             st.session_state.gebruikersnaam = "Gebruiker"
 
+        elif gebruikersnaam == "sjors" and wachtwoord == "test123":
+            st.session_state.ingelogd = True
+            st.session_state.rol = "gebruiker"
+            st.session_state.gebruikersnaam = "Sjors"
+            st.rerun()
+        elif        gebruikersnaam == "marianne" and wachtwoord == "test123":
+            st.session_state.ingelogd = True
+            st.session_state.rol = "gebruiker"
+            st.session_state.gebruikersnaam = "Marianne"
+            st.rerun()
+
             st.rerun()    
         else:
             st.error("Onjuiste gebruikersnaam of wachtwoord!")

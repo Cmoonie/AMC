@@ -42,7 +42,7 @@ else:
     for _, persoon in betrokken.iterrows():
         if st.button(f"👤 {persoon['name']}", key=f"exp_persoon_{persoon['id']}"):
             st.session_state.geselecteerde_persoon = persoon["id"]
-            st.switch_page("pages/researcher.py")
+            st.switch_page("pages/onderzoeker.py")
 
     # Terug knop
     if st.button("← Terug naar zoeken"):

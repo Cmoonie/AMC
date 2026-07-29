@@ -66,9 +66,9 @@ for _, koppeling in personen_expertise.iterrows():
                  f"e_{koppeling['expertise_id']}")
 
 # Sla op als HTML
-net.save_graph("knowlegdegrapgh.html")
+net.save_graph("kennisgraaf.html")
 
 # Toon in Streamlit
-with open("knowledgegraph.html", "r", encoding="utf-8") as f:
+with open("kennisgraaf.html", "r", encoding="utf-8") as f:
     html = f.read()
 components.html(html, height=650)

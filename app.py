@@ -6,7 +6,10 @@ import numpy as np
 import json
 
 # Database verbinding
-conn = sqlite3.connect("spider.db")
+# conn = sqlite3.connect("spider.db")
+import os
+db_path = os.path.join(os.path.dirname(__file__), "spider.db")
+conn = sqlite3.connect(db_path)
 
 from dotenv import load_dotenv #laad de .enc library
 import os                      #laad de os library om bestanden te lezen

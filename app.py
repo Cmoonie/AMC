@@ -183,7 +183,10 @@ if zoekterm:
     resultaat = pd.concat([resultaat, semantische_resultaten]).drop_duplicates()
     st.success(f"{len(resultaat)} onderzoeker(s) gevonden")
 
+    col_links, col_rechts = st.columns([1, 1])
+
     # Gevonden onderzoekers
+with col_links:
     st.subheader("Gevonden onderzoekers")
     lopende = pd.read_sql("SELECT leider_id FROM lopende_projecten", conn)
     actieve_leiders = lopende["leider_id"].tolist()
@@ -215,7 +218,7 @@ if zoekterm:
                 if st.button(f"🔬 {exp['label']}", key=f"exp_{persoon['id']}_{exp['id']}"):
                     st.session_state.geselecteerde_expertise = exp["id"]
                     st.switch_page("pages/expertise.py")
-
+with col_rechts:
     if not resultaat.empty:
         with st.spinner("Samenvatting genereren ..."):
             samenvatting = genereer_samenvatting(zoekterm, resultaat)

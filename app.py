@@ -165,61 +165,63 @@ if zoekterm:
    
  
    
-   #combineer alles
+# Combineer alles
     resultaat = pd.concat([naam_resultaat, expertise_resultaat]).drop_duplicates()
 
     # Semantisch zoeken via publicaties
     top_pmids = semantisch_zoeken(zoekterm)
     semantische_resultaten = pd.read_sql(f"""
-    SELECT DISTINCT p.* FROM persons p
-    JOIN publications pub ON (
-        LOWER(pub.authors) LIKE LOWER('%' || p.name || '%')
-        OR LOWER(pub.authors) LIKE LOWER('%' || SUBSTR(p.name, INSTR(p.name, ' ') + 1) || '%')
-    )
-    WHERE pub.pmid IN ({','.join(['?']*len(top_pmids))})
-""", conn, params=top_pmids)    
-    
+        SELECT DISTINCT p.* FROM persons p
+        JOIN publications pub ON (
+            LOWER(pub.authors) LIKE LOWER('%' || p.name || '%')
+            OR LOWER(pub.authors) LIKE LOWER('%' || SUBSTR(p.name, INSTR(p.name, ' ') + 1) || '%')
+        )
+        WHERE pub.pmid IN ({','.join(['?']*len(top_pmids))})
+    """, conn, params=top_pmids)
+
     # Voeg toe aan resultaten
     resultaat = pd.concat([resultaat, semantische_resultaten]).drop_duplicates()
     st.success(f"{len(resultaat)} onderzoeker(s) gevonden")
 
     col_links, col_rechts = st.columns([1, 1])
 
-    # Gevonden onderzoekers
-with col_links:
-    st.subheader("Gevonden onderzoekers")
-    lopende = pd.read_sql("SELECT leider_id FROM lopende_projecten", conn)
-    actieve_leiders = lopende["leider_id"].tolist()
+    with col_links:
+        st.subheader("Gevonden onderzoekers")
+        lopende = pd.read_sql("SELECT leider_id FROM lopende_projecten", conn)
+        actieve_leiders = lopende["leider_id"].tolist()
 
-    for _, persoon in resultaat.iterrows():
-        label = f"🟢 {persoon['name']}" if persoon["id"] in actieve_leiders else f"👤 {persoon['name']}"
-        col1, col2 = st.columns([3, 1])
-        with col1:
-            if st.button(label, key=f"persoon_{persoon['id']}"):
-                st.session_state.geselecteerde_persoon = persoon["id"]
-                st.switch_page("pages/onderzoeker.py")
-        with col2:
-            if persoon["id"] in actieve_leiders:
-                if st.button("🔬 Project", key=f"project_{persoon['id']}"):
-                    # Haal project op van deze persoon
-                    project = pd.read_sql(f"SELECT id FROM lopende_projecten WHERE leider_id = {persoon['id']} LIMIT 1", conn)
-                    if not project.empty:
-                        st.session_state.geselecteerd_lopend_project = int(project.iloc[0]["id"])
-                        st.switch_page("pages/lopend_project.py")                
+        for _, persoon in resultaat.iterrows():
+            label = f"🟢 {persoon['name']}" if persoon["id"] in actieve_leiders else f"👤 {persoon['name']}"
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                if st.button(label, key=f"persoon_{persoon['id']}"):
+                    st.session_state.geselecteerde_persoon = persoon["id"]
+                    st.switch_page("pages/onderzoeker.py")
+            with col2:
+                if persoon["id"] in actieve_leiders:
+                    if st.button("🔬 Project", key=f"project_{persoon['id']}"):
+                        project = pd.read_sql(f"SELECT id FROM lopende_projecten WHERE leider_id = {persoon['id']} LIMIT 1", conn)
+                        if not project.empty:
+                            st.session_state.geselecteerd_lopend_project = int(project.iloc[0]["id"])
+                            st.switch_page("pages/lopend_project.py")
 
-    # Expertise — apart blok buiten de loop hierboven
-    st.subheader("Expertise")
-    for _, persoon in resultaat.iterrows():
-        exp_ids = personen_expertise[personen_expertise["person_id"] == persoon["id"]]["expertise_id"].tolist()
-        exp_details = expertise[expertise["id"].isin(exp_ids)]
-        if not exp_details.empty:
-            st.write(f"**{persoon['name']}:**")
-            for _, exp in exp_details.iterrows():
-                if st.button(f"🔬 {exp['label']}", key=f"exp_{persoon['id']}_{exp['id']}"):
-                    st.session_state.geselecteerde_expertise = exp["id"]
-                    st.switch_page("pages/expertise.py")
-with col_rechts:
-    if not resultaat.empty:
-        with st.spinner("Samenvatting genereren ..."):
-            samenvatting = genereer_samenvatting(zoekterm, resultaat)
-            st.info(samenvatting)
+        # Expertise
+        st.subheader("Expertise")
+        for _, persoon in resultaat.iterrows():
+            exp_ids = personen_expertise[personen_expertise["person_id"] == persoon["id"]]["expertise_id"].tolist()
+            exp_details = expertise[expertise["id"].isin(exp_ids)]
+            if not exp_details.empty:
+                st.write(f"**{persoon['name']}:**")
+                for _, exp in exp_details.iterrows():
+                    if st.button(f"🔬 {exp['label']}", key=f"exp_{persoon['id']}_{exp['id']}"):
+                        st.session_state.geselecteerde_expertise = exp["id"]
+                        st.switch_page("pages/expertise.py")
+
+    with col_rechts:
+        if not resultaat.empty:
+            with st.spinner("Samenvatting genereren ..."):
+                samenvatting = genereer_samenvatting(zoekterm, resultaat)
+                st.info(samenvatting)
+
+else:
+    st.info("Typ een naam, expertise of project om te zoeken.")   

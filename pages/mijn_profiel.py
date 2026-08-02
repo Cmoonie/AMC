@@ -30,8 +30,6 @@ cursor.execute("SELECT id FROM persons WHERE name = ?", (gebruikersnaam,))
 result = cursor.fetchone()
 persoon_id = result[0] if result else None
 
-st.write(f"gebruikersnaam: {gebruikersnaam}")
-st.write(f"persoon_id: {persoon_id}")
 
 # Laad profiel uit database
 cursor = conn.cursor()
@@ -181,33 +179,27 @@ st.subheader("📋 Mijn lopende projecten")
 
 mijn_projecten = pd.read_sql(f"SELECT * FROM lopende_projecten WHERE leider_id = {persoon_id}", conn) if persoon_id else pd.DataFrame() 
 
-
-cursor.execute("""
-    INSERT INTO lopende_projecten (naam, beschrijving, leider_id, datum)
-    VALUES (?, ?, ?, ?)
-""", (project_naam, project_beschrijving, persoon_id, str(date.today())))
-
 if mijn_projecten.empty:
     st.info("Je hebt nog geen lopende projecten.")
 else:
     for _, project in mijn_projecten.iterrows():
         st.write(f"🔬 **{project['naam']}** — {project['beschrijving'][:50]}...")
         
-    col1, col2, col3 = st.columns([2, 1, 1])
-    with col1:
-        if st.button("🔗 Bekijk project", key=f"bekijk_{project['id']}"):
-            st.session_state.geselecteerd_lopend_project = int(project["id"])
-            st.switch_page("pages/lopend_project.py")
-    with col2:
-        if st.button("✏️ Aanpassen", key=f"aanpas_{project['id']}"):
-            st.session_state.aanpassen_project_id = project["id"]
-    with col3:
-        if st.button("🗑️ Verwijderen", key=f"verwijder_{project['id']}"):
-            cursor.execute("DELETE FROM lopende_projecten WHERE id = ?", (project["id"],))
-            cursor.execute("DELETE FROM project_deelnemers WHERE project_id = ?", (project["id"],))
-            conn.commit()
-            st.success("✅ Project verwijderd!")
-            st.rerun()
+        col1, col2, col3 = st.columns([2, 1, 1])
+        with col1:
+            if st.button("🔗 Bekijk project", key=f"bekijk_{project['id']}"):
+                st.session_state.geselecteerd_lopend_project = int(project["id"])
+                st.switch_page("pages/lopend_project.py")
+        with col2:
+            if st.button("✏️ Aanpassen", key=f"aanpas_{project['id']}"):
+                st.session_state.aanpassen_project_id = project["id"]
+        with col3:
+            if st.button("🗑️ Verwijderen", key=f"verwijder_{project['id']}"):
+                cursor.execute("DELETE FROM lopende_projecten WHERE id = ?", (project["id"],))
+                cursor.execute("DELETE FROM project_deelnemers WHERE project_id = ?", (project["id"],))
+                conn.commit()
+                st.success("✅ Project verwijderd!")
+                st.rerun()
 
 # Aanpassen formulier
 if "aanpassen_project_id" in st.session_state and st.session_state.aanpassen_project_id:
@@ -226,21 +218,6 @@ if "aanpassen_project_id" in st.session_state and st.session_state.aanpassen_pro
             st.session_state.aanpassen_project_id = None
             st.success("✅ Project bijgewerkt!")
             st.rerun()
-            
-    st.divider()
-    st.subheader("✏️ Project aanpassen")
-    nieuwe_naam = st.text_input("Naam", value=huidig["naam"], key="aanpas_naam")
-    nieuwe_beschrijving = st.text_area("Beschrijving", value=huidig["beschrijving"], key="aanpas_beschrijving")
-    
-    if st.button("💾 Opslaan", key="opslaan_project"):
-        cursor = conn.cursor()
-        cursor.execute("UPDATE lopende_projecten SET naam = ?, beschrijving = ? WHERE id = ?",
-                       (nieuwe_naam, nieuwe_beschrijving, project_id))
-        conn.commit()
-        st.session_state.aanpassen_project_id = None
-        st.success("✅ Project bijgewerkt!")
-        st.rerun()        
 
-    # Terug knop onderaan
-    if st.button("← Terug naar zoeken", key="terug_onder"):
-        st.switch_page("app.py")
+if st.button("← Terug naar zoeken", key="terug_onder"):
+    st.switch_page("app.py")

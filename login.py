@@ -26,6 +26,12 @@ def login_pagina():
                 st.session_state.rol = "beheerder"
                 st.session_state.gebruikersnaam = "Admin"
                 st.switch_page("pages/beheer.py")
+
+            elif gebruikersnaam == "robert" and wachtwoord == "test123":
+                st.session_state.ingelogd = True
+                st.session_state.rol = "gebruiker"
+                st.session_state.gebruikersnaam = "Robert de Jonge"
+                st.rerun()
             else:
                 # Check database gebruikers
                 import sqlite3

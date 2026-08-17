@@ -31,17 +31,18 @@ def login_pagina():
                 st.session_state.ingelogd = True
                 st.session_state.rol = "gebruiker"
                 st.session_state.gebruikersnaam = "Robert de Jonge"
+
+            elif gebruikersnaam == "sjors" and wachtwoord == "test123":
+                st.session_state.ingelogd = True
+                st.session_state.rol = "gebruiker"
+                st.session_state.gebruikersnaam = "Sjors In 't Veld"
+                 
+            elif gebruikersnaam == "martijn" and wachtwoord == "test123":
+                st.session_state.ingelogd = True
+                st.session_state.rol = "gebruiker"
+                st.session_state.gebruikersnaam = "Martijn C Schut"
                 st.rerun()
-            else:
-                # Check database gebruikers
-                import sqlite3
-                import os
-                db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "spider.db")
-                conn = sqlite3.connect(db_path)
-                cursor = conn.cursor()
-                cursor.execute("SELECT * FROM gebruikers WHERE gebruikersnaam = ? AND wachtwoord = ?",
-                               (gebruikersnaam, wachtwoord))
-                gebruiker = cursor.fetchone()
+
                 
                 if gebruiker:
                     st.session_state.ingelogd = True
@@ -51,6 +52,3 @@ def login_pagina():
                 else:
                     st.error("Onjuiste gebruikersnaam of wachtwoord!")
     
-    with col2:
-        if st.button("📝 Registreren"):
-            st.switch_page("pages/registreren.py")

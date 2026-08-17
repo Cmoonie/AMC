@@ -70,7 +70,8 @@ col1, col2 = st.columns([2, 1])
 
 with col1:
     st.subheader(rol.capitalize())
-    st.write("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
+    bio_tekst = profiel[3] if profiel and profiel[3] else ""
+    st.write(bio_tekst if bio_tekst else "Geen bio beschikbaar.")
 
 with col2:
     st.image("https://picsum.photos/300/400", width=300)

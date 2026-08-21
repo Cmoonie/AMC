@@ -222,21 +222,38 @@ if zoekterm:
                     if st.button(f"🔬 {exp['label']}", key=f"exp_{persoon['id']}_{exp['id']}"):
                         st.session_state.geselecteerde_expertise = exp["id"]
                         uitgewerkte_expertise = {
-                            "methotrexate": "pages/expertise_methotrexaat.py",
-                            "methotrexaat": "pages/expertise_methotrexaat.py",
-                            "methotrexate polyglutamates": "pages/expertise_methotrexaat.py",
-            }
-            label = exp['label'].lower()
-            if label in uitgewerkte_expertise:
-                st.switch_page(uitgewerkte_expertise[label])
-            else:
-                st.session_state.geselecteerde_expertise = exp["id"]
-                st.switch_page("pages/expertise.py")
+    # Robert
+    "methotrexate": "pages/expertise_methotrexaat.py",
+    "methotrexaat": "pages/expertise_methotrexaat.py",
+    "methotrexate polyglutamates": "pages/expertise_methotrexaat.py",
+    "methotrexate polyglutamate": "pages/expertise_methotrexaat.py",
+    "methotrexate polyglutamates": "pages/expertise_methotrexaat.py",       
+    "gene expression": "pages/expertise_gene_expression.py",
+    "laboratory medicine": "pages/expertise_laboratorium_diagnostiek.py",
+    
+    # Sjors
+    "neurofilament light chain": "pages/expertise_neurofilament.py",
+    "amyloid beta": "pages/expertise_amyloid.py",
+    "systemic amyloidosis": "pages/expertise_amyloid.py",
+    "attrv amyloidosis": "pages/expertise_amyloid.py",
+    
+    # Martijn
+    "clinical decision making": "pages/expertise_clinical_decision.py",
+    "clinical prediction models": "pages/expertise_clinical_decision.py",
+    "epidemiology": "pages/expertise_epidemiology.py",
+}
+                     
+            # label = exp['label'].lower()
+            # if label in uitgewerkte_expertise:
+            #     st.switch_page(uitgewerkte_expertise[label])
+            # else:
+            #     st.session_state.geselecteerde_expertise = exp["id"]
+            #     st.switch_page("pages/expertise.py")
 
-                with col_rechts:
-                    if not resultaat.empty:
-                        with st.spinner("Samenvatting genereren ..."):
-                            samenvatting = genereer_samenvatting(zoekterm, resultaat)
-                            st.info(samenvatting)
+            #     with col_rechts:
+            #         if not resultaat.empty:
+            #             with st.spinner("Samenvatting genereren ..."):
+            #                 samenvatting = genereer_samenvatting(zoekterm, resultaat)
+            #                 st.info(samenvatting)
 
   

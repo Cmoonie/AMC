@@ -70,6 +70,19 @@ else:
     for _, persoon in betrokken.iterrows():
         st.write(f"👤 {persoon['name']}")
 
+
+      # Documenten
+    st.divider()
+    st.subheader("📎 Documenten")
+         
+    documenten = pd.read_sql(f"SELECT * FROM project_documenten WHERE project_id = {project_id}", conn)
+             
+    if documenten.empty:
+        st.write("Geen documenten beschikbaar.")
+    else:
+         for _, doc in documenten.iterrows():
+             st.markdown(f"📄 [{doc['naam']}]({doc['url']})")   
+
     st.divider()
 
     # Aanmelden check
@@ -84,6 +97,7 @@ elif eigen_id in deelnemer_ids:
             st.success("✅ Je bent afgemeld!")
             st.rerun()
 
+   
 
 if st.button("← Terug naar zoeken"):
       

@@ -113,13 +113,31 @@ else:
     exp_ids = personen_expertise[personen_expertise["person_id"] == persoon_id]["expertise_id"].tolist()
     exp_details = expertise[expertise["id"].isin(exp_ids)]
     
+  
     uitgewerkte_expertise = {
-        "methotrexate": "pages/expertise_methotrexaat.py",
-        "methotrexaat": "pages/expertise_methotrexaat.py",
-        "methotrexate polyglutamates": "pages/expertise_methotrexaat.py",
-    }
+    # Robert
+    "methotrexate": "pages/expertise_methotrexaat.py",
+    "methotrexaat": "pages/expertise_methotrexaat.py",
+    "methotrexate polyglutamates": "pages/expertise_methotrexaat.py",
+    "gene expression": "pages/expertise_gene_expression.py",
+    "laboratory medicine": "pages/expertise_laboratorium_diagnostiek.py",
+    
+    # Sjors
+    "neurofilament light chain": "pages/expertise_neurofilament.py",
+    "amyloid beta": "pages/expertise_amyloid.py",
+    "systemic amyloidosis": "pages/expertise_amyloid.py",
+    
+    # Martijn
+    "clinical decision making": "pages/expertise_clinical_decision.py",
+    "clinical practice guidelines": "pages/expertise_clinical_decision.py",
+    "clinical prediction models": "pages/expertise_clinical_decision.py",
+    "epidemiology": "pages/expertise_epidemiology.py",
+    "alzheimer": "pages/expertise_amyloid.py",
+}
+    
     
     for _, exp in exp_details.iterrows():
+     if exp['label'].lower() in uitgewerkte_expertise:
         if st.button(f"🔬 {exp['label']}", key=f"exp_{exp['id']}"):
             label = exp['label'].lower()
             if label in uitgewerkte_expertise:

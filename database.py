@@ -144,6 +144,19 @@ cursor.execute("""
 conn.commit()
 print("Gebruikers tabel aangemaakt!")
 
+# Documenten tabel aanmaken
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS project_documenten (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        project_id INTEGER,
+        naam TEXT,
+        url TEXT,
+        type TEXT
+    )
+""")
+conn.commit()
+print("Project documenten tabel aangemaakt!")
+
 # Sluit verbinding
 conn.close()
 print("Klaar!")

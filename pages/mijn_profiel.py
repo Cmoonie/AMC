@@ -74,13 +74,33 @@ with col1:
     st.write(bio_tekst if bio_tekst else "Geen bio beschikbaar.")
 
 with col2:
-    st.image("https://picsum.photos/300/400", width=300)
-
+    initialen = "".join([naam[0] for naam in gebruikersnaam.split() if naam])[:2].upper()
+    st.markdown(f"""
+        <div style="
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background-color: #003082;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: auto;
+        ">
+            <span style="
+                color: white;
+                font-size: 72px;
+                font-weight: bold;
+                font-family: Arial;
+            ">{initialen}</span>
+        </div>
+    """, unsafe_allow_html=True)
+    
 st.divider()
 st.subheader("📧 Contact")
 
 
-st.write("📧 emailadres@amsterdamumc.nl")
+email_tekst = profiel[2] if profiel and profiel[2] else "Geen email beschikbaar."
+st.write(f"📧 {email_tekst}")
 
 with st.expander("Klik om aan te passen"):
     nieuwe_naam = st.text_input("Naam", value=gebruikersnaam)

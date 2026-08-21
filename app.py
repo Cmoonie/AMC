@@ -111,7 +111,7 @@ def genereer_samenvatting(zoekterm, resultaat, taal="Nederlands"):
         
         # Stuur prompt naar Groq AI en ontvang antwoord
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-20b",
         messages=[{"role": "user", "content": prompt}]
     )
     return response.choices[0].message.content

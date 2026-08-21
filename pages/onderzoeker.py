@@ -28,7 +28,7 @@ def genereer_bio(naam):
     prompt = f"Geef een korte bio van 2-3 zinnen over onderzoeker {naam} op basis van deze publicaties: {titels}"
     
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-20b",
         messages=[{"role": "user", "content": prompt}]
     )
     return response.choices[0].message.content
@@ -67,16 +67,38 @@ else:
     if st.button("← Terug naar zoeken", key="terug_boven"):
         st.switch_page("app.py")
 
-    # Naam en info
-    st.title(persoon["name"])
-    col1, col2 = st.columns([2, 1])
-    with col1:
-         st.subheader(persoon["department"])
-         bio = genereer_bio(persoon["name"]) 
-    if bio:
-        st.write(bio)       
-    with col2:
-        st.image("https://picsum.photos/300/400", width=300)
+
+     # Naam + cirkel + department op zelfde rij
+    initialen = "".join([naam[0] for naam in persoon['name'].split() if naam])[:2].upper()
+    
+    col_info, col_cirkel = st.columns([2, 1])
+    with col_info:
+        st.title(persoon["name"])
+        st.subheader(persoon["department"])
+        bio = genereer_bio(persoon["name"])
+        if bio:
+            st.write(bio)
+    with col_cirkel:
+        st.markdown(f"""
+                <div style="
+                    width: 200px;
+                    height: 200px;
+                    border-radius: 50%;
+                    background-color: #003082;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: auto;
+                ">
+                    <span style="
+                        color: white;
+                        font-size: 72px;
+                        font-weight: bold;
+                        font-family: Arial;
+                    ">{initialen}</span>
+                </div>
+            """, unsafe_allow_html=True)
+      
 
     st.divider()
     st.subheader("📧 Contact")

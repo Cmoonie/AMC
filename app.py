@@ -125,10 +125,16 @@ personen_expertise = pd.read_sql("SELECT * FROM persons_expertise", conn) #tusse
 st.title("Spider")
 st.subheader("Zoek onderzoeksexpertise binnen Division 9")
 
-department_filter = st.selectbox(
-    "Filter op department",
-    ["Alle"] + personen["department"].unique().tolist()
-)
+afdelingen = personen["department"].unique().tolist()
+
+if len(afdelingen) > 1:
+    department_filter = st.selectbox(
+        "Filter op department",
+        ["Alle"] + afdelingen
+    )
+else:
+    department_filter = "Alle"
+
 # Taal selectie
 if "taal" not in st.session_state:
     st.session_state.taal = "Nederlands"

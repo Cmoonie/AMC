@@ -33,8 +33,34 @@ else:
 
     # Titel
     st.title(f"🔬 {exp['label']}")
+        # Uitleg van de expertise via AI
+    from groq import Groq
+    from dotenv import load_dotenv
+    import os
+    load_dotenv()
+    client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+    
+    response = client.chat.completions.create(
+        model="openai/gpt-oss-20b",
+        messages=[{"role": "user", "content": f"Geef een korte uitleg van 2-3 zinnen over het onderzoeksgebied '{exp['label']}' in medische context. Schrijf in het Nederlands."}]
+    )
+    st.info(response.choices[0].message.content)
 
-    # Betrokken onderzoekers
+        # Check of expertise een eigen pagina heeft
+    uitgewerkte_expertise = {
+        "methotrexate": "pages/expertise_methotrexaat.py",
+        "methotrexaat": "pages/expertise_methotrexaat.py",
+        "methotrexate polyglutamates": "pages/expertise_methotrexaat.py",
+    }
+    
+    label_lower = exp['label'].lower()
+    if label_lower in uitgewerkte_expertise:
+        if st.button("📖 Lees meer over deze expertise"):
+            st.switch_page(uitgewerkte_expertise[label_lower])
+    
+    st.divider()
+
+        # Betrokken onderzoekers
     st.divider()
     st.subheader("Onderzoekers met deze expertise")
     persoon_ids = personen_expertise[personen_expertise["expertise_id"] == expertise_id]["person_id"].tolist()
@@ -43,6 +69,28 @@ else:
         if st.button(f"👤 {persoon['name']}", key=f"exp_persoon_{persoon['id']}"):
             st.session_state.geselecteerde_persoon = persoon["id"]
             st.switch_page("pages/onderzoeker.py")
+    
+    # Relevante publicaties
+    st.divider()
+    st.subheader("📄 Relevante publicaties")
+    publicaties = pd.read_sql(f"""
+        SELECT title, year, pubmed_url FROM publications 
+        WHERE LOWER(keywords) LIKE LOWER('%{exp['label']}%')
+        OR LOWER(mesh_terms) LIKE LOWER('%{exp['label']}%')
+        OR LOWER(abstract) LIKE LOWER('%{exp['label']}%')
+        LIMIT 5
+    """, conn)
+    
+    if publicaties.empty:
+        st.write("Geen publicaties gevonden.")
+    else:
+        for _, pub in publicaties.iterrows():
+            if pub["pubmed_url"]:
+                st.markdown(f"📄 [{pub['title'][:80]}...]({pub['pubmed_url']}) — *{pub['year']}*")
+            else:
+                st.write(f"📄 {pub['title'][:80]}... — *{pub['year']}*")
+
+
 
     # Terug knop
     if st.button("← Terug naar zoeken"):

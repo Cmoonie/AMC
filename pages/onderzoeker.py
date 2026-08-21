@@ -112,10 +112,22 @@ else:
     st.subheader("Expertise")
     exp_ids = personen_expertise[personen_expertise["person_id"] == persoon_id]["expertise_id"].tolist()
     exp_details = expertise[expertise["id"].isin(exp_ids)]
+    
+    uitgewerkte_expertise = {
+        "methotrexate": "pages/expertise_methotrexaat.py",
+        "methotrexaat": "pages/expertise_methotrexaat.py",
+        "methotrexate polyglutamates": "pages/expertise_methotrexaat.py",
+    }
+    
     for _, exp in exp_details.iterrows():
         if st.button(f"🔬 {exp['label']}", key=f"exp_{exp['id']}"):
-            st.session_state.geselecteerde_expertise = exp["id"]
-            st.switch_page("pages/expertise.py")
+            label = exp['label'].lower()
+            if label in uitgewerkte_expertise:
+                st.switch_page(uitgewerkte_expertise[label])
+            else:
+                st.session_state.geselecteerde_expertise = exp["id"]
+                st.switch_page("pages/expertise.py")
+
 
 
 # Lopende projecten

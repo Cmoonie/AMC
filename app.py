@@ -63,6 +63,8 @@ st.markdown("""
     [data-testid="stSidebarNav"] { display: none; }
     </style>
 """, unsafe_allow_html=True)
+from styling import set_background
+set_background("home")
 
 
 
@@ -121,6 +123,41 @@ personen = pd.read_sql("SELECT * FROM persons", conn) #personen inladen
 expertise = pd.read_sql("SELECT * FROM expertise", conn) #expertise inladen
 personen_expertise = pd.read_sql("SELECT * FROM persons_expertise", conn) #tussentabel inladen
 
+# Mapping van expertise-label (lowercase) naar uitgewerkte pagina
+# Buiten de loop gezet zodat hij niet bij elke knop-klik opnieuw wordt aangemaakt
+uitgewerkte_expertise = {
+    # Robert
+    "methotrexate": "pages/expertise_methotrexaat.py",
+    "methotrexaat": "pages/expertise_methotrexaat.py",
+    "methotrexate polyglutamates": "pages/expertise_methotrexaat.py",
+    "methotrexate polyglutamate": "pages/expertise_methotrexaat.py",
+    "gene expression": "pages/expertise_gene_expression.py",
+    "laboratory medicine": "pages/expertise_laboratorium_diagnostiek.py",
+
+    # Sjors
+    "neurofilament light chain": "pages/expertise_neurofilament.py",
+    "amyloid beta": "pages/expertise_amyloid.py",
+    "systemic amyloidosis": "pages/expertise_amyloid.py",
+    "attrv amyloidosis": "pages/expertise_amyloid.py",
+
+    # Martijn
+    "clinical decision making": "pages/expertise_clinical_decision.py",
+    "clinical prediction models": "pages/expertise_clinical_decision.py",
+    "epidemiology": "pages/expertise_epidemiology.py",
+    "clinical practice guidelines": "pages/expertise_clinical_decision.py",
+    "alzheimer": "pages/expertise_amyloid.py",
+}
+
+# Nette paginanamen voor de knoptekst
+pagina_namen = {
+    "pages/expertise_methotrexaat.py": "Methotrexaat",
+    "pages/expertise_gene_expression.py": "Gene Expression",
+    "pages/expertise_laboratorium_diagnostiek.py": "Laboratorium Diagnostiek",
+    "pages/expertise_neurofilament.py": "Neurofilament Light Chain",
+    "pages/expertise_amyloid.py": "Amyloid Beta",
+    "pages/expertise_clinical_decision.py": "Clinical Decision Making",
+    "pages/expertise_epidemiology.py": "Epidemiologie",
+}
 
 st.title("Spider")
 st.subheader("Zoek onderzoeksexpertise binnen Division 9")
@@ -151,6 +188,10 @@ if "laatste_zoekterm" not in st.session_state:
     st.session_state.laatste_zoekterm = ""
 zoekterm = st.text_input("Zoek op naam, project of expertise" if taal == "Nederlands" else "Search by name, project or expertise", 
                           value=st.session_state.laatste_zoekterm)  
+
+# Expliciete zoekknop naast automatisch zoeken bij typen (bv. na Enter)
+zoek_geklikt = st.button("🔍 Zoeken")
+
 if zoekterm:
     st.session_state.laatste_zoekterm = zoekterm
 if zoekterm:
@@ -211,49 +252,28 @@ if zoekterm:
                             st.session_state.geselecteerd_lopend_project = int(project.iloc[0]["id"])
                             st.switch_page("pages/lopend_project.py")
 
-        # Expertise
+        # Expertise — alleen tags uit uitgewerkte_expertise, 1 knop per unieke pagina
         st.subheader("Expertise")
         for _, persoon in resultaat.iterrows():
             exp_ids = personen_expertise[personen_expertise["person_id"] == persoon["id"]]["expertise_id"].tolist()
             exp_details = expertise[expertise["id"].isin(exp_ids)]
-            if not exp_details.empty:
+            gematchte = exp_details[exp_details["label"].str.lower().isin(uitgewerkte_expertise)]
+
+            if not gematchte.empty:
                 st.write(f"**{persoon['name']}:**")
-                for _, exp in exp_details.iterrows():
-                    if st.button(f"🔬 {exp['label']}", key=f"exp_{persoon['id']}_{exp['id']}"):
-                        st.session_state.geselecteerde_expertise = exp["id"]
-                        uitgewerkte_expertise = {
-    # Robert
-    "methotrexate": "pages/expertise_methotrexaat.py",
-    "methotrexaat": "pages/expertise_methotrexaat.py",
-    "methotrexate polyglutamates": "pages/expertise_methotrexaat.py",
-    "methotrexate polyglutamate": "pages/expertise_methotrexaat.py",
-    "methotrexate polyglutamates": "pages/expertise_methotrexaat.py",       
-    "gene expression": "pages/expertise_gene_expression.py",
-    "laboratory medicine": "pages/expertise_laboratorium_diagnostiek.py",
-    
-    # Sjors
-    "neurofilament light chain": "pages/expertise_neurofilament.py",
-    "amyloid beta": "pages/expertise_amyloid.py",
-    "systemic amyloidosis": "pages/expertise_amyloid.py",
-    "attrv amyloidosis": "pages/expertise_amyloid.py",
-    
-    # Martijn
-    "clinical decision making": "pages/expertise_clinical_decision.py",
-    "clinical prediction models": "pages/expertise_clinical_decision.py",
-    "epidemiology": "pages/expertise_epidemiology.py",
-}
-                     
-            # label = exp['label'].lower()
-            # if label in uitgewerkte_expertise:
-            #     st.switch_page(uitgewerkte_expertise[label])
-            # else:
-            #     st.session_state.geselecteerde_expertise = exp["id"]
-            #     st.switch_page("pages/expertise.py")
+                bestemmingen = {}
+                for _, exp in gematchte.iterrows():
+                    pagina = uitgewerkte_expertise[exp["label"].lower()]
+                    if pagina not in bestemmingen:
+                        bestemmingen[pagina] = True
 
-            #     with col_rechts:
-            #         if not resultaat.empty:
-            #             with st.spinner("Samenvatting genereren ..."):
-            #                 samenvatting = genereer_samenvatting(zoekterm, resultaat)
-            #                 st.info(samenvatting)
+                for pagina in bestemmingen:
+                    naam = pagina_namen.get(pagina, pagina)
+                    if st.button(f"🔬 {naam}", key=f"exp_{persoon['id']}_{pagina}"):
+                        st.switch_page(pagina)
 
-  
+    with col_rechts:
+        if not resultaat.empty:
+            with st.spinner("Samenvatting genereren ..."):
+                samenvatting = genereer_samenvatting(zoekterm, resultaat)
+                st.info(samenvatting)

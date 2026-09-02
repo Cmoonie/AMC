@@ -23,6 +23,8 @@ st.markdown("""
     [data-testid="stSidebarNav"] { display: none; }
     </style>
 """, unsafe_allow_html=True)
+from styling import set_background
+set_background("geschiedenis")
 
 # Sidebar
 st.sidebar.write(f"👤 **{st.session_state.get('gebruikersnaam', '')}**")

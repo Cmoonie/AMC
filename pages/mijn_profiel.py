@@ -3,7 +3,11 @@ import pandas as pd
 import sqlite3
 import os
 from datetime import date
-db_path = os.path.join(os.path.dirname(__file__),"..", "spider.db")
+
+# set_page_config MOET de allereerste Streamlit-aanroep zijn in het bestand
+st.set_page_config(layout="wide")
+
+db_path = os.path.join(os.path.dirname(__file__), "..", "spider.db")
 conn = sqlite3.connect(db_path)
 
 
@@ -13,6 +17,10 @@ if "ingelogd" not in st.session_state or not st.session_state.ingelogd:
     st.switch_page("app.py")
     st.stop()
 
+# Styling
+from styling import set_background
+set_background("profiel")
+
 # Sidebar CSS
 st.markdown("""
     <style>
@@ -20,7 +28,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-#Gebruikersnaam ophalen
+# Gebruikersnaam ophalen
 gebruikersnaam = st.session_state.get("gebruikersnaam", "")
 rol = st.session_state.get("rol", "")
 
@@ -29,7 +37,6 @@ cursor = conn.cursor()
 cursor.execute("SELECT id FROM persons WHERE name = ?", (gebruikersnaam,))
 result = cursor.fetchone()
 persoon_id = result[0] if result else None
-
 
 # Laad profiel uit database
 cursor = conn.cursor()
@@ -43,7 +50,6 @@ if not profiel:
     conn.commit()
     cursor.execute("SELECT * FROM profiel_data WHERE gebruikersnaam = ?", (gebruikersnaam,))
     profiel = cursor.fetchone()
-
 
 
 # Sidebar
@@ -60,10 +66,7 @@ if st.sidebar.button("🚪 Uitloggen"):
     st.session_state.rol = None
     st.rerun()
 
-st.set_page_config(layout="wide")
-
 # Pagina inhoud
-
 st.title(f"👤 {gebruikersnaam}")
 
 col1, col2 = st.columns([2, 1])
@@ -94,10 +97,9 @@ with col2:
             ">{initialen}</span>
         </div>
     """, unsafe_allow_html=True)
-    
+
 st.divider()
 st.subheader("📧 Contact")
-
 
 email_tekst = profiel[2] if profiel and profiel[2] else "Geen email beschikbaar."
 st.write(f"📧 {email_tekst}")
@@ -106,7 +108,7 @@ with st.expander("Klik om aan te passen"):
     nieuwe_naam = st.text_input("Naam", value=gebruikersnaam)
     nieuw_email = st.text_input("Email", value="emailadres@amsterdamumc.nl")
     nieuwe_bio = st.text_area("Bio", value="Lorem ipsum dolor sit amet...")
-    
+
     if st.button("💾 Opslaan"):
         st.session_state.gebruikersnaam = nieuwe_naam
         st.session_state.email = nieuw_email
@@ -115,10 +117,76 @@ with st.expander("Klik om aan te passen"):
         st.rerun()
 
 
+# ============================================================
+# Expertise (automatisch, uit publicaties) — zelfde systeem als onderzoeker.py
+# ============================================================
 st.divider()
-st.subheader("🔬 Expertise")
+st.subheader("🔬 Expertise (uit publicaties)")
 
-# Laad expertise uit database
+uitgewerkte_expertise = {
+    # Robert
+    "methotrexate": "pages/expertise_methotrexaat.py",
+    "methotrexaat": "pages/expertise_methotrexaat.py",
+    "methotrexate polyglutamates": "pages/expertise_methotrexaat.py",
+    "methotrexate polyglutamate": "pages/expertise_methotrexaat.py",
+    "gene expression": "pages/expertise_gene_expression.py",
+    "laboratory medicine": "pages/expertise_laboratorium_diagnostiek.py",
+
+    # Sjors
+    "neurofilament light chain": "pages/expertise_neurofilament.py",
+    "amyloid beta": "pages/expertise_amyloid.py",
+    "systemic amyloidosis": "pages/expertise_amyloid.py",
+    "attrv amyloidosis": "pages/expertise_amyloid.py",
+
+    # Martijn
+    "clinical decision making": "pages/expertise_clinical_decision.py",
+    "clinical prediction models": "pages/expertise_clinical_decision.py",
+    "epidemiology": "pages/expertise_epidemiology.py",
+    "clinical practice guidelines": "pages/expertise_clinical_decision.py",
+    "alzheimer": "pages/expertise_amyloid.py",
+}
+
+pagina_namen = {
+    "pages/expertise_methotrexaat.py": "Methotrexaat",
+    "pages/expertise_gene_expression.py": "Gene Expression",
+    "pages/expertise_laboratorium_diagnostiek.py": "Laboratorium Diagnostiek",
+    "pages/expertise_neurofilament.py": "Neurofilament Light Chain",
+    "pages/expertise_amyloid.py": "Amyloid Beta",
+    "pages/expertise_clinical_decision.py": "Clinical Decision Making",
+    "pages/expertise_epidemiology.py": "Epidemiologie",
+}
+
+if persoon_id is None:
+    st.write("Geen gekoppeld onderzoekersprofiel gevonden — expertise uit publicaties niet beschikbaar.")
+else:
+    expertise_df = pd.read_sql("SELECT * FROM expertise", conn)
+    personen_expertise_df = pd.read_sql("SELECT * FROM persons_expertise", conn)
+
+    exp_ids = personen_expertise_df[personen_expertise_df["person_id"] == persoon_id]["expertise_id"].tolist()
+    exp_details = expertise_df[expertise_df["id"].isin(exp_ids)]
+    gematchte = exp_details[exp_details["label"].str.lower().isin(uitgewerkte_expertise)]
+
+    if gematchte.empty:
+        st.write("Geen uitgewerkte expertise gevonden.")
+    else:
+        bestemmingen = {}
+        for _, exp in gematchte.iterrows():
+            pagina = uitgewerkte_expertise[exp["label"].lower()]
+            if pagina not in bestemmingen:
+                bestemmingen[pagina] = True
+
+        for pagina in bestemmingen:
+            naam = pagina_namen.get(pagina, pagina)
+            if st.button(f"🔬 {naam}", key=f"eigen_exp_{pagina}"):
+                st.switch_page(pagina)
+
+
+# ============================================================
+# Expertise (handmatig, vrij invulbaar) — bestaand systeem, ongewijzigd
+# ============================================================
+st.divider()
+st.subheader("✏️ Expertise (handmatig toegevoegd)")
+
 expertise_opgeslagen = profiel[4] if profiel[4] else ""
 expertise_lijst = expertise_opgeslagen.split(",") if expertise_opgeslagen else []
 
@@ -149,17 +217,15 @@ if expertise_lijst:
                            (",".join(expertise_lijst), gebruikersnaam))
             conn.commit()
             st.success(f"✅ Gewijzigd naar {gewijzigde_exp}!")
-            st.rerun()           
+            st.rerun()
 
-
-    
 
 st.divider()
 st.subheader("🎙️ Bestanden & Opnames")
 st.info("Upload hier je bestanden — PDF, Word of Google Docs link")
 
 uploaded_file = st.file_uploader(
-    "Kies een bestand", 
+    "Kies een bestand",
     type=["pdf", "docx", "txt"]
 )
 
@@ -172,7 +238,7 @@ st.subheader("🔗 Google Docs link toevoegen")
 google_link = st.text_input("Plak hier je Google Docs link")
 if st.button("💾 Link opslaan", key="save_link"):
     if google_link:
-        st.success("✅ Link opgeslagen!")                   
+        st.success("✅ Link opgeslagen!")
 
 st.divider()
 st.subheader("🔬 Lopend project starten")
@@ -180,7 +246,7 @@ st.subheader("🔬 Lopend project starten")
 with st.expander("➕ Nieuw project starten"):
     project_naam = st.text_input("Projectnaam", key="nieuw_project_naam")
     project_beschrijving = st.text_area("Beschrijving", key="nieuw_project_beschrijving")
-    
+
     if st.button("💾 Project starten", key="start_project"):
         if project_naam:
             cursor = conn.cursor()
@@ -198,14 +264,14 @@ with st.expander("➕ Nieuw project starten"):
 st.divider()
 st.subheader("📋 Mijn lopende projecten")
 
-mijn_projecten = pd.read_sql(f"SELECT * FROM lopende_projecten WHERE leider_id = {persoon_id}", conn) if persoon_id else pd.DataFrame() 
+mijn_projecten = pd.read_sql(f"SELECT * FROM lopende_projecten WHERE leider_id = {persoon_id}", conn) if persoon_id else pd.DataFrame()
 
 if mijn_projecten.empty:
     st.info("Je hebt nog geen lopende projecten.")
 else:
     for _, project in mijn_projecten.iterrows():
         st.write(f"🔬 **{project['naam']}** — {project['beschrijving'][:50]}...")
-        
+
         col1, col2, col3 = st.columns([2, 1, 1])
         with col1:
             if st.button("🔗 Bekijk project", key=f"bekijk_{project['id']}"):

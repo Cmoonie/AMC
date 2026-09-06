@@ -74,6 +74,7 @@ else:
       # Documenten
     st.divider()
     st.subheader("📎 Documenten")
+
          
     documenten = pd.read_sql(f"SELECT * FROM project_documenten WHERE project_id = {project_id}", conn)
              
@@ -84,6 +85,15 @@ else:
              st.markdown(f"📄 [{doc['naam']}]({doc['url']})")   
 
     st.divider()
+        # Audio/Video links
+    st.divider()
+    st.subheader("🎥 Audio & Video")
+    st.markdown("""
+    📹 [Projectpresentatie — Teams Recording](#)  
+    🎙️ [Podcast interview onderzoeker](#)  
+    📺 [Seminar opname Amsterdam UMC](#)
+    """)
+    st.caption("⚠️ Demo: links verwijzen naar externe bronnen zoals Microsoft Teams of YouTube.")
 
     # Aanmelden check
 if eigen_id == project["leider_id"]:

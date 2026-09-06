@@ -234,12 +234,60 @@ if uploaded_file is not None:
     st.success(f"✅ {uploaded_file.name} is geüpload!")
     st.warning("⚠️ Let op: bestanden worden nog niet permanent opgeslagen. Dit komt in een volgende versie.")
 
-# Google Docs link
-st.subheader("🔗 Google Docs link toevoegen")
-google_link = st.text_input("Plak hier je Google Docs link")
-if st.button("💾 Link opslaan", key="save_link"):
-    if google_link:
-        st.success("✅ Link opgeslagen!")
+# Laad opgeslagen links
+opgeslagen_links = profiel[6] if profiel and len(profiel) > 6 and profiel[6] else ""
+links_dict = {}
+if opgeslagen_links:
+    import json
+    try:
+        links_dict = json.loads(opgeslagen_links)
+    except:
+        links_dict = {}
+
+# Toon opgeslagen links
+if links_dict:
+    st.divider()
+    st.subheader("🔗 Mijn links")
+    
+    for key, emoji, label in [
+        ("google", "📄", "Google Docs"),
+        ("teams", "📹", "Teams Recording"),
+        ("podcast", "🎙️", "Podcast"),
+        ("opname", "📺", "Seminar opname"),
+    ]:
+        if links_dict.get(key):
+            col1, col2 = st.columns([4, 1])
+            with col1:
+                st.markdown(f"{emoji} [{label}]({links_dict[key]})")
+            with col2:
+                if st.button("🗑️", key=f"verwijder_{key}"):
+                    links_dict[key] = ""
+                    cursor.execute("UPDATE profiel_data SET links = ? WHERE gebruikersnaam = ?",
+                                   (__import__('json').dumps(links_dict), gebruikersnaam))
+                    conn.commit()
+                    st.rerun()
+
+# Links invoeren
+st.divider()
+st.subheader("🔗 Externe links toevoegen")
+google_link = st.text_input("📄 Google Docs link", value=links_dict.get("google", ""), key="google_link")
+teams_link = st.text_input("📹 Teams Recording link", value=links_dict.get("teams", ""), key="teams_link")
+podcast_link = st.text_input("🎙️ Podcast link", value=links_dict.get("podcast", ""), key="podcast_link")
+opname_link = st.text_input("📺 Seminar opname link", value=links_dict.get("opname", ""), key="opname_link")
+
+if st.button("💾 Links opslaan", key="save_links"):
+    import json
+    nieuwe_links = {
+        "google": google_link,
+        "teams": teams_link,
+        "podcast": podcast_link,
+        "opname": opname_link,
+    }
+    cursor.execute("UPDATE profiel_data SET links = ? WHERE gebruikersnaam = ?",
+                   (json.dumps(nieuwe_links), gebruikersnaam))
+    conn.commit()
+    st.success("✅ Links opgeslagen!")
+    st.rerun()
 
 st.divider()
 st.subheader("🔬 Lopend project starten")

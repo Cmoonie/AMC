@@ -3,6 +3,7 @@ import pandas as pd
 import sqlite3
 import os
 from datetime import date
+import time
 
 # set_page_config MOET de allereerste Streamlit-aanroep zijn in het bestand
 st.set_page_config(layout="wide")
@@ -184,40 +185,40 @@ else:
 # ============================================================
 # Expertise (handmatig, vrij invulbaar) — bestaand systeem, ongewijzigd
 # ============================================================
-st.divider()
-st.subheader("✏️ Expertise (handmatig toegevoegd)")
+# st.divider()
+# st.subheader("✏️ Expertise (handmatig toegevoegd)")
 
-expertise_opgeslagen = profiel[4] if profiel[4] else ""
-expertise_lijst = expertise_opgeslagen.split(",") if expertise_opgeslagen else []
+# expertise_opgeslagen = profiel[4] if profiel[4] else ""
+# expertise_lijst = expertise_opgeslagen.split(",") if expertise_opgeslagen else []
 
-for exp in expertise_lijst:
-    if exp:
-        st.write(f"🔬 {exp}")
+# for exp in expertise_lijst:
+#     if exp:
+#         st.write(f"🔬 {exp}")
 
-with st.expander("➕ Expertise toevoegen"):
-    nieuwe_exp = st.text_input("Expertise", key="nieuwe_exp")
-    if st.button("Toevoegen", key="exp_toevoegen"):
-        if nieuwe_exp:
-            expertise_lijst.append(nieuwe_exp)
-            cursor.execute("UPDATE profiel_data SET expertise = ? WHERE gebruikersnaam = ?",
-                           (",".join(expertise_lijst), gebruikersnaam))
-            conn.commit()
-            st.success(f"✅ {nieuwe_exp} toegevoegd!")
-            st.rerun()
+# with st.expander("➕ Expertise toevoegen"):
+#     nieuwe_exp = st.text_input("Expertise", key="nieuwe_exp")
+#     if st.button("Toevoegen", key="exp_toevoegen"):
+#         if nieuwe_exp:
+#             expertise_lijst.append(nieuwe_exp)
+#             cursor.execute("UPDATE profiel_data SET expertise = ? WHERE gebruikersnaam = ?",
+#                            (",".join(expertise_lijst), gebruikersnaam))
+#             conn.commit()
+#             st.success(f"✅ {nieuwe_exp} toegevoegd!")
+#             st.rerun()
 
-# Expertise wijzigen
-if expertise_lijst:
-    with st.expander("✏️ Expertise wijzigen"):
-        te_wijzigen_exp = st.selectbox("Selecteer expertise", expertise_lijst, key="wijzig_exp_select")
-        gewijzigde_exp = st.text_input("Nieuwe naam", value=te_wijzigen_exp, key="gewijzigde_exp")
-        if st.button("Opslaan", key="exp_wijzigen"):
-            index = expertise_lijst.index(te_wijzigen_exp)
-            expertise_lijst[index] = gewijzigde_exp
-            cursor.execute("UPDATE profiel_data SET expertise = ? WHERE gebruikersnaam = ?",
-                           (",".join(expertise_lijst), gebruikersnaam))
-            conn.commit()
-            st.success(f"✅ Gewijzigd naar {gewijzigde_exp}!")
-            st.rerun()
+# # Expertise wijzigen
+# if expertise_lijst:
+#     with st.expander("✏️ Expertise wijzigen"):
+#         te_wijzigen_exp = st.selectbox("Selecteer expertise", expertise_lijst, key="wijzig_exp_select")
+#         gewijzigde_exp = st.text_input("Nieuwe naam", value=te_wijzigen_exp, key="gewijzigde_exp")
+#         if st.button("Opslaan", key="exp_wijzigen"):
+#             index = expertise_lijst.index(te_wijzigen_exp)
+#             expertise_lijst[index] = gewijzigde_exp
+#             cursor.execute("UPDATE profiel_data SET expertise = ? WHERE gebruikersnaam = ?",
+#                            (",".join(expertise_lijst), gebruikersnaam))
+#             conn.commit()
+#             st.success(f"✅ Gewijzigd naar {gewijzigde_exp}!")
+#             st.rerun()
 
 
 st.divider()
@@ -246,6 +247,9 @@ st.subheader("🔬 Lopend project starten")
 with st.expander("➕ Nieuw project starten"):
     project_naam = st.text_input("Projectnaam", key="nieuw_project_naam")
     project_beschrijving = st.text_area("Beschrijving", key="nieuw_project_beschrijving")
+    project_begindatum = st.date_input("Begindatum", key="nieuw_project_begindatum")
+    project_einddatum = st.date_input("Einddatum", key="nieuw_project_einddatum")
+
 
     if st.button("💾 Project starten", key="start_project"):
         if project_naam:
@@ -253,9 +257,10 @@ with st.expander("➕ Nieuw project starten"):
             cursor.execute("""
                 INSERT INTO lopende_projecten (naam, beschrijving, leider_id, datum)
                 VALUES (?, ?, ?, ?)
-            """, (project_naam, project_beschrijving, persoon_id, str(date.today())))
+            """, (project_naam, project_beschrijving, persoon_id, str(project_begindatum), str(project_einddatum)))
             conn.commit()
             st.success(f"✅ Project '{project_naam}' gestart!")
+            time.sleep(1.5)
             st.rerun()
         else:
             st.error("Vul een projectnaam in!")
@@ -287,6 +292,28 @@ else:
                 conn.commit()
                 st.success("✅ Project verwijderd!")
                 st.rerun()
+
+                # Projecten waar je deelnemer van bent
+st.divider()
+st.subheader("📋 Projecten waar ik aan deelneem")
+
+if persoon_id:
+    deelname_projecten = pd.read_sql(f"""
+        SELECT lp.* FROM lopende_projecten lp
+        JOIN project_deelnemers pd ON lp.id = pd.project_id
+        WHERE pd.persoon_id = {persoon_id}
+        AND lp.leider_id != {persoon_id}
+    """, conn)
+    
+    if deelname_projecten.empty:
+        st.info("Je neemt nog niet deel aan projecten van anderen.")
+    else:
+        for _, project in deelname_projecten.iterrows():
+            if st.button(f"🔬 {project['naam']}", key=f"deelname_{project['id']}"):
+                st.session_state.geselecteerd_lopend_project = int(project["id"])
+                st.switch_page("pages/lopend_project.py")
+else:
+    st.info("Log in als onderzoeker om je deelname te zien.")
 
 # Aanpassen formulier
 if "aanpassen_project_id" in st.session_state and st.session_state.aanpassen_project_id:

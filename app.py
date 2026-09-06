@@ -247,12 +247,15 @@ if zoekterm:
             with col2:
                 if persoon["id"] in actieve_leiders:
                     if st.button("🔬 Project", key=f"project_{persoon['id']}"):
-                        project = pd.read_sql(f"SELECT id FROM lopende_projecten WHERE leider_id = {persoon['id']} LIMIT 1", conn)
-                        if not project.empty:
-                            st.session_state.geselecteerd_lopend_project = int(project.iloc[0]["id"])
+                        projecten_persoon = pd.read_sql(f"SELECT id FROM lopende_projecten WHERE leider_id = {persoon['id']}", conn)
+                        if len(projecten_persoon) == 1:
+                            st.session_state.geselecteerd_lopend_project = int(projecten_persoon.iloc[0]["id"])
                             st.switch_page("pages/lopend_project.py")
+                        elif len(projecten_persoon) > 1:
+                            st.session_state.lopende_projecten_persoon = persoon["id"]
+                            st.switch_page("pages/lopende_projecten_overzicht.py")
 
-        # Expertise — alleen tags uit uitgewerkte_expertise, 1 knop per unieke pagina
+ # Expertise — alleen tags uit uitgewerkte_expertise, 1 knop per unieke pagina
         st.subheader("Expertise")
         for _, persoon in resultaat.iterrows():
             exp_ids = personen_expertise[personen_expertise["person_id"] == persoon["id"]]["expertise_id"].tolist()

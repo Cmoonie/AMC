@@ -172,25 +172,41 @@ else:
     st.subheader("🔬 Lopende projecten")
 
     lopende = pd.read_sql(f"SELECT * FROM lopende_projecten WHERE leider_id = {persoon_id}", conn)
+    
+    # Haal eigen persoon_id op
+    eigen_gebruikersnaam = st.session_state.get("gebruikersnaam", "")
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM persons WHERE name = ?", (eigen_gebruikersnaam,))
+    result = cursor.fetchone()
+    eigen_id = result[0] if result else None
 
     if lopende.empty:
         st.write("Geen lopende projecten.")
-    else:
-        for _, project in lopende.iterrows():
-            st.write(f"🟢 **{project['naam']}** — {project['beschrijving'][:80]}")
-            if st.button("➕ Aanmelden", key=f"aanmeld_{project['id']}"):
-                gebruikersnaam = st.session_state.get("gebruikersnaam", "")
-                cursor = conn.cursor()
-                cursor.execute("SELECT id FROM persons WHERE name = ?", (gebruikersnaam,))
-                result = cursor.fetchone()
-                eigen_id = result[0] if result else None
-                if eigen_id:
+    elif len(lopende) == 1:
+        project = lopende.iloc[0]
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            if st.button(f"🟢 {project['naam']}", key=f"project_link_{project['id']}"):
+                st.session_state.geselecteerd_lopend_project = int(project["id"])
+                st.switch_page("pages/lopend_project.py")
+        with col2:
+            cursor.execute("SELECT * FROM project_deelnemers WHERE project_id = ? AND persoon_id = ?",
+                           (project["id"], eigen_id))
+            al_aangemeld = cursor.fetchone()
+            if al_aangemeld or eigen_id == persoon_id:
+                st.write("✅ Aangemeld")
+            else:
+                if st.button("➕ Aanmelden", key=f"aanmeld_{project['id']}"):
                     cursor.execute("INSERT INTO project_deelnemers (project_id, persoon_id) VALUES (?, ?)",
                                    (project["id"], eigen_id))
                     conn.commit()
                     st.success("✅ Aangemeld!")
                     st.rerun()
-
+    else:
+        if st.button("📋 Bekijk alle lopende projecten"):
+            st.session_state.lopende_projecten_persoon = persoon_id
+            st.switch_page("pages/lopende_projecten_overzicht.py")
+        
     # Publicaties
     st.divider()
     st.subheader("📄 Publicaties")

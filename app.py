@@ -123,41 +123,7 @@ personen = pd.read_sql("SELECT * FROM persons", conn) #personen inladen
 expertise = pd.read_sql("SELECT * FROM expertise", conn) #expertise inladen
 personen_expertise = pd.read_sql("SELECT * FROM persons_expertise", conn) #tussentabel inladen
 
-# Mapping van expertise-label (lowercase) naar uitgewerkte pagina
-# Buiten de loop gezet zodat hij niet bij elke knop-klik opnieuw wordt aangemaakt
-uitgewerkte_expertise = {
-    # Robert
-    "methotrexate": "pages/expertise_methotrexaat.py",
-    "methotrexaat": "pages/expertise_methotrexaat.py",
-    "methotrexate polyglutamates": "pages/expertise_methotrexaat.py",
-    "methotrexate polyglutamate": "pages/expertise_methotrexaat.py",
-    "gene expression": "pages/expertise_gene_expression.py",
-    "laboratory medicine": "pages/expertise_laboratorium_diagnostiek.py",
-
-    # Sjors
-    "neurofilament light chain": "pages/expertise_neurofilament.py",
-    "amyloid beta": "pages/expertise_amyloid.py",
-    "systemic amyloidosis": "pages/expertise_amyloid.py",
-    "attrv amyloidosis": "pages/expertise_amyloid.py",
-
-    # Martijn
-    "clinical decision making": "pages/expertise_clinical_decision.py",
-    "clinical prediction models": "pages/expertise_clinical_decision.py",
-    "epidemiology": "pages/expertise_epidemiology.py",
-    "clinical practice guidelines": "pages/expertise_clinical_decision.py",
-    "alzheimer": "pages/expertise_amyloid.py",
-}
-
-# Nette paginanamen voor de knoptekst
-pagina_namen = {
-    "pages/expertise_methotrexaat.py": "Methotrexaat",
-    "pages/expertise_gene_expression.py": "Gene Expression",
-    "pages/expertise_laboratorium_diagnostiek.py": "Laboratorium Diagnostiek",
-    "pages/expertise_neurofilament.py": "Neurofilament Light Chain",
-    "pages/expertise_amyloid.py": "Amyloid Beta",
-    "pages/expertise_clinical_decision.py": "Clinical Decision Making",
-    "pages/expertise_epidemiology.py": "Epidemiologie",
-}
+from expertise_routes import uitgewerkte_expertise, pagina_namen 
 
 st.title("Spider")
 st.subheader("Zoek onderzoeksexpertise binnen Division 9")

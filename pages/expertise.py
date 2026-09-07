@@ -18,7 +18,14 @@ st.markdown("""
     <style>
     [data-testid="stSidebarNav"] { display: none; }
     </style>
+
+    
 """, unsafe_allow_html=True)
+
+# expertise.py
+from styling import apply_styling
+apply_styling("expertise")
+
 # Laad data
 personen = pd.read_sql("SELECT * FROM persons", conn)
 expertise = pd.read_sql("SELECT * FROM expertise", conn)

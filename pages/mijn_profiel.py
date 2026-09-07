@@ -1,12 +1,19 @@
 import streamlit as st
+
+st.set_page_config(
+    page_title="Mijn profiel - Spider",
+    layout="wide"
+)
+
 import pandas as pd
 import sqlite3
 import os
 from datetime import date
 import time
+from sidebar import toon_sidebar
 
-# set_page_config MOET de allereerste Streamlit-aanroep zijn in het bestand
-st.set_page_config(layout="wide")
+
+
 
 db_path = os.path.join(os.path.dirname(__file__), "..", "spider.db")
 conn = sqlite3.connect(db_path)
@@ -18,16 +25,13 @@ if "ingelogd" not in st.session_state or not st.session_state.ingelogd:
     st.switch_page("app.py")
     st.stop()
 
-# Styling
-from styling import set_background
-set_background("profiel")
+toon_sidebar()    
 
-# Sidebar CSS
-st.markdown("""
-    <style>
-    [data-testid="stSidebarNav"] { display: none; }
-    </style>
-""", unsafe_allow_html=True)
+# Styling
+from styling import apply_styling
+apply_styling("profiel")
+
+
 
 # Gebruikersnaam ophalen
 gebruikersnaam = st.session_state.get("gebruikersnaam", "")
@@ -53,19 +57,7 @@ if not profiel:
     profiel = cursor.fetchone()
 
 
-# Sidebar
-st.sidebar.write(f"👤 **{gebruikersnaam}**")
-st.sidebar.divider()
-if st.sidebar.button("🏠 Home"):
-    st.switch_page("app.py")
-if rol == "beheerder":
-    if st.sidebar.button("⚙️ Beheer"):
-        st.switch_page("pages/beheer.py")
-st.sidebar.divider()
-if st.sidebar.button("🚪 Uitloggen"):
-    st.session_state.ingelogd = False
-    st.session_state.rol = None
-    st.rerun()
+
 
 # Pagina inhoud
 st.title(f"👤 {gebruikersnaam}")

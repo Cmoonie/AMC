@@ -45,8 +45,8 @@ if "ingelogd" not in st.session_state or not st.session_state.ingelogd:
     st.stop()
 
 # Styling
-from styling import set_background
-set_background("profiel")
+from styling import apply_styling
+apply_styling("profiel")
 
 st.markdown("""
     <style>

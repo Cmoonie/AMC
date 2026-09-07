@@ -22,6 +22,10 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+# projecten.py
+from styling import apply_styling
+apply_styling("projecten")
+
 # Sidebar
 st.sidebar.write(f"👤 **{st.session_state.get('gebruikersnaam', '')}**")
 st.sidebar.divider()

@@ -1,8 +1,48 @@
+import os
+import base64
+
+
 """
 styling.py — Gedeelde styling helper voor Spider
 """
 
 import streamlit as st
+
+# ============================================================
+# ACHTERGRONDAFBEELDINGEN
+# ============================================================
+
+BASE_DIR = os.path.dirname(__file__)
+
+expertise_bg_path = os.path.join(
+    BASE_DIR,
+    "assets",
+    "expertise_achtergrond.png"
+)
+
+expertise_bg = ""
+
+if os.path.exists(expertise_bg_path):
+    with open(expertise_bg_path, "rb") as bestand:
+        expertise_bg = base64.b64encode(
+            bestand.read()
+        ).decode()
+
+BASE_DIR = os.path.dirname(__file__)
+
+projecten_bg_path = os.path.join(
+    BASE_DIR,
+    "assets",
+    "achtergrond_lopende_project.png"
+)
+
+projecten_bg = ""
+
+if os.path.exists(projecten_bg_path):
+    with open(projecten_bg_path, "rb") as bestand:
+        projecten_bg = base64.b64encode(
+            bestand.read()
+        ).decode()        
 
 
 # =========================
@@ -38,23 +78,36 @@ PAGE_BACKGROUNDS = {
             #F8FAFC 100%
         )
     """,
+    
 
-    "expertise": """
-        linear-gradient(
-            135deg,
-            #FFF9F7 0%,
-            #F7F3F1 50%,
-            #FFF9F7 100%
-        )
+    "expertise": f"""
+        background-color: #EAF3FA;
+        background-image:
+            linear-gradient(
+                rgba(234, 243, 250, 0.18),
+                rgba(234, 243, 250, 0.18)
+            ),
+            url("data:image/png;base64,{expertise_bg}");
+
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
     """,
 
-    "projecten": """
-        linear-gradient(
-            135deg,
-            #FFF9F4 0%,
-            #F7F2EC 50%,
-            #FFF9F4 100%
-        )
+    "projecten": f"""
+        background-color: #EAF3FA;
+        background-image:
+            linear-gradient(
+                rgba(234, 243, 250, 0.18),
+                rgba(234, 243, 250, 0.18)
+            ),
+            url("data:image/png;base64,{projecten_bg}");
+
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
     """,
 
     "kennisgraaf": """
@@ -343,7 +396,76 @@ def apply_styling(pagina_type: str) -> None:
             margin-bottom: 1rem;
         }}
 
+         /* =========================
+   SPIDER PAPIERKAART
+        Profiel / Expertise / Project
+        ========================== */
 
+        .spider-paper {{
+            background: #FFFFFF;
+
+            border: 1px solid #CED9E5;
+            border-left: 6px solid #E6000F;
+
+            border-radius: 16px;
+
+            padding: 1.6rem 1.8rem;
+
+            margin-top: 0.5rem;
+            margin-bottom: 1.5rem;
+
+            box-shadow:
+                0 6px 18px rgba(0, 55, 65, 0.06);
+        }}
+
+
+        /* Titel binnen een papierkaart */
+        .spider-paper-title {{
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }}
+
+
+        /* Grijze scheidingslijn */
+        .spider-paper-divider {{
+            height: 1px;
+
+            background-color: #CED9E5;
+
+            border: none;
+
+            margin: 1.4rem 0;
+        }}
+
+
+        /* Kleinere subtitel */
+        .spider-paper-label {{
+            font-size: 0.8rem;
+            font-weight: 700;
+
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+
+            color: #607D9B;
+        }}
+        /* =========================
+        STREAMLIT PAPIERCONTAINER
+        ========================= */
+
+        [data-testid="stVerticalBlockBorderWrapper"] {{
+            background-color: #FFFFFF !important;
+
+            border: 1px solid #CED9E5 !important;
+            border-left: 6px solid #E6000F !important;
+
+            border-radius: 16px !important;
+
+            padding: 0.4rem !important;
+
+            box-shadow:
+                0 6px 18px rgba(0, 55, 65, 0.06) !important;
+}}
         /* =========================
            TAGS
         ========================== */

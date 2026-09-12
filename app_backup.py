@@ -19,7 +19,7 @@ api_key = os.getenv("GROQ_API_KEY") # haal de sleutel eruit
 
 
 from groq import Groq
-from login import login_pagina
+from pages.login import login_pagina
 
 
 if "ingelogd" not in st.session_state:

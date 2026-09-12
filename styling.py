@@ -234,6 +234,32 @@ def apply_styling(pagina_type: str) -> None:
         }}
 
         /* =========================
+        LEESBAARHEID
+        ========================= */
+
+        /* Sidebar knoppen */
+        [data-testid="stSidebar"] .stButton > button {{
+            font-size: 18px !important;
+            min-height: 48px !important;
+        }}
+
+        /* Tekst bovenaan sidebar: Spider / gebruikersnaam */
+        [data-testid="stSidebar"] h3 {{
+            font-size: 21px !important;
+        }}
+
+        /* Algemene captions */
+        .stCaptionContainer p {{
+            font-size: 18px !important;
+            line-height: 1.5 !important;
+        }}
+
+        /* Info / succes / waarschuwing meldingen */
+        [data-testid="stAlert"] p {{
+            font-size: 18px !important;
+}}
+
+        /* =========================
            TYPOGRAFIE
         ========================== */
 
@@ -264,7 +290,7 @@ def apply_styling(pagina_type: str) -> None:
 
         .hero-label {{
             color: #607D9B;
-            font-size: 0.72rem;
+            font-size: 18px;
             font-weight: 700;
             letter-spacing: 0.18em;
             text-transform: uppercase;

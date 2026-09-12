@@ -5,11 +5,11 @@ import os
 db_path = os.path.join(os.path.dirname(__file__),"..", "spider.db")
 conn = sqlite3.connect(db_path)
 
-#Aunthenticatie
-if "ingelogd" not in st.session_state or not st.session_state.ingelogd:
-    st.warning("Je moet eerst inloggen!")
-    st.switch_page("app.py")
-    st.stop()
+# #Aunthenticatie
+# if "ingelogd" not in st.session_state or not st.session_state.ingelogd:
+#     st.warning("Je moet eerst inloggen!")
+#     st.switch_page("app.py")
+#     st.stop()
 
 
 st.set_page_config(layout="wide")

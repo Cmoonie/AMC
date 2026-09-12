@@ -31,13 +31,13 @@ cursor = conn.cursor()
 # AUTHENTICATIE
 # ============================================================
 
-if (
-    "ingelogd" not in st.session_state
-    or not st.session_state.ingelogd
-):
-    st.warning("Je moet eerst inloggen!")
-    st.switch_page("app.py")
-    st.stop()
+# if (
+#     "ingelogd" not in st.session_state
+#     or not st.session_state.ingelogd
+# ):
+#     st.warning("Je moet eerst inloggen!")
+#     st.switch_page("app.py")
+#     st.stop()
 
 
 # ============================================================

@@ -20,11 +20,11 @@ import base64
 
 
 
-# Authenticatie
-if "ingelogd" not in st.session_state or not st.session_state.ingelogd:
-    st.warning("Je moet eerst inloggen!")
-    st.switch_page("app.py")
-    st.stop()
+# # Authenticatie
+# if "ingelogd" not in st.session_state or not st.session_state.ingelogd:
+#     st.warning("Je moet eerst inloggen!")
+#     st.switch_page("app.py")
+#     st.stop()
 
 # Algemene Spider styling
 apply_styling("kennisgraaf")

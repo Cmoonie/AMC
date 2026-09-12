@@ -19,7 +19,6 @@ from groq import Groq
 from sentence_transformers import SentenceTransformer
 
 from expertise_routes import uitgewerkte_expertise, pagina_namen
-from login import login_pagina
 from styling import apply_styling
 
 
@@ -44,9 +43,7 @@ client = Groq(api_key=api_key)
 if "ingelogd" not in st.session_state:
     st.session_state.ingelogd = False
 
-if not st.session_state.ingelogd:
-    login_pagina()
-    st.stop()
+
 
 gebruikersnaam = st.session_state.get("gebruikersnaam", "")
 rol = st.session_state.get("rol", "")

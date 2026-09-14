@@ -49,25 +49,7 @@ def hash_wachtwoord(wachtwoord):
     return f"{salt}${wachtwoord_hash}"
 
 
-# ============================================================
-# CONTROLE: BESTAAT GEBRUIKERSNAAM?
-# ============================================================
 
-def gebruikersnaam_bestaat(gebruikersnaam):
-    conn = get_connection()
-
-    bestaand = conn.execute(
-        """
-        SELECT id
-        FROM gebruikers
-        WHERE LOWER(gebruikersnaam) = LOWER(?)
-        """,
-        (gebruikersnaam,)
-    ).fetchone()
-
-    conn.close()
-
-    return bestaand is not None
 
 
 # ============================================================
@@ -76,24 +58,46 @@ def gebruikersnaam_bestaat(gebruikersnaam):
 
 def registreer_onderzoeker(
     naam,
-    gebruikersnaam,
-    wachtwoord,
-    afdeling,
-    email
+    wachtwoord
 ):
     """
     Maakt in één transactie aan:
-    1. person
-    2. gebruiker
-    3. profiel_data
+    1. onderzoeker in persons
+    2. account in gebruikers
+    3. leeg profiel in profiel_data
 
-    Als één stap mislukt, wordt alles teruggedraaid.
+    De volledige naam wordt voorlopig ook gebruikt
+    als gebruikersnaam voor het inloggen.
     """
 
     conn = get_connection()
 
     try:
+
         cursor = conn.cursor()
+
+        naam = naam.strip()
+
+        # ----------------------------------------------------
+        # CONTROLEREN OF ACCOUNT AL BESTAAT
+        # ----------------------------------------------------
+
+        bestaand = cursor.execute(
+            """
+            SELECT id
+            FROM gebruikers
+            WHERE LOWER(gebruikersnaam) = LOWER(?)
+            """,
+            (
+                naam,
+            )
+        ).fetchone()
+
+        if bestaand:
+
+            return False, (
+                "Er bestaat al een account met deze naam."
+            )
 
         # ----------------------------------------------------
         # 1. ONDERZOEKER AANMAKEN
@@ -108,8 +112,8 @@ def registreer_onderzoeker(
             VALUES (?, ?)
             """,
             (
-                naam.strip(),
-                afdeling.strip()
+                naam,
+                ""
             )
         )
 
@@ -138,22 +142,20 @@ def registreer_onderzoeker(
                 person_id,
                 aangemaakt_op
             )
-            VALUES (
-                ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP
-            )
+            VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
             """,
             (
-                naam.strip(),
-                gebruikersnaam.strip(),
+                naam,
+                naam,
                 wachtwoord_hash,
-                afdeling.strip(),
+                "",
                 "gebruiker",
                 person_id
             )
         )
 
         # ----------------------------------------------------
-        # 4. PROFIEL AANMAKEN
+        # 4. LEEG PROFIEL AANMAKEN
         # ----------------------------------------------------
 
         cursor.execute(
@@ -167,22 +169,18 @@ def registreer_onderzoeker(
                 projecten,
                 links
             )
-            VALUES (?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 person_id,
-                gebruikersnaam.strip(),
-                email.strip(),
+                naam,
+                "",
                 "",
                 "",
                 "",
                 ""
             )
         )
-
-        # ----------------------------------------------------
-        # ALLES OPSLAAN
-        # ----------------------------------------------------
 
         conn.commit()
 
@@ -210,42 +208,34 @@ if "registratie_gelukt" not in st.session_state:
 # ============================================================
 # PAGINA
 # ============================================================
+col1, col2 = st.columns([3, 2])
 
-st.markdown(
-    """
-    <div style="
-        max-width: 760px;
-        margin: 0 auto;
-        padding-top: 30px;
+with col1:
+
+    st.markdown("""
+    <h1 style="
+        margin-top: 0;
+        color: #003741;
     ">
-        <p style="
-            color: #F07814;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            margin-bottom: 4px;
-        ">
-            ONDERZOEKERSACCOUNT
-        </p>
+        Registreren bij Spider
+    </h1>
 
-        <h1 style="
-            margin-top: 0;
-            color: #003741;
-        ">
-            Registreren bij Spider
-        </h1>
+    <p style="
+        font-size: 18px;
+        color: #003741;
+        margin-bottom: 30px;
+    ">
+        Maak een account aan om je onderzoekersprofiel,
+        projecten en publicaties te beheren.
+    </p>
+    """, unsafe_allow_html=True)
 
-        <p style="
-            font-size: 18px;
-            color: #003741;
-            margin-bottom: 30px;
-        ">
-            Maak een account aan om je onderzoekersprofiel,
-            projecten en publicaties te beheren.
-        </p>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+with col2:
+
+    st.image(
+        "assets/loginpagina.png",
+        use_container_width=True
+    )
 
 
 # ============================================================
@@ -270,36 +260,18 @@ if st.session_state.registratie_gelukt:
     st.stop()
 
 
+
 # ============================================================
 # REGISTRATIEFORMULIER
 # ============================================================
 
 with st.container(border=True):
 
-    st.subheader("Persoonsgegevens")
+    st.subheader("Account aanmaken")
 
     naam = st.text_input(
         "Volledige naam *",
         placeholder="Bijvoorbeeld: Robert de Jonge"
-    )
-
-    afdeling = st.text_input(
-        "Afdeling *",
-        placeholder="Bijvoorbeeld: Division 9"
-    )
-
-    email = st.text_input(
-        "E-mailadres *",
-        placeholder="naam@amsterdamumc.nl"
-    )
-
-    st.divider()
-
-    st.subheader("Accountgegevens")
-
-    gebruikersnaam = st.text_input(
-        "Gebruikersnaam *",
-        placeholder="Kies een gebruikersnaam"
     )
 
     wachtwoord = st.text_input(
@@ -310,6 +282,11 @@ with st.container(border=True):
     wachtwoord_bevestiging = st.text_input(
         "Herhaal wachtwoord *",
         type="password"
+    )
+
+    st.caption(
+        "E-mailadres, afdeling en andere profielgegevens "
+        "kun je na het inloggen toevoegen aan je profiel."
     )
 
     st.caption(
@@ -332,9 +309,7 @@ if registreren:
     fouten = []
 
     naam = naam.strip()
-    afdeling = afdeling.strip()
-    email = email.strip()
-    gebruikersnaam = gebruikersnaam.strip()
+
 
     # --------------------------------------------------------
     # VERPLICHTE VELDEN
@@ -345,37 +320,23 @@ if registreren:
             "Vul je volledige naam in."
         )
 
-    if not afdeling:
-        fouten.append(
-            "Vul je afdeling in."
-        )
-
-    if not email:
-        fouten.append(
-            "Vul je e-mailadres in."
-        )
-
-    if not gebruikersnaam:
-        fouten.append(
-            "Kies een gebruikersnaam."
-        )
 
     if not wachtwoord:
         fouten.append(
             "Vul een wachtwoord in."
         )
 
-    # --------------------------------------------------------
-    # EMAIL EENVOUDIG CONTROLEREN
-    # --------------------------------------------------------
+    # # --------------------------------------------------------
+    # # EMAIL EENVOUDIG CONTROLEREN
+    # # --------------------------------------------------------
 
-    if email and (
-        "@" not in email
-        or "." not in email.split("@")[-1]
-    ):
-        fouten.append(
-            "Vul een geldig e-mailadres in."
-        )
+    # if email and (
+    #     "@" not in email
+    #     or "." not in email.split("@")[-1]
+    # ):
+    #     fouten.append(
+    #         "Vul een geldig e-mailadres in."
+    #     )
 
     # --------------------------------------------------------
     # WACHTWOORD
@@ -395,15 +356,15 @@ if registreren:
     # GEBRUIKERSNAAM BESTAAT AL
     # --------------------------------------------------------
 
-    if (
-        gebruikersnaam
-        and gebruikersnaam_bestaat(
-            gebruikersnaam
-        )
-    ):
-        fouten.append(
-            "Deze gebruikersnaam bestaat al."
-        )
+    # if (
+    #     gebruikersnaam
+    #     and gebruikersnaam_bestaat(
+    #         gebruikersnaam
+    #     )
+    # ):
+    #     fouten.append(
+    #         "Deze gebruikersnaam bestaat al."
+    #     )
 
     # --------------------------------------------------------
     # FOUTEN TONEN
@@ -418,10 +379,8 @@ if registreren:
 
         gelukt, resultaat = registreer_onderzoeker(
             naam=naam,
-            gebruikersnaam=gebruikersnaam,
             wachtwoord=wachtwoord,
-            afdeling=afdeling,
-            email=email
+            
         )
 
         if gelukt:

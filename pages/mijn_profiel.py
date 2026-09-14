@@ -78,7 +78,20 @@ cursor.execute("""
 
 conn.commit()
 
+# ============================================================
+# PUBMED AUTEURSNAMEN
+# ============================================================
 
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS person_author_aliases (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        person_id INTEGER NOT NULL,
+        author_name TEXT NOT NULL,
+        FOREIGN KEY (person_id) REFERENCES persons(id)
+    )
+""")
+
+conn.commit()
 # ============================================================
 # PERSOONSGEGEVENS
 # ============================================================
@@ -406,7 +419,148 @@ with st.container(border=True):
                             use_container_width=True
                         ):
                             st.switch_page(pagina)
+        # ============================================================
+    # PUBMED AUTEURSNAMEN
+    # ============================================================
 
+    st.divider()
+
+    st.subheader("📚 Mijn PubMed-auteursnamen")
+
+    st.caption(
+        "Voeg hier de namen toe waaronder je in PubMed-publicaties voorkomt. "
+        "Spider gebruikt deze namen om publicaties aan jouw profiel te koppelen."
+    )
+
+    auteur_aliases = pd.read_sql(
+        """
+        SELECT *
+        FROM person_author_aliases
+        WHERE person_id = ?
+        ORDER BY author_name
+        """,
+        conn,
+        params=(persoon_id,)
+    )
+
+    if auteur_aliases.empty:
+
+        st.info(
+            "Je hebt nog geen PubMed-auteursnamen toegevoegd."
+        )
+
+    else:
+
+        for _, alias in auteur_aliases.iterrows():
+
+            col_naam, col_verwijder = st.columns(
+                [5, 1]
+            )
+
+            with col_naam:
+
+                st.write(
+                    f"👤 {alias['author_name']}"
+                )
+
+            with col_verwijder:
+
+                if st.button(
+                    "🗑️",
+                    key=f"verwijder_author_alias_{alias['id']}"
+                ):
+
+                    cursor.execute(
+                        """
+                        DELETE FROM person_author_aliases
+                        WHERE id = ?
+                        AND person_id = ?
+                        """,
+                        (
+                            int(alias["id"]),
+                            persoon_id
+                        )
+                    )
+
+                    conn.commit()
+
+                    st.rerun()
+
+
+    with st.expander(
+        "➕ PubMed-auteursnaam toevoegen"
+    ):
+
+        nieuwe_author_alias = st.text_input(
+            "Auteursnaam",
+            placeholder="Bijvoorbeeld: Ishizuka B",
+            key="nieuwe_author_alias"
+        )
+
+        if st.button(
+            "💾 Auteursnaam toevoegen",
+            type="primary",
+            key="author_alias_opslaan"
+        ):
+
+            nieuwe_author_alias = (
+                nieuwe_author_alias.strip()
+            )
+
+            if not nieuwe_author_alias:
+
+                st.warning(
+                    "Vul eerst een auteursnaam in."
+                )
+
+            else:
+
+                cursor.execute(
+                    """
+                    SELECT id
+                    FROM person_author_aliases
+                    WHERE person_id = ?
+                    AND LOWER(author_name) = LOWER(?)
+                    """,
+                    (
+                        persoon_id,
+                        nieuwe_author_alias
+                    )
+                )
+
+                bestaand_alias = (
+                    cursor.fetchone()
+                )
+
+                if bestaand_alias:
+
+                    st.info(
+                        "Deze auteursnaam staat al bij je profiel."
+                    )
+
+                else:
+
+                    cursor.execute(
+                        """
+                        INSERT INTO person_author_aliases (
+                            person_id,
+                            author_name
+                        )
+                        VALUES (?, ?)
+                        """,
+                        (
+                            persoon_id,
+                            nieuwe_author_alias
+                        )
+                    )
+
+                    conn.commit()
+
+                    st.success(
+                        "✅ PubMed-auteursnaam toegevoegd."
+                    )
+
+                    st.rerun()
 
 
     st.divider()

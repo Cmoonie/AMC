@@ -1,0 +1,301 @@
+PMID- 23792081
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20131204
+LR  - 20140731
+IS  - 1090-2422 (Electronic)
+IS  - 0014-4827 (Linking)
+VI  - 319
+IP  - 17
+DP  - 2013 Oct 15
+TI  - Endothelial cell preservation at hypothermic to normothermic conditions using 
+      clinical and experimental organ preservation solutions.
+PG  - 2501-13
+LID - S0014-4827(13)00217-6 [pii]
+LID - 10.1016/j.yexcr.2013.05.011 [doi]
+AB  - INTRODUCTION: Endothelial barrier function is pivotal for the outcome of organ 
+      transplantation. Since hypothermic preservation (gold standard) is associated 
+      with cold-induced endothelial damage, endothelial barrier function may benefit 
+      from organ preservation at warmer temperatures. We therefore assessed endothelial 
+      barrier integrity and viability as function of preservation temperature and 
+      perfusion solution, and hypothesized that endothelial cell preservation at 
+      subnormothermic conditions using metabolism-supporting solutions constitute 
+      optimal preservation conditions. METHODS: Human umbilical vein endothelial cells 
+      (HUVEC) were preserved at 4-37°C for up to 20 h using Ringer's lactate, 
+      histidine-tryptophan-ketoglutarate solution, University of Wisconsin (UW) 
+      solution, Polysol, or endothelial cell growth medium (ECGM). Following 
+      preservation, the monolayer integrity, metabolic capacity, and ATP content were 
+      determined as positive parameters of endothelial cell viability. As negative 
+      parameters, apoptosis, necrosis, and cell activation were assayed. A viability 
+      index was devised on the basis of these parameters. RESULTS: HUVEC viability and 
+      barrier integrity was compromised at 4°C regardless of the preservation solution. 
+      At temperatures above 20°C, the cells' metabolic demands outweighed the 
+      preservation solutions' supporting capacity. Only UW maintained HUVEC viability 
+      up to 20°C. Despite high intracellular ATP content, none of the solutions were 
+      capable of sufficiently preserving HUVEC above 20°C except for ECGM. CONCLUSION: 
+      Optimal HUVEC preservation is achieved with UW up to 20°C. Only ECGM maintains 
+      HUVEC viability at temperatures above 20°C.
+CI  - © 2013 Elsevier Inc. All rights reserved.
+FAU - Post, Ivo C J H
+AU  - Post IC
+AD  - Department of Surgery (Surgical Laboratory), Academic Medical Center, University 
+      of Amsterdam, Amsterdam, The Netherlands.
+FAU - de Boon, Wadim M I
+AU  - de Boon WM
+FAU - Heger, Michal
+AU  - Heger M
+FAU - van Wijk, Albert C W A
+AU  - van Wijk AC
+FAU - Kroon, Jeffrey
+AU  - Kroon J
+FAU - van Buul, Jaap D
+AU  - van Buul JD
+FAU - van Gulik, Thomas M
+AU  - van Gulik TM
+LA  - eng
+PT  - Journal Article
+DEP - 20130620
+PL  - United States
+TA  - Exp Cell Res
+JT  - Experimental cell research
+JID - 0373226
+RN  - 0 (Organ Preservation Solutions)
+RN  - 0 (polysol solution)
+SB  - IM
+MH  - Cell Survival
+MH  - *Cold Temperature
+MH  - Energy Metabolism
+MH  - Human Umbilical Vein Endothelial Cells/metabolism/*physiology
+MH  - Humans
+MH  - *Organ Preservation Solutions
+MH  - Tissue Preservation/*methods
+OTO - NOTNLM
+OT  - (sub)normothermic (20–37°C) preservation
+OT  - 1% FCS-enriched PBS
+OT  - ATP
+OT  - DW
+OT  - ECGM
+OT  - ECIS
+OT  - FACS
+OT  - FCS
+OT  - FLICA
+OT  - HTK
+OT  - HUVEC
+OT  - Histidine–tryptophan–ketoglutarate solution
+OT  - Human umbilical vein endothelial cells
+OT  - ICAM-1
+OT  - PBS
+OT  - PBS+
+OT  - PS
+OT  - Polysol
+OT  - RL
+OT  - RT
+OT  - Ringer's lactate
+OT  - SNP
+OT  - TRIS
+OT  - Transplantation
+OT  - UW
+OT  - University of Wisconsin solution
+OT  - WE
+OT  - WST-1
+OT  - Williams medium E
+OT  - adenosine triphosphate
+OT  - demineralized water
+OT  - electric cell–substrate impedance sensing
+OT  - endothelial cell growth medium
+OT  - fetal calf serum
+OT  - fluorescence-activated cell sorting
+OT  - fluorescently labeled inhibitor of caspases
+OT  - histidine–tryptophan–ketoglutarate solution
+OT  - human umbilical vein endothelial cells
+OT  - intercellular adhesion molecule-1
+OT  - phosphate buffered saline
+OT  - room temperature
+OT  - tris(hydroxymethyl)aminomethane buffer
+OT  - water-soluble tetrazolium-1
+EDAT- 2013/06/25 06:00
+MHDA- 2013/12/16 06:00
+CRDT- 2013/06/25 06:00
+PHST- 2012/08/23 00:00 [received]
+PHST- 2013/04/27 00:00 [revised]
+PHST- 2013/05/09 00:00 [accepted]
+PHST- 2013/06/25 06:00 [entrez]
+PHST- 2013/06/25 06:00 [pubmed]
+PHST- 2013/12/16 06:00 [medline]
+AID - S0014-4827(13)00217-6 [pii]
+AID - 10.1016/j.yexcr.2013.05.011 [doi]
+PST - ppublish
+SO  - Exp Cell Res. 2013 Oct 15;319(17):2501-13. doi: 10.1016/j.yexcr.2013.05.011. Epub 
+      2013 Jun 20.
+
+PMID- 24429546
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20141203
+LR  - 20260128
+IS  - 1432-0533 (Electronic)
+IS  - 0001-6322 (Linking)
+VI  - 127
+IP  - 5
+DP  - 2014 May
+TI  - P-glycoprotein regulates trafficking of CD8(+) T cells to the brain parenchyma.
+PG  - 699-711
+LID - 10.1007/s00401-014-1244-8 [doi]
+AB  - The trafficking of cytotoxic CD8(+) T lymphocytes across the lining of the 
+      cerebral vasculature is key to the onset of the chronic neuro-inflammatory 
+      disorder multiple sclerosis. However, the mechanisms controlling their final 
+      transmigration across the brain endothelium remain unknown. Here, we describe 
+      that CD8(+) T lymphocyte trafficking into the brain is dependent on the activity 
+      of the brain endothelial adenosine triphosphate-binding cassette transporter 
+      P-glycoprotein. Silencing P-glycoprotein activity selectively reduced the 
+      trafficking of CD8(+) T cells across the brain endothelium in vitro as well as in 
+      vivo. In response to formation of the T cell-endothelial synapse, P-glycoprotein 
+      was found to regulate secretion of endothelial (C-C motif) ligand 2 (CCL2), a 
+      chemokine that mediates CD8(+) T cell migration in vitro. Notably, CCL2 levels 
+      were significantly enhanced in microvessels isolated from human multiple 
+      sclerosis lesions in comparison with non-neurological controls. Endothelial 
+      cell-specific elimination of CCL2 in mice subjected to experimental autoimmune 
+      encephalomyelitis also significantly diminished the accumulation of CD8(+) T 
+      cells compared to wild-type animals. Collectively, these results highlight a 
+      novel (patho)physiological role for P-glycoprotein in CD8(+) T cell trafficking 
+      into the central nervous system during neuro-inflammation and illustrate CCL2 
+      secretion as a potential link in this mechanism.
+FAU - Kooij, Gijs
+AU  - Kooij G
+AD  - Blood-Brain Barrier Research Group, Department of Molecular Cell Biology and 
+      Immunology, Neuroscience Campus Amsterdam, VU University Medical Center, P.O. Box 
+      7057, 1007 MB, Amsterdam, The Netherlands, g.kooij@vumc.nl.
+FAU - Kroon, Jeffrey
+AU  - Kroon J
+FAU - Paul, Debayon
+AU  - Paul D
+FAU - Reijerkerk, Arie
+AU  - Reijerkerk A
+FAU - Geerts, Dirk
+AU  - Geerts D
+FAU - van der Pol, Susanne M A
+AU  - van der Pol SM
+FAU - van Het Hof, Bert
+AU  - van Het Hof B
+FAU - Drexhage, Joost A
+AU  - Drexhage JA
+FAU - van Vliet, Sandra J
+AU  - van Vliet SJ
+FAU - Hekking, Liesbeth H P
+AU  - Hekking LH
+FAU - van Buul, Jaap D
+AU  - van Buul JD
+FAU - Pachter, Joel S
+AU  - Pachter JS
+FAU - de Vries, Helga E
+AU  - de Vries HE
+LA  - eng
+GR  - R0-1-MH061525/MH/NIMH NIH HHS/United States
+PT  - Journal Article
+PT  - Research Support, N.I.H., Extramural
+PT  - Research Support, Non-U.S. Gov't
+DEP - 20140116
+PL  - Germany
+TA  - Acta Neuropathol
+JT  - Acta neuropathologica
+JID - 0412041
+RN  - 0 (ATP Binding Cassette Transporter, Subfamily B)
+RN  - 0 (Chemokine CCL2)
+RN  - 0 (ATP-Binding Cassette Sub-Family B Member 4)
+RN  - 0 (CCL2 protein, human)
+RN  - 0 (Ccl2 protein, mouse)
+RN  - 9EI49ZU76O (multidrug resistance protein 3)
+SB  - IM
+MH  - ATP Binding Cassette Transporter, Subfamily B/genetics/*metabolism
+MH  - Animals
+MH  - Blood-Brain Barrier/physiology
+MH  - Brain/blood supply/*immunology/pathology
+MH  - CD4-Positive T-Lymphocytes/physiology
+MH  - CD8-Positive T-Lymphocytes/*physiology
+MH  - Cell Line
+MH  - Chemokine CCL2/genetics/metabolism
+MH  - Encephalomyelitis, Autoimmune, Experimental/*immunology/pathology
+MH  - Female
+MH  - Humans
+MH  - Mice, Inbred C57BL
+MH  - Mice, Knockout
+MH  - Microvessels/pathology/physiopathology
+MH  - Multiple Sclerosis/*immunology/pathology
+MH  - Transendothelial and Transepithelial Migration/*physiology
+MH  - ATP-Binding Cassette Sub-Family B Member 4
+EDAT- 2014/01/17 06:00
+MHDA- 2014/12/15 06:00
+CRDT- 2014/01/17 06:00
+PHST- 2013/10/08 00:00 [received]
+PHST- 2014/01/02 00:00 [accepted]
+PHST- 2014/01/17 06:00 [entrez]
+PHST- 2014/01/17 06:00 [pubmed]
+PHST- 2014/12/15 06:00 [medline]
+AID - 10.1007/s00401-014-1244-8 [doi]
+PST - ppublish
+SO  - Acta Neuropathol. 2014 May;127(5):699-711. doi: 10.1007/s00401-014-1244-8. Epub 
+      2014 Jan 16.
+
+PMID- 26374854
+OWN - NLM
+STAT- PubMed-not-MEDLINE
+DCOM- 20151209
+LR  - 20190517
+IS  - 1477-9137 (Electronic)
+IS  - 0021-9533 (Print)
+IS  - 0021-9533 (Linking)
+VI  - 128
+IP  - 18
+DP  - 2015 Sep 15
+TI  - A local VE-cadherin and Trio-based signaling complex stabilizes endothelial 
+      junctions through Rac1.
+PG  - 3514
+LID - 10.1242/jcs.179424 [doi]
+FAU - Timmerman, Ilse
+AU  - Timmerman I
+FAU - Heemskerk, Niels
+AU  - Heemskerk N
+FAU - Kroon, Jeffrey
+AU  - Kroon J
+FAU - Schaefer, Antje
+AU  - Schaefer A
+FAU - van Rijssel, Jos
+AU  - van Rijssel J
+FAU - Hoogenboezem, Mark
+AU  - Hoogenboezem M
+FAU - van Unen, Jakobus
+AU  - van Unen J
+FAU - Goedhart, Joachim
+AU  - Goedhart J
+FAU - Gadella, Theodorus W J Jr
+AU  - Gadella TW Jr
+FAU - Yin, Taofei
+AU  - Yin T
+FAU - Wu, Yi
+AU  - Wu Y
+FAU - Huveneers, Stephan
+AU  - Huveneers S
+FAU - van Buul, Jaap D
+AU  - van Buul JD
+LA  - eng
+GR  - R21 NS071216/NS/NINDS NIH HHS/United States
+PT  - Published Erratum
+PL  - England
+TA  - J Cell Sci
+JT  - Journal of cell science
+JID - 0052457
+EFR - J Cell Sci. 2015 Aug 15;128(16):3041-54. doi: 10.1242/jcs.168674. PMID: 26116572
+PMC - PMC6518322
+EDAT- 2015/09/17 06:00
+MHDA- 2015/09/17 06:01
+PMCR- 2015/09/15
+CRDT- 2015/09/17 06:00
+PHST- 2015/09/17 06:00 [entrez]
+PHST- 2015/09/17 06:00 [pubmed]
+PHST- 2015/09/17 06:01 [medline]
+PHST- 2015/09/15 00:00 [pmc-release]
+AID - 128/18/3514 [pii]
+AID - JCS179424 [pii]
+AID - 10.1242/jcs.179424 [doi]
+PST - ppublish
+SO  - J Cell Sci. 2015 Sep 15;128(18):3514. doi: 10.1242/jcs.179424.

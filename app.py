@@ -17,6 +17,8 @@ import streamlit as st
 from dotenv import load_dotenv
 from groq import Groq
 from sentence_transformers import SentenceTransformer
+import re
+
 
 from styling import apply_styling
 
@@ -251,6 +253,141 @@ def open_projecten_van_persoon(persoon_id):
         st.session_state.lopende_projecten_persoon = persoon_id
         st.switch_page("pages/lopende_projecten_overzicht.py")
 
+def open_projecten_van_persoon(persoon_id):
+    """Open direct één project of een overzicht bij meerdere projecten."""
+    projecten_persoon = pd.read_sql(
+        """
+        SELECT id
+        FROM lopende_projecten
+        WHERE leider_id = ?
+        """,
+        conn,
+        params=(persoon_id,),
+    )
+
+    if len(projecten_persoon) == 1:
+        st.session_state.geselecteerd_lopend_project = int(
+            projecten_persoon.iloc[0]["id"]
+        )
+        st.switch_page("pages/lopend_project.py")
+
+    elif len(projecten_persoon) > 1:
+        st.session_state.lopende_projecten_persoon = persoon_id
+        st.switch_page("pages/lopende_projecten_overzicht.py")
+
+
+def verwerk_project_zoekvraag(zoekterm):
+    """
+    Herkent of een gebruiker specifiek naar lopende projecten zoekt.
+
+    Voorbeelden:
+    - "Welke lopende onderzoeken zijn er?"
+      -> project_intentie = True
+      -> project_zoekterm = ""
+
+    - "Welke lopende onderzoeken zijn er over Alzheimer?"
+      -> project_intentie = True
+      -> project_zoekterm = "alzheimer"
+
+    - "machine learning"
+      -> project_intentie = False
+      -> project_zoekterm = "machine learning"
+    """
+
+    tekst = str(zoekterm).strip().lower()
+
+def verwerk_project_zoekvraag(zoekterm):
+    """
+    Herkent of een gebruiker specifiek naar lopende projecten zoekt.
+
+    Voorbeelden:
+    - "Welke lopende onderzoeken zijn er?"
+      -> project_intentie = True
+      -> project_zoekterm = ""
+
+    - "Welke lopende onderzoeken zijn er over Alzheimer?"
+      -> project_intentie = True
+      -> project_zoekterm = "alzheimer"
+
+    - "machine learning"
+      -> project_intentie = False
+      -> project_zoekterm = "machine learning"
+    """
+
+    tekst = str(zoekterm).strip().lower()
+
+    project_signalen = [
+        "lopend onderzoek",
+        "lopende onderzoeken",
+        "lopende onderzoek",
+        "lopend project",
+        "lopende projecten",
+        "projecten",
+        "project",
+    ]
+
+    project_intentie = any(
+        signaal in tekst
+        for signaal in project_signalen
+    )
+
+    if not project_intentie:
+        return False, tekst
+
+    # Leestekens verwijderen
+    schone_tekst = re.sub(
+        r"[^\w\s-]",
+        " ",
+        tekst
+    )
+
+    woorden = schone_tekst.split()
+
+    # Algemene vraagwoorden die niet inhoudelijk zijn
+    stopwoorden = {
+        "welke",
+        "wat",
+        "wie",
+        "waar",
+        "zijn",
+        "is",
+        "er",
+        "de",
+        "het",
+        "een",
+        "en",
+        "van",
+        "voor",
+        "met",
+        "over",
+        "naar",
+        "rond",
+        "op",
+        "binnen",
+        "lopende",
+        "lopend",
+        "onderzoek",
+        "onderzoeken",
+        "project",
+        "projecten",
+        "toon",
+        "geef",
+        "laat",
+        "zien",
+        "mij",
+    }
+
+    inhoudelijke_woorden = [
+        woord
+        for woord in woorden
+        if woord not in stopwoorden
+    ]
+
+    project_zoekterm = " ".join(
+        inhoudelijke_woorden
+    ).strip()
+
+    return True, project_zoekterm    
 
 # ============================================================
 # SESSION STATE
@@ -419,6 +556,104 @@ if zoekterm:
         personen_gefilterd["id"].isin(personen_ids)
     ]
 
+        # --------------------------------------------------------
+    # Zoeken in lopende projecten
+    # --------------------------------------------------------
+
+    project_intentie, project_zoekterm = (
+        verwerk_project_zoekvraag(
+            zoekterm
+        )
+    )
+
+    # Normale zoekopdracht:
+    # bijvoorbeeld "Alzheimer" of "machine learning"
+    if not project_intentie:
+        project_zoekterm = zoekterm
+
+    # --------------------------------------------------------
+    # Projectvraag zonder onderwerp:
+    # "Welke lopende onderzoeken zijn er?"
+    # -> alle lopende projecten tonen
+    # --------------------------------------------------------
+
+    if project_intentie and not project_zoekterm:
+
+        project_resultaat = pd.read_sql(
+            """
+            SELECT
+                lp.id,
+                lp.naam,
+                lp.beschrijving,
+                lp.leider_id,
+                lp.datum,
+                lp.einddatum,
+                p.name AS leider_naam,
+                p.department AS leider_department
+            FROM lopende_projecten lp
+            LEFT JOIN persons p
+                ON p.id = lp.leider_id
+            ORDER BY lp.naam
+            """,
+            conn
+        )
+
+    # --------------------------------------------------------
+    # Projectvraag met onderwerp:
+    # "Welke lopende onderzoeken zijn er over Alzheimer?"
+    #
+    # Of normale zoekterm:
+    # "Alzheimer"
+    # --------------------------------------------------------
+
+    else:
+
+        zoekwaarde = f"%{project_zoekterm}%"
+
+        project_resultaat = pd.read_sql(
+            """
+            SELECT
+                lp.id,
+                lp.naam,
+                lp.beschrijving,
+                lp.leider_id,
+                lp.datum,
+                lp.einddatum,
+                p.name AS leider_naam,
+                p.department AS leider_department
+            FROM lopende_projecten lp
+            LEFT JOIN persons p
+                ON p.id = lp.leider_id
+            WHERE
+                LOWER(COALESCE(lp.naam, ''))
+                    LIKE LOWER(?)
+
+                OR LOWER(COALESCE(lp.beschrijving, ''))
+                    LIKE LOWER(?)
+
+                OR LOWER(COALESCE(p.name, ''))
+                    LIKE LOWER(?)
+
+            ORDER BY lp.naam
+            """,
+            conn,
+            params=(
+                zoekwaarde,
+                zoekwaarde,
+                zoekwaarde,
+            )
+        )
+
+    # --------------------------------------------------------
+    # Departmentfilter toepassen
+    # --------------------------------------------------------
+
+    if department_filter != "Alle":
+
+        project_resultaat = project_resultaat[
+            project_resultaat["leider_department"]
+            == department_filter
+        ]
 
     # --------------------------------------------------------
     # Normale resultaten combineren
@@ -510,8 +745,10 @@ if zoekterm:
     # --------------------------------------------------------
     # Aantal resultaten
     # --------------------------------------------------------
-    st.success(f"{len(resultaat)} onderzoeker(s) gevonden")
-
+        st.success(
+        f"{len(resultaat)} onderzoeker(s) en "
+        f"{len(project_resultaat)} lopend(e) project(en) gevonden"
+    )
 
     # ========================================================
     # RESULTATENLAYOUT
@@ -703,7 +940,76 @@ if zoekterm:
                                     f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/",
                                     use_container_width=True
                                 )
+            # ====================================================
+        # LOPENDE PROJECTEN
+        # ====================================================
 
+        st.divider()
+        st.subheader("📁 Gevonden lopende projecten")
+
+        if project_resultaat.empty:
+
+            st.info(
+                "Geen lopende projecten gevonden "
+                "voor deze zoekterm."
+            )
+
+        else:
+
+            for _, project in project_resultaat.iterrows():
+
+                project_id = int(project["id"])
+
+                with st.container(border=True):
+
+                    st.markdown(
+                        f"### 📁 {project['naam']}"
+                    )
+
+                    if (
+                        pd.notna(project["leider_naam"])
+                        and str(project["leider_naam"]).strip()
+                    ):
+                        st.caption(
+                            f"Projectleider: "
+                            f"{project['leider_naam']}"
+                        )
+
+                    beschrijving = project["beschrijving"]
+
+                    if (
+                        pd.notna(beschrijving)
+                        and str(beschrijving).strip()
+                    ):
+
+                        beschrijving = str(
+                            beschrijving
+                        ).strip()
+
+                        if len(beschrijving) > 250:
+                            beschrijving = (
+                                beschrijving[:250]
+                                + "..."
+                            )
+
+                        st.write(
+                            beschrijving
+                        )
+
+                    if st.button(
+                        "Bekijk project",
+                        key=f"zoek_project_{project_id}",
+                        type="primary",
+                        use_container_width=True,
+                    ):
+
+                        st.session_state[
+                            "geselecteerd_lopend_project"
+                        ] = project_id
+
+                        st.switch_page(
+                            "pages/lopend_project.py"
+                        )
 
     # ========================================================
     # RECHTERKOLOM — AI-UITLEG

@@ -680,43 +680,57 @@ with nav_expertise:
     expertise_opties = {}
 
     for _, exp in gefilterde_expertise.iterrows():
-        exp_id = int(exp["id"])
-        label = str(exp["label"])
+
+        exp_id = int(
+            exp["id"]
+        )
+
+        label = str(
+            exp["label"]
+        )
 
         weergave = label
 
         if exp_id in gedeelde_expertise_ids:
             weergave += " ★ gedeeld"
 
-        expertise_opties[weergave] = exp_id
+        expertise_opties[
+            weergave
+        ] = exp_id
+
 
     if expertise_opties:
+
         gekozen_expertise = st.selectbox(
             "Kies expertise",
-            list(expertise_opties.keys()),
+            list(
+                expertise_opties.keys()
+            ),
             key="kg_nav_expertise"
         )
+
 
         if st.button(
             "🔬 Bekijk expertise",
             key="kg_open_expertise",
             use_container_width=True
         ):
-            st.session_state.geselecteerde_expertise_id = (
-                expertise_opties[
-                    gekozen_expertise
-                ]
+
+            st.session_state[
+                "geselecteerde_expertise_id"
+            ] = expertise_opties[
+                gekozen_expertise
+            ]
+
+            st.switch_page(
+                "pages/expertise.py"
             )
 
-            st.info(
-                "De dynamische expertisepagina bouwen we "
-                "bij de volgende expertise-stap."
-            )
     else:
+
         st.info(
             "Geen expertise zichtbaar."
         )
-
 
 nav_project, nav_publicatie = st.columns(2)
 

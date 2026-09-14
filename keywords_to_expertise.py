@@ -4,16 +4,15 @@ import pandas as pd
 
 def werk_expertise_bij(conn):
     """
-    Werkt expertise bij op basis van keywords
-    uit publicaties.
+    Werkt expertise bij op basis van publicaties.
 
     Voor iedere onderzoeker:
-    - zoekt publicaties waarin de naam voorkomt
-    - verzamelt keywords
-    - maakt ontbrekende expertise aan
-    - maakt ontbrekende persons_expertise koppelingen aan
-
-    Geeft terug hoeveel nieuwe koppelingen zijn gemaakt.
+    - gebruikt de normale naam + PubMed-auteursaliassen
+    - zoekt bijbehorende publicaties
+    - gebruikt keywords als die aanwezig zijn
+    - gebruikt MeSH-termen als keywords ontbreken
+    - bepaalt de top 10 onderwerpen
+    - maakt expertise en koppelingen opnieuw aan
     """
 
     cursor = conn.cursor()
@@ -29,13 +28,33 @@ def werk_expertise_bij(conn):
     totaal_nieuwe_expertise = 0
     totaal_nieuwe_koppelingen = 0
 
+    # Algemene MeSH-termen die geen echte expertise zijn
+    mesh_stopwoorden = {
+        "humans",
+        "animals",
+        "male",
+        "female",
+        "adult",
+        "child",
+        "infant",
+        "adolescent",
+        "aged",
+        "middle aged",
+        "young adult",
+        "mice",
+        "rats",
+        "cell line",
+    }
+
     for _, persoon in personen.iterrows():
 
         naam = persoon["name"]
         persoon_id = persoon["id"]
-        
-    # Oude expertise-koppelingen van deze onderzoeker verwijderen
-    # zodat de nieuwe top 10 opnieuw opgebouwd kan worden
+
+        # --------------------------------------------------------
+        # OUDE KOPPELINGEN VERWIJDEREN
+        # --------------------------------------------------------
+
         cursor.execute(
             """
             DELETE FROM persons_expertise
@@ -45,29 +64,76 @@ def werk_expertise_bij(conn):
                 persoon_id,
             )
         )
+
+        # --------------------------------------------------------
+        # AUTEURSNAMEN + ALIASSEN
+        # --------------------------------------------------------
+
+        aliases_df = pd.read_sql(
+            """
+            SELECT author_name
+            FROM person_author_aliases
+            WHERE person_id = ?
+            """,
+            conn,
+            params=(
+                persoon_id,
+            )
+        )
+
+        auteursnamen = [
+            str(naam).strip()
+        ]
+
+        for alias in aliases_df["author_name"].dropna():
+
+            alias = str(alias).strip()
+
+            if alias and alias not in auteursnamen:
+                auteursnamen.append(alias)
+
         # --------------------------------------------------------
         # PUBLICATIES VAN DEZE ONDERZOEKER
         # --------------------------------------------------------
 
-        publicaties = pd.read_sql(
-            """
-            SELECT keywords
-            FROM publications
-            WHERE authors LIKE ?
-            AND keywords IS NOT NULL
-            AND TRIM(keywords) != ''
-            """,
-            conn,
-            params=(
-                f"%{naam}%",
+        voorwaarden = []
+        params = []
+
+        for auteursnaam in auteursnamen:
+
+            voorwaarden.append(
+                "LOWER(authors) LIKE ?"
             )
+
+            params.append(
+                f"%{auteursnaam.lower()}%"
+            )
+
+        where_auteurs = " OR ".join(
+            voorwaarden
+        )
+
+        query = f"""
+            SELECT
+                keywords,
+                mesh_terms
+            FROM publications
+            WHERE (
+                {where_auteurs}
+            )
+        """
+
+        publicaties = pd.read_sql(
+            query,
+            conn,
+            params=params
         )
 
         if publicaties.empty:
             continue
 
         # --------------------------------------------------------
-        # KEYWORDS VERZAMELEN
+        # KEYWORDS / MESH VERZAMELEN
         # --------------------------------------------------------
 
         keyword_tellingen = {}
@@ -76,46 +142,108 @@ def werk_expertise_bij(conn):
 
             keywords_tekst = pub["keywords"]
 
-            if not keywords_tekst:
+            mesh_tekst = pub["mesh_terms"]
+
+            # Eerst normale keywords proberen
+            if (
+                keywords_tekst
+                and str(keywords_tekst).strip()
+            ):
+
+                termen = str(
+                    keywords_tekst
+                ).split(";")
+
+                gebruik_mesh = False
+
+            # Geen keywords?
+            # Dan MeSH gebruiken als fallback
+            elif (
+                mesh_tekst
+                and str(mesh_tekst).strip()
+            ):
+
+                termen = str(
+                    mesh_tekst
+                ).split(";")
+
+                gebruik_mesh = True
+
+            else:
                 continue
 
-            for keyword in keywords_tekst.split(";"):
+            for term in termen:
 
-                keyword = keyword.strip().lower()
+                term = term.strip()
 
+                if not term:
+                    continue
+
+                # Bij MeSH alleen het hoofdonderwerp gebruiken.
+                #
+                # Bijvoorbeeld:
+                # Autoimmune Diseases/genetics/*immunology
+                #
+                # wordt:
+                # autoimmune diseases
+                if gebruik_mesh:
+
+                    term = term.split("/")[0]
+
+                    term = term.replace(
+                        "*",
+                        ""
+                    )
+
+                term = term.strip().lower()
+
+                # Eventuele foutieve tekencodering herstellen
                 try:
-                    keyword = (
-                        keyword
+                    term = (
+                        term
                         .encode("latin-1")
                         .decode("utf-8")
                     )
                 except Exception:
                     pass
 
-                if keyword and len(keyword) > 2:
+                if not term:
+                    continue
 
-                    if keyword not in keyword_tellingen:
-                        keyword_tellingen[keyword] = 0
+                if len(term) <= 2:
+                    continue
 
-                    keyword_tellingen[keyword] += 1
+                if term in {"nan", "none", "null"}:
+                    continue
 
+                if (
+                    gebruik_mesh
+                    and term in mesh_stopwoorden
+                ):
+                    continue
 
-            # Sorteer op aantal keer voorkomen:
-            # meest voorkomende eerst
-            gesorteerde_keywords = sorted(
-                keyword_tellingen.items(),
-                key=lambda item: (
-                    -item[1],
-                    item[0]
-                )
+                if term not in keyword_tellingen:
+                    keyword_tellingen[term] = 0
+
+                keyword_tellingen[term] += 1
+
+        # --------------------------------------------------------
+        # TOP 10 BEPALEN
+        # --------------------------------------------------------
+
+        gesorteerde_keywords = sorted(
+            keyword_tellingen.items(),
+            key=lambda item: (
+                -item[1],
+                item[0]
             )
+        )
 
-
-            # Alleen de keyword-tekst bewaren
-            keywords = [
-                keyword
-                for keyword, aantal in gesorteerde_keywords[:10]
-            ]
+        keywords = [
+            keyword
+            for keyword, aantal
+            in gesorteerde_keywords[:10]
+        ]
 
         # --------------------------------------------------------
         # EXPERTISE OPSLAAN
@@ -154,14 +282,12 @@ def werk_expertise_bij(conn):
                     )
                 )
 
-                expertise_id = (
-                    cursor.lastrowid
-                )
+                expertise_id = cursor.lastrowid
 
                 totaal_nieuwe_expertise += 1
 
             # ----------------------------------------------------
-            # KOPPELING PERSON ↔ EXPERTISE
+            # KOPPELING ONDERZOEKER ↔ EXPERTISE
             # ----------------------------------------------------
 
             cursor.execute(
@@ -234,4 +360,3 @@ if __name__ == "__main__":
     print(
         "Klaar!"
     )
-  

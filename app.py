@@ -18,7 +18,6 @@ from dotenv import load_dotenv
 from groq import Groq
 from sentence_transformers import SentenceTransformer
 
-from expertise_routes import uitgewerkte_expertise, pagina_namen
 from styling import apply_styling
 
 
@@ -201,45 +200,31 @@ def genereer_samenvatting(zoekterm, resultaat, relevante_publicaties):
 
 def haal_expertise_op(persoon_id):
     """
-    Haal unieke expertise + bijbehorende pagina op
-    voor één onderzoeker.
+    Haal alle gekoppelde expertise op voor één onderzoeker.
     """
+
     exp_ids = personen_expertise[
         personen_expertise["person_id"] == persoon_id
     ]["expertise_id"].tolist()
 
     exp_details = expertise[
         expertise["id"].isin(exp_ids)
-    ]
+    ].copy()
 
-    gematchte = exp_details[
-        exp_details["label"]
-        .str.lower()
-        .isin(uitgewerkte_expertise)
-    ]
+    exp_details = exp_details.sort_values(
+        "label"
+    )
 
     expertise_links = []
-    bestemmingen = set()
 
-    for _, exp in gematchte.iterrows():
-        pagina = uitgewerkte_expertise[
-            exp["label"].lower()
-        ]
+    for _, exp in exp_details.iterrows():
 
-        if pagina not in bestemmingen:
-            bestemmingen.add(pagina)
-
-            naam = pagina_namen.get(
-                pagina,
-                exp["label"],
-            )
-
-            expertise_links.append(
-                {
-                    "naam": naam,
-                    "pagina": pagina,
-                }
-            )
+        expertise_links.append(
+            {
+                "id": int(exp["id"]),
+                "naam": exp["label"],
+            }
+        )
 
     return expertise_links
 
@@ -612,13 +597,18 @@ if zoekterm:
                                     key=(
                                         f"expertise_"
                                         f"{persoon_id}_"
-                                        f"{index}"
+                                        f"{exp['id']}"
                                     ),
                                     use_container_width=True,
                                 ):
+
+                                    st.session_state[
+                                        "geselecteerde_expertise_id"
+                                    ] = exp["id"]
+
                                     st.switch_page(
-                                        exp["pagina"]
-                                    )
+                                        "pages/expertise.py"
+                                    )   
 
                     # Kleine ruimte vóór actieknoppen
                     st.write("")

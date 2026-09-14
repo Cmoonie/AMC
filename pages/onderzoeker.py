@@ -20,7 +20,7 @@ conn = sqlite3.connect(db_path)
 from groq import Groq
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv()# Mapping van expertise-label (lowercase) naar uitgewerkte pagina
 api_key = os.getenv("GROQ_API_KEY")
 client = Groq(api_key=api_key)
 
@@ -69,41 +69,8 @@ personen = pd.read_sql("SELECT * FROM persons", conn)
 expertise = pd.read_sql("SELECT * FROM expertise", conn)
 personen_expertise = pd.read_sql("SELECT * FROM persons_expertise", conn)
 
-# Mapping van expertise-label (lowercase) naar uitgewerkte pagina
-# Zelfde dict als in app.py — hou deze twee synchroon
-uitgewerkte_expertise = {
-    # Robert
-    "methotrexate": "pages/expertise_methotrexaat.py",
-    "methotrexaat": "pages/expertise_methotrexaat.py",
-    "methotrexate polyglutamates": "pages/expertise_methotrexaat.py",
-    "methotrexate polyglutamate": "pages/expertise_methotrexaat.py",
-    "gene expression": "pages/expertise_gene_expression.py",
-    "laboratory medicine": "pages/expertise_laboratorium_diagnostiek.py",
 
-    # Sjors
-    "neurofilament light chain": "pages/expertise_neurofilament.py",
-    "amyloid beta": "pages/expertise_amyloid.py",
-    "systemic amyloidosis": "pages/expertise_amyloid.py",
-    "attrv amyloidosis": "pages/expertise_amyloid.py",
 
-    # Martijn
-    "clinical decision making": "pages/expertise_clinical_decision.py",
-    "clinical prediction models": "pages/expertise_clinical_decision.py",
-    "epidemiology": "pages/expertise_epidemiology.py",
-    "clinical practice guidelines": "pages/expertise_clinical_decision.py",
-    "alzheimer": "pages/expertise_amyloid.py",
-}
-
-# Nette paginanamen voor de knoptekst
-pagina_namen = {
-    "pages/expertise_methotrexaat.py": "Methotrexaat",
-    "pages/expertise_gene_expression.py": "Gene Expression",
-    "pages/expertise_laboratorium_diagnostiek.py": "Laboratorium Diagnostiek",
-    "pages/expertise_neurofilament.py": "Neurofilament Light Chain",
-    "pages/expertise_amyloid.py": "Amyloid Beta",
-    "pages/expertise_clinical_decision.py": "Clinical Decision Making",
-    "pages/expertise_epidemiology.py": "Epidemiologie",
-}
 
 # Check session state
 if "geselecteerde_persoon" not in st.session_state or st.session_state.geselecteerde_persoon is None:
@@ -155,27 +122,67 @@ else:
     st.write(f"📧 emailadres@amsterdamumc.nl")
     st.write(f"🔗 [Zoek op PubMed](https://pubmed.ncbi.nlm.nih.gov/?term={persoon['name'].replace(' ', '+')})")
 
-    # Expertise — alleen tags uit uitgewerkte_expertise, 1 knop per unieke pagina
+    # ============================================================
+    # EXPERTISE
+    # ============================================================
+
     st.divider()
-    st.subheader("Expertise")
+    st.subheader("🔬 Expertise")
 
-    exp_ids = personen_expertise[personen_expertise["person_id"] == persoon_id]["expertise_id"].tolist()
-    exp_details = expertise[expertise["id"].isin(exp_ids)]
-    gematchte = exp_details[exp_details["label"].str.lower().isin(uitgewerkte_expertise)]
+    exp_ids = personen_expertise[
+        personen_expertise["person_id"] == persoon_id
+    ]["expertise_id"].tolist()
 
-    if gematchte.empty:
-        st.write("Geen uitgewerkte expertise gevonden voor deze onderzoeker.")
+    exp_details = expertise[
+        expertise["id"].isin(exp_ids)
+    ].copy()
+
+    exp_details = exp_details.sort_values(
+        "label"
+    )
+
+    if exp_details.empty:
+
+        st.info(
+            "Geen expertise gevonden voor deze onderzoeker."
+        )
+
     else:
-        bestemmingen = {}
-        for _, exp in gematchte.iterrows():
-            pagina = uitgewerkte_expertise[exp["label"].lower()]
-            if pagina not in bestemmingen:
-                bestemmingen[pagina] = True
 
-        for pagina in bestemmingen:
-            naam = pagina_namen.get(pagina, pagina)
-            if st.button(f"🔬 {naam}", key=f"exp_{persoon_id}_{pagina}"):
-                st.switch_page(pagina)
+        for start in range(
+            0,
+            len(exp_details),
+            3
+        ):
+
+            rij = exp_details.iloc[
+                start:start + 3
+            ]
+
+            kolommen = st.columns(3)
+
+            for kolom, (_, exp) in zip(
+                kolommen,
+                rij.iterrows()
+            ):
+
+                with kolom:
+
+                    if st.button(
+                        f"🔬 {exp['label']}",
+                        key=f"exp_{persoon_id}_{exp['id']}",
+                        use_container_width=True
+                    ):
+
+                        st.session_state[
+                            "geselecteerde_expertise_id"
+                        ] = int(
+                            exp["id"]
+                        )
+
+                        st.switch_page(
+                            "pages/expertise.py"
+                        )
 
     # Lopende projecten
     st.divider()

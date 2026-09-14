@@ -346,79 +346,84 @@ with st.container(border=True):
                     f"Technische melding: {e}"
                 )
 
+    
+        # ============================================================
+    # EXPERTISE
     # ============================================================
-    # Expertise (automatisch, uit publicaties) — zelfde systeem als onderzoeker.py
-    # ============================================================
+
     st.divider()
+
     st.subheader("🔬 Expertise")
-    st.caption("Onderwerpen die automatisch uit je publicaties zijn gekoppeld.")
 
-    uitgewerkte_expertise = {
-        # Robert
-        "methotrexate": "pages/expertise_methotrexaat.py",
-        "methotrexaat": "pages/expertise_methotrexaat.py",
-        "methotrexate polyglutamates": "pages/expertise_methotrexaat.py",
-        "methotrexate polyglutamate": "pages/expertise_methotrexaat.py",
-        "gene expression": "pages/expertise_gene_expression.py",
-        "laboratory medicine": "pages/expertise_laboratorium_diagnostiek.py",
-
-        # Sjors
-        "neurofilament light chain": "pages/expertise_neurofilament.py",
-        "amyloid beta": "pages/expertise_amyloid.py",
-        "systemic amyloidosis": "pages/expertise_amyloid.py",
-        "attrv amyloidosis": "pages/expertise_amyloid.py",
-
-        # Martijn
-        "clinical decision making": "pages/expertise_clinical_decision.py",
-        "clinical prediction models": "pages/expertise_clinical_decision.py",
-        "epidemiology": "pages/expertise_epidemiology.py",
-        "clinical practice guidelines": "pages/expertise_clinical_decision.py",
-        "alzheimer": "pages/expertise_amyloid.py",
-    }
-
-    pagina_namen = {
-        "pages/expertise_methotrexaat.py": "Methotrexaat",
-        "pages/expertise_gene_expression.py": "Gene Expression",
-        "pages/expertise_laboratorium_diagnostiek.py": "Laboratorium Diagnostiek",
-        "pages/expertise_neurofilament.py": "Neurofilament Light Chain",
-        "pages/expertise_amyloid.py": "Amyloid Beta",
-        "pages/expertise_clinical_decision.py": "Clinical Decision Making",
-        "pages/expertise_epidemiology.py": "Epidemiologie",
-    }
+    st.caption(
+        "Onderwerpen die automatisch uit je publicaties zijn gekoppeld."
+    )
 
     if persoon_id is None:
-        st.write("Geen gekoppeld onderzoekersprofiel gevonden — expertise uit publicaties niet beschikbaar.")
+
+        st.info(
+            "Geen gekoppeld onderzoekersprofiel gevonden."
+        )
+
     else:
-        expertise_df = pd.read_sql("SELECT * FROM expertise", conn)
-        personen_expertise_df = pd.read_sql("SELECT * FROM persons_expertise", conn)
 
-        exp_ids = personen_expertise_df[personen_expertise_df["person_id"] == persoon_id]["expertise_id"].tolist()
-        exp_details = expertise_df[expertise_df["id"].isin(exp_ids)]
-        gematchte = exp_details[exp_details["label"].str.lower().isin(uitgewerkte_expertise)]
+        expertise_df = pd.read_sql(
+            """
+            SELECT DISTINCT
+                e.id,
+                e.label
+            FROM expertise e
+            INNER JOIN persons_expertise pe
+                ON pe.expertise_id = e.id
+            WHERE pe.person_id = ?
+            ORDER BY e.label
+            """,
+            conn,
+            params=(persoon_id,)
+        )
 
-        if gematchte.empty:
-            st.write("Geen uitgewerkte expertise gevonden.")
+        if expertise_df.empty:
+
+            st.info(
+                "Er is nog geen expertise gekoppeld aan je profiel."
+            )
+
         else:
-            bestemmingen = {}
-            for _, exp in gematchte.iterrows():
-                pagina = uitgewerkte_expertise[exp["label"].lower()]
-                if pagina not in bestemmingen:
-                    bestemmingen[pagina] = True
 
-            paginas = list(bestemmingen.keys())
-            for start in range(0, len(paginas), 3):
-                rij = paginas[start:start + 3]
+            for start in range(
+                0,
+                len(expertise_df),
+                3
+            ):
+
+                rij = expertise_df.iloc[
+                    start:start + 3
+                ]
+
                 kolommen = st.columns(3)
 
-                for kolom, pagina in zip(kolommen, rij):
-                    naam = pagina_namen.get(pagina, pagina)
+                for kolom, (_, exp) in zip(
+                    kolommen,
+                    rij.iterrows()
+                ):
+
                     with kolom:
+
                         if st.button(
-                            f"🔬 {naam}",
-                            key=f"eigen_exp_{pagina}",
+                            f"🔬 {exp['label']}",
+                            key=f"eigen_exp_{exp['id']}",
                             use_container_width=True
                         ):
-                            st.switch_page(pagina)
+
+                            st.session_state[
+                                "geselecteerde_expertise_id"
+                            ] = int(
+                                exp["id"]
+                            )
+
+                            st.switch_page(
+                                "pages/expertise.py"
+                            )
         # ============================================================
     # PUBMED AUTEURSNAMEN
     # ============================================================

@@ -2,9 +2,17 @@ import streamlit as st
 import pandas as pd
 import sqlite3
 import os
+from sidebar import toon_sidebar
+from styling import apply_styling
+
+
+
 
 # set_page_config MOET de allereerste Streamlit-aanroep zijn in het bestand
 st.set_page_config(layout="wide")
+
+apply_styling("kennisgraaf")
+toon_sidebar()
 
 db_path = os.path.join(os.path.dirname(__file__), "..", "spider.db")
 conn = sqlite3.connect(db_path)
@@ -43,6 +51,8 @@ if "ingelogd" not in st.session_state or not st.session_state.ingelogd:
     st.warning("Je moet eerst inloggen!")
     st.switch_page("app.py")
     st.stop()
+
+
 
 # Styling
 from styling import apply_styling

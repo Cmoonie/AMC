@@ -4,3 +4,4 @@ python-dotenv
 groq
 sentence-transformers
 pyvis
+pypdf

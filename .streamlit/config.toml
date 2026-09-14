@@ -1,9 +1,8 @@
 [theme]
-primaryColor = "#003082"
+primaryColor = "#ccd1d6"
 backgroundColor = "#FFFFFF"
 secondaryBackgroundColor = "#EEF4FF"
 textColor = "#1a1a2e"
 
 [client]
 showSidebarNavigation = false
-

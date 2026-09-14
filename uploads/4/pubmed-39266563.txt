@@ -1,0 +1,88 @@
+PMID- 39266563
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20240912
+LR  - 20240912
+IS  - 2056-676X (Electronic)
+IS  - 2056-676X (Linking)
+VI  - 10
+IP  - 1
+DP  - 2024 Sep 12
+TI  - Premature ovarian insufficiency.
+PG  - 63
+LID - 10.1038/s41572-024-00547-5 [doi]
+AB  - Premature ovarian insufficiency (POI) is a cause of infertility and endocrine 
+      dysfunction in women, defined by loss of normal, predictable ovarian activity 
+      before the age of 40 years. POI is clinically characterized by amenorrhoea 
+      (primary or secondary) with raised circulating levels of follicle-stimulating 
+      hormone. This condition can occur due to medical interventions such as ovarian 
+      surgery or cytotoxic cancer therapy, metabolic and lysosomal storage diseases, 
+      infections, chromosomal anomalies and autoimmune diseases. At least 1 in 100 
+      women is affected by POI, including 1 in 1,000 before the age of 30 years. 
+      Substantial evidence suggests a genetic basis to POI. However, the cause of 
+      idiopathic POI remains unknown in most patients, indicating that gene variants 
+      associated with this condition remain to be discovered. Over the past 10 years, 
+      tremendous progress has been made in our knowledge of genes involved in POI. 
+      Genetic approaches in diagnosis are important as they enable patients with 
+      familial POI to be identified, with the opportunity for oocyte preservation. 
+      Moreover, genetic approaches could provide a better understanding of disease 
+      mechanisms, which will ultimately aid the development of improved treatments.
+CI  - © 2024. Springer Nature Limited.
+FAU - Touraine, Philippe
+AU  - Touraine P
+AUID- ORCID: 0000-0002-8462-7753
+AD  - Department of Endocrinology and Reproductive Medicine, AP-HP Pitié Salpêtrière 
+      Hospital, Sorbonne Université Médecine, Paris, France. philippe.touraine@aphp.fr.
+AD  - Inserm U1151 INEM, Necker Hospital, Paris, France. philippe.touraine@aphp.fr.
+FAU - Chabbert-Buffet, Nathalie
+AU  - Chabbert-Buffet N
+AD  - Department of Obstetrics, Gynecology and Reproductive Medicine, Tenon Hospital, 
+      AP-HP Sorbonne Université, Paris, France.
+AD  - INSERM UMR S 938, CDR St Antoine, Paris, France.
+FAU - Plu-Bureau, Genevieve
+AU  - Plu-Bureau G
+AD  - Department of Medical Gynecology, AP-HP Port Royal-Cochin Hospital, Université 
+      Paris Cité, Paris, France.
+AD  - U1151 EPOPEE Team, Paris, France.
+FAU - Duranteau, Lise
+AU  - Duranteau L
+AD  - Department of Medical Gynecology, Bicêtre Hospital, AP-HP Université 
+      Paris-Saclay, Le Kremlin Bicêtre, France.
+FAU - Sinclair, Andrew H
+AU  - Sinclair AH
+AD  - Murdoch Children's Research Institute, Melbourne, Victoria, Australia.
+AD  - Department of Paediatrics, University of Melbourne, Melbourne, Victoria, 
+      Australia.
+FAU - Tucker, Elena J
+AU  - Tucker EJ
+AUID- ORCID: 0000-0002-6380-5100
+AD  - Murdoch Children's Research Institute, Melbourne, Victoria, Australia. 
+      elena.tucker@mcri.edu.au.
+AD  - Department of Paediatrics, University of Melbourne, Melbourne, Victoria, 
+      Australia. elena.tucker@mcri.edu.au.
+LA  - eng
+PT  - Journal Article
+PT  - Review
+DEP - 20240912
+PL  - England
+TA  - Nat Rev Dis Primers
+JT  - Nature reviews. Disease primers
+JID - 101672103
+RN  - 9002-68-0 (Follicle Stimulating Hormone)
+SB  - IM
+MH  - Humans
+MH  - *Primary Ovarian Insufficiency/physiopathology/etiology/genetics/diagnosis
+MH  - Female
+MH  - Follicle Stimulating Hormone/blood
+MH  - Adult
+EDAT- 2024/09/13 00:46
+MHDA- 2024/09/13 00:47
+CRDT- 2024/09/12 23:18
+PHST- 2024/07/31 00:00 [accepted]
+PHST- 2024/09/13 00:47 [medline]
+PHST- 2024/09/13 00:46 [pubmed]
+PHST- 2024/09/12 23:18 [entrez]
+AID - 10.1038/s41572-024-00547-5 [pii]
+AID - 10.1038/s41572-024-00547-5 [doi]
+PST - epublish
+SO  - Nat Rev Dis Primers. 2024 Sep 12;10(1):63. doi: 10.1038/s41572-024-00547-5.

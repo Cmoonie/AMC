@@ -181,16 +181,22 @@ def genereer_samenvatting(zoekterm, resultaat, relevante_publicaties):
     context_tekst = "\n".join(publicatie_context)
 
     prompt = (
-        f"De gebruiker zoekt naar: '{zoekterm}'.\n"
-        f"Gevonden onderzoekers: {namen}.\n\n"
-        "Hieronder staan de publicaties die semantisch het sterkst aansluiten:\n"
-        f"{context_tekst}\n\n"
-        "Geef in het Nederlands een korte, concrete uitleg van maximaal 4 zinnen. "
-        "Leg uit waarom de gevonden onderzoekers relevant zijn voor de zoekvraag en "
-        "verwijs inhoudelijk naar de gevonden publicaties. Noem alleen informatie die "
-        "uit bovenstaande gegevens volgt. Zeg niet dat iemand een specialist is als dat "
-        "niet uit de gegevens blijkt."
-    )
+    f"De gebruiker zoekt naar: '{zoekterm}'.\n"
+    f"Gevonden onderzoekers: {namen}.\n\n"
+    "Hieronder staan de publicaties die semantisch het sterkst aansluiten:\n"
+    f"{context_tekst}\n\n"
+    "Geef in het Nederlands een korte, concrete uitleg van maximaal 7 zinnen. "
+    "Leg uit waarom de gevonden onderzoekers relevant zijn voor de zoekvraag en "
+    "verwijs inhoudelijk naar de gevonden publicaties. "
+    "Gebruik uitsluitend informatie die expliciet uit bovenstaande gegevens volgt. "
+    "Leg geen verbanden tussen onderzoekers die niet expliciet uit de gegevens volgen. "
+    "Beweer niet dat onderzoekers tot dezelfde onderzoeksgroep behoren tenzij dit "
+    "expliciet in de gegevens staat. "
+    "Gebruik woorden zoals 'waarschijnlijk', 'mogelijk' of 'vermoedelijk' niet "
+    "om ontbrekende informatie in te vullen. "
+    "Zeg niet dat iemand een specialist of expert is als dat niet uit de gegevens blijkt. "
+    "Verzin geen feiten, relaties, functies of onderzoeksgebieden."
+)
 
     response = client.chat.completions.create(
         model="openai/gpt-oss-20b",
@@ -199,6 +205,64 @@ def genereer_samenvatting(zoekterm, resultaat, relevante_publicaties):
 
     return response.choices[0].message.content
 
+def genereer_project_samenvatting(zoekterm, project_resultaat):
+    """
+    Genereer een korte AI-uitleg over gevonden lopende projecten.
+    """
+
+    if project_resultaat.empty:
+        return "Er zijn geen lopende projecten gevonden die bij deze zoekvraag passen."
+
+    project_context = []
+
+    for _, project in project_resultaat.head(10).iterrows():
+        naam = project.get("naam", "Onbekend project")
+        beschrijving = project.get("beschrijving", "")
+        leider = project.get("leider_naam", "")
+        datum = project.get("datum", "")
+        einddatum = project.get("einddatum", "")
+
+        regel = f"Project: {naam}."
+
+        if pd.notna(leider) and str(leider).strip():
+            regel += f" Projectleider: {leider}."
+
+        if pd.notna(beschrijving) and str(beschrijving).strip():
+            regel += f" Beschrijving: {str(beschrijving).strip()}"
+
+        if pd.notna(datum) and str(datum).strip():
+            regel += f" Startdatum: {datum}."
+
+        if pd.notna(einddatum) and str(einddatum).strip():
+            regel += f" Einddatum: {einddatum}."
+
+        project_context.append(regel)
+
+    context_tekst = "\n".join(project_context)
+
+    prompt = (
+        f"De gebruiker vraagt: '{zoekterm}'.\n\n"
+        f"Er zijn {len(project_resultaat)} lopende projecten gevonden.\n\n"
+        "Hieronder staan de gevonden projecten:\n"
+        f"{context_tekst}\n\n"
+        "Geef in het Nederlands een korte en duidelijke uitleg van maximaal "
+        "4 zinnen over de gevonden lopende projecten. "
+        "Vat de belangrijkste onderwerpen en overeenkomsten samen. "
+        "Gebruik alleen informatie uit bovenstaande projectgegevens. "
+        "Verzin geen informatie en verwijs niet naar publicaties of PubMed."
+    )
+
+    response = client.chat.completions.create(
+        model="openai/gpt-oss-20b",
+        messages=[
+            {
+                "role": "user",
+                "content": prompt,
+            }
+        ],
+    )
+
+    return response.choices[0].message.content
 
 def haal_expertise_op(persoon_id):
     """
@@ -459,12 +523,22 @@ with hero_rechts:
 # DEPARTMENTFILTER
 # Alleen zichtbaar bij meerdere departments
 # ============================================================
+
 afdelingen = (
     personen["department"]
     .dropna()
     .astype(str)
-    .unique()
-    .tolist()
+    .str.strip()
+)
+
+# Lege afdelingen verwijderen
+afdelingen = afdelingen[
+    afdelingen != ""
+]
+
+# Dubbele waarden verwijderen
+afdelingen = sorted(
+    afdelingen.unique().tolist()
 )
 
 if len(afdelingen) > 1:
@@ -664,17 +738,39 @@ if zoekterm:
     ).drop_duplicates(subset=["id"])
 
 
-    # --------------------------------------------------------
-    # Semantisch zoeken via publicaties
-    # --------------------------------------------------------
-    semantische_scores = semantisch_zoeken(zoekterm)
 
-    top_pmids = [
-        item["pmid"]
-        for item in semantische_scores
-    ]
+        # --------------------------------------------------------
+    # Semantisch zoeken via publicaties
+    #
+    # Alleen uitvoeren bij een normale zoekopdracht.
+    # Bij een projectvraag zoeken we NIET in PubMed.
+    # --------------------------------------------------------
 
     relevante_publicaties = pd.DataFrame()
+    semantische_scores = []
+    top_pmids = []
+
+    if not project_intentie:
+
+        # Als de zoekterm direct een onderzoeker op naam vindt,
+        # voegen we geen extra onderzoekers toe via PubMed.
+        naamzoekactie = not naam_resultaat.empty
+
+        if not naamzoekactie:
+
+            semantische_scores = semantisch_zoeken(
+                zoekterm
+            )
+
+            top_pmids = [
+                item["pmid"]
+                for item in semantische_scores
+            ]
+
+        top_pmids = [
+            item["pmid"]
+            for item in semantische_scores
+        ]
 
     if top_pmids:
         placeholders = ",".join(["?"] * len(top_pmids))
@@ -741,6 +837,143 @@ if zoekterm:
         "similarity",
         ascending=False,
     )
+
+
+         # ========================================================
+    # SPECIALE WEERGAVE VOOR PROJECTVRAGEN
+    # ========================================================
+
+    if project_intentie:
+
+        st.success(
+            f"{len(project_resultaat)} lopend(e) project(en) gevonden"
+        )
+
+        project_col, ai_col = st.columns(
+            [1.25, 1],
+            gap="large",
+        )
+
+        # ----------------------------------------------------
+        # LINKERKOLOM - PROJECTEN
+        # ----------------------------------------------------
+
+        with project_col:
+
+            st.subheader("📁 Gevonden lopende projecten")
+
+            if project_resultaat.empty:
+
+                st.info(
+                    "Geen lopende projecten gevonden "
+                    "voor deze zoekvraag."
+                )
+
+            else:
+
+                for _, project in project_resultaat.iterrows():
+
+                    project_id = int(project["id"])
+
+                    with st.container(border=True):
+
+                        st.markdown(
+                            f"### 📁 {project['naam']}"
+                        )
+
+                        if (
+                            pd.notna(project["leider_naam"])
+                            and str(project["leider_naam"]).strip()
+                        ):
+                            st.caption(
+                                f"Projectleider: "
+                                f"{project['leider_naam']}"
+                            )
+
+                        beschrijving = project["beschrijving"]
+
+                        if (
+                            pd.notna(beschrijving)
+                            and str(beschrijving).strip()
+                        ):
+                            beschrijving = str(
+                                beschrijving
+                            ).strip()
+
+                            if len(beschrijving) > 300:
+                                beschrijving = (
+                                    beschrijving[:300]
+                                    + "..."
+                                )
+
+                            st.write(beschrijving)
+
+                        if st.button(
+                            "Bekijk project",
+                            key=f"project_zoekresultaat_{project_id}",
+                            type="primary",
+                            use_container_width=True,
+                        ):
+                            st.session_state[
+                                "geselecteerd_lopend_project"
+                            ] = project_id
+
+                            st.switch_page(
+                                "pages/lopend_project.py"
+                            )
+
+        # ----------------------------------------------------
+        # RECHTERKOLOM - PROJECT AI
+        # ----------------------------------------------------
+
+        with ai_col:
+
+            st.subheader("✨ AI-uitleg")
+
+            if project_resultaat.empty:
+
+                st.info(
+                    "Er zijn geen projecten gevonden om "
+                    "een samenvatting van te maken."
+                )
+
+            else:
+
+                with st.spinner(
+                    "Projecten samenvatten ..."
+                ):
+
+                    try:
+
+                        project_samenvatting = (
+                            genereer_project_samenvatting(
+                                zoekterm,
+                                project_resultaat,
+                            )
+                        )
+
+                        st.markdown(
+                            f"""
+                            <div class="ai-summary">
+                                {project_samenvatting}
+                            </div>
+                            """,
+                            unsafe_allow_html=True,
+                        )
+
+                    except Exception as fout:
+
+                        st.warning(
+                            "De AI-samenvatting kon op dit "
+                            "moment niet worden gegenereerd."
+                        )
+
+                        st.caption(str(fout))
+
+        # Heel belangrijk:
+        # de normale onderzoeker-/PubMed-weergave
+        # hieronder niet meer uitvoeren.
+        st.stop()   
 
     # --------------------------------------------------------
     # Aantal resultaten

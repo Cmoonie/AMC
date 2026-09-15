@@ -125,29 +125,77 @@ with st.container(border=True):
                 with col1:
                     st.markdown(
                         f"### 🟢 {project['naam']}"
+    )
+
+                # --------------------------------------------------------
+                # Projectleider
+                # --------------------------------------------------------
+
+                leider_id = project.get("leider_id")
+
+                leider = personen[
+                    personen["id"] == leider_id
+                ]
+
+                if not leider.empty:
+                    leider_naam = leider.iloc[0]["name"]
+
+                    st.markdown("**Projectleider:**")
+
+                    if st.button(
+                        f"👤 {leider_naam}",
+                        key=f"leider_overzicht_{project['id']}_{leider_id}"
+                    ):
+                        st.session_state[
+                            "geselecteerde_persoon"
+                        ] = int(leider_id)
+
+                        st.switch_page(
+                            "pages/onderzoeker.py"
+                        )
+
+                else:
+                    st.write(
+                        "**Projectleider:** Onbekend"
                     )
 
+                # --------------------------------------------------------
+                # Beschrijving
+                # --------------------------------------------------------
+
+                beschrijving = (
+                    str(project["beschrijving"])
+                    if pd.notna(project["beschrijving"])
+                    else ""
+                )
+
+                if len(beschrijving) > 180:
                     beschrijving = (
-                        str(project["beschrijving"])
-                        if pd.notna(project["beschrijving"])
-                        else ""
+                        beschrijving[:180] + "..."
                     )
 
-                    if len(beschrijving) > 180:
-                        beschrijving = (
-                            beschrijving[:180] + "..."
-                        )
+                st.write(beschrijving)
 
-                    st.write(beschrijving)
+                # --------------------------------------------------------
+                # Datums
+                # --------------------------------------------------------
 
-                    datum = project.get("datum")
+                datum = project.get("datum")
 
-                    if pd.notna(datum):
-                        st.write(
-                            f"📅 **Start:** {datum}"
-                        )
+                if pd.notna(datum):
+                    st.write(
+                        f"📅 **Start:** {datum}"
+                    )
 
-                    einddatum = project.get("einddatum")
+                einddatum = project.get("einddatum")
+
+                if (
+                    pd.notna(einddatum)
+                    and str(einddatum).strip()
+                ):
+                    st.write(
+                        f"📅 **Einde:** {einddatum}"
+                    )
 
                     if (
                         pd.notna(einddatum)

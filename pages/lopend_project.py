@@ -8,6 +8,7 @@ st.set_page_config(
 import pandas as pd
 import sqlite3
 import os
+from datetime import datetime
 
 from sidebar import toon_sidebar
 from styling import apply_styling
@@ -26,6 +27,21 @@ db_path = os.path.join(
 conn = sqlite3.connect(db_path)
 cursor = conn.cursor()
 
+cursor.execute(
+    """
+    CREATE TABLE IF NOT EXISTS project_media (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        project_id INTEGER NOT NULL,
+        titel TEXT NOT NULL,
+        url TEXT NOT NULL,
+        media_type TEXT,
+        toegevoegd_door INTEGER,
+        toegevoegd_op TEXT
+    )
+    """
+)
+
+conn.commit()
 
 # ============================================================
 # AUTHENTICATIE
@@ -77,7 +93,7 @@ with st.container(border=True):
 
         if st.button(
             "← Terug naar zoeken",
-            key="terug_geen_project"
+            key=f"terug_naar_zoeken_{project_id}"
         ):
             st.switch_page("app.py")
 
@@ -113,7 +129,20 @@ with st.container(border=True):
                 "Lopend onderzoeksproject binnen Amsterdam UMC"
             )
 
-            st.write(f"**Projectleider:** {leider_naam}")
+            st.markdown("**Projectleider:**")
+
+            if not leider_selectie.empty:
+                leider_id = int(project["leider_id"])
+
+                if st.button(
+                    f"👤 {leider_naam}",
+                    key=f"projectleider_{leider_id}"
+                ):
+                    st.session_state.geselecteerde_persoon = leider_id
+                    st.switch_page("pages/onderzoeker.py")
+            else:
+                st.write("Onbekend")
+
             st.write(f"**Gestart:** {project['datum']}")
 
             einddatum = project.get("einddatum")
@@ -162,42 +191,403 @@ with st.container(border=True):
                     for _, persoon in betrokken.iterrows():
                         st.write(f"👤 {persoon['name']}")
 
-            # Documenten
-            st.subheader("📎 Documenten")
+         
+# ============================================================
+# PROJECTBESTANDEN
+# ============================================================
 
-            documenten = pd.read_sql(
-                """
-                SELECT *
-                FROM project_documenten
-                WHERE project_id = ?
-                """,
-                conn,
-                params=(project_id,)
+st.subheader("📎 Projectbestanden")
+
+mag_bestanden_beheren = (
+    eigen_id is not None
+    and (
+        eigen_id == project["leider_id"]
+        or eigen_id in deelnemer_ids
+    )
+)
+
+# Tabel aanmaken indien nodig
+cursor.execute(
+    """
+    CREATE TABLE IF NOT EXISTS project_bestanden (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        project_id INTEGER NOT NULL,
+        naam TEXT NOT NULL,
+        bestandspad TEXT NOT NULL,
+        uploader_id INTEGER
+    )
+    """
+)
+
+conn.commit()
+
+
+# ------------------------------------------------------------
+# Upload
+# ------------------------------------------------------------
+
+if mag_bestanden_beheren:
+
+    upload = st.file_uploader(
+        "Bestand toevoegen",
+        type=[
+            "pdf",
+            "docx",
+            "txt",
+            "xlsx",
+            "csv",
+            "pptx",
+            "png",
+            "jpg",
+            "jpeg",
+            "mp3",
+            "wav",
+            "m4a",
+            "mp4",
+            "mov",
+            "webm",
+        ],
+        key=f"project_bestand_{project_id}"
+    )
+
+    if upload is not None:
+
+        if st.button(
+            "💾 Bestand opslaan",
+            key=f"opslaan_project_bestand_{project_id}",
+            type="primary"
+        ):
+
+            project_map = os.path.join(
+                os.path.dirname(
+                    os.path.abspath(__file__)
+                ),
+                "..",
+                "uploads",
+                "projecten",
+                str(project_id)
             )
 
-            if documenten.empty:
-                st.write("Geen documenten beschikbaar.")
-            else:
-                for _, doc in documenten.iterrows():
-                    st.markdown(
-                        f"📄 [{doc['naam']}]({doc['url']})"
+            os.makedirs(
+                project_map,
+                exist_ok=True
+            )
+
+            bestandsnaam = os.path.basename(
+                upload.name
+            )
+
+            bestandspad = os.path.join(
+                project_map,
+                bestandsnaam
+            )
+
+            basisnaam, extensie = os.path.splitext(
+                bestandsnaam
+            )
+
+            teller = 1
+
+            while os.path.exists(bestandspad):
+
+                bestandspad = os.path.join(
+                    project_map,
+                    f"{basisnaam}_{teller}{extensie}"
+                )
+
+                teller += 1
+
+            with open(
+                bestandspad,
+                "wb"
+            ) as bestand:
+
+                bestand.write(
+                    upload.getbuffer()
+                )
+
+            cursor.execute(
+                """
+                INSERT INTO project_bestanden (
+                    project_id,
+                    naam,
+                    bestandspad,
+                    uploader_id
+                )
+                VALUES (?, ?, ?, ?)
+                """,
+                (
+                    project_id,
+                    os.path.basename(bestandspad),
+                    bestandspad,
+                    eigen_id,
+                )
+            )
+
+            conn.commit()
+
+            st.success(
+                "✅ Bestand opgeslagen."
+            )
+
+            st.rerun()
+
+
+# ------------------------------------------------------------
+# Bestanden tonen
+# ------------------------------------------------------------
+
+project_bestanden = pd.read_sql(
+    """
+    SELECT *
+    FROM project_bestanden
+    WHERE project_id = ?
+    ORDER BY id DESC
+    """,
+    conn,
+    params=(project_id,)
+)
+
+if project_bestanden.empty:
+
+    st.info(
+        "Er zijn nog geen projectbestanden toegevoegd."
+    )
+
+else:
+
+    for _, bestand in project_bestanden.iterrows():
+
+        pad = bestand["bestandspad"]
+
+        with st.container(border=True):
+
+            st.markdown(
+                f"📄 **{bestand['naam']}**"
+            )
+
+            if os.path.exists(pad):
+
+                with open(pad, "rb") as bestand_data:
+
+                    st.download_button(
+                        "⬇️ Download",
+                        data=bestand_data.read(),
+                        file_name=bestand["naam"],
+                        key=f"download_{bestand['id']}",
+                        use_container_width=True
                     )
 
-            st.divider()
+            else:
 
-            # Audio / Video
-            st.subheader("🎥 Audio & Video")
+                st.warning(
+                    "Bestand kon niet worden gevonden."
+                )
 
-            st.markdown("""
-📹 [Projectpresentatie — Teams Recording](#)  
-🎙️ [Podcast interview onderzoeker](#)  
-📺 [Seminar opname Amsterdam UMC](#)
-""")
+            if (
+                eigen_id is not None
+                and eigen_id == project["leider_id"]
+            ):
 
-            st.caption(
-                "⚠️ Demo: links verwijzen naar externe bronnen "
-                "zoals Microsoft Teams of YouTube."
+                if st.button(
+                    "🗑️ Verwijderen",
+                    key=f"verwijder_bestand_{bestand['id']}"
+                ):
+
+                    if os.path.exists(pad):
+                        os.remove(pad)
+
+                    cursor.execute(
+                        """
+                        DELETE FROM project_bestanden
+                        WHERE id = ?
+                        """,
+                        (int(bestand["id"]),)
+                    )
+
+                    conn.commit()
+
+                    st.rerun()
+
+st.divider()
+
+            # ============================================================
+# AUDIO / VIDEO
+# ============================================================
+
+st.subheader("🎥 Audio & Video")
+
+# Projectleider of deelnemer mag media toevoegen
+mag_media_toevoegen = (
+    eigen_id is not None
+    and (
+        eigen_id == project["leider_id"]
+        or eigen_id in deelnemer_ids
+    )
+)
+
+if mag_media_toevoegen:
+
+    with st.expander(
+        "➕ Recording of mediakoppeling toevoegen"
+    ):
+
+        media_titel = st.text_input(
+            "Titel",
+            placeholder="Bijvoorbeeld: Projectpresentatie",
+            key=f"media_titel_{project_id}"
+        )
+
+        media_type = st.selectbox(
+            "Type",
+            [
+                "Microsoft Teams",
+                "YouTube",
+                "Podcast",
+                "Seminar",
+                "Anders"
+            ],
+            key=f"media_type_{project_id}"
+        )
+
+        media_url = st.text_input(
+            "Link",
+            placeholder="https://...",
+            key=f"media_url_{project_id}"
+        )
+
+        if st.button(
+            "💾 Recording opslaan",
+            key=f"media_opslaan_{project_id}",
+            type="primary"
+        ):
+
+            titel_schoon = media_titel.strip()
+            url_schoon = media_url.strip()
+
+            if not titel_schoon:
+                st.warning(
+                    "Vul eerst een titel in."
+                )
+
+            elif not url_schoon:
+                st.warning(
+                    "Vul eerst een link in."
+                )
+
+            elif not (
+                url_schoon.startswith("https://")
+                or url_schoon.startswith("http://")
+            ):
+                st.warning(
+                    "Vul een geldige http- of https-link in."
+                )
+
+            else:
+                cursor.execute(
+                    """
+                    INSERT INTO project_media (
+                        project_id,
+                        titel,
+                        url,
+                        media_type,
+                        toegevoegd_door,
+                        toegevoegd_op
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        project_id,
+                        titel_schoon,
+                        url_schoon,
+                        media_type,
+                        eigen_id,
+                        datetime.now().isoformat(
+                            timespec="seconds"
+                        )
+                    )
+                )
+
+                conn.commit()
+
+                st.success(
+                    "Recording opgeslagen."
+                )
+
+                st.rerun()
+
+
+# ------------------------------------------------------------
+# OPGESLAGEN RECORDINGS TONEN
+# ------------------------------------------------------------
+
+media_items = pd.read_sql(
+    """
+    SELECT *
+    FROM project_media
+    WHERE project_id = ?
+    ORDER BY id DESC
+    """,
+    conn,
+    params=(project_id,)
+)
+
+if media_items.empty:
+
+    st.info(
+        "Er zijn nog geen recordings of mediakoppelingen toegevoegd."
+    )
+
+else:
+
+    for _, media in media_items.iterrows():
+
+        with st.container(border=True):
+
+            st.markdown(
+                f"### 🎬 {media['titel']}"
             )
+
+            if (
+                pd.notna(media["media_type"])
+                and str(media["media_type"]).strip()
+            ):
+                st.caption(
+                    str(media["media_type"])
+                )
+
+            st.link_button(
+                "▶️ Open recording",
+                media["url"],
+                use_container_width=True
+            )
+
+            # Alleen projectleider mag verwijderen
+            if (
+                eigen_id is not None
+                and eigen_id == project["leider_id"]
+            ):
+
+                if st.button(
+                    "🗑️ Recording verwijderen",
+                    key=f"verwijder_media_{media['id']}"
+                ):
+
+                    cursor.execute(
+                        """
+                        DELETE FROM project_media
+                        WHERE id = ?
+                        """,
+                        (int(media["id"]),)
+                    )
+
+                    conn.commit()
+
+                    st.success(
+                        "Recording verwijderd."
+                    )
+
+                    st.rerun()
 
             st.divider()
 
@@ -227,8 +617,6 @@ with st.container(border=True):
                     st.success("✅ Je bent afgemeld!")
                     st.rerun()
 
-            if st.button(
-                "← Terug naar zoeken",
-                key="terug_naar_zoeken"
-            ):
-                st.switch_page("app.py")
+            conn.commit()
+            st.success("✅ Je bent afgemeld!")
+            st.rerun()

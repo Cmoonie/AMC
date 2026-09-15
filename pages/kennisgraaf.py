@@ -256,9 +256,35 @@ st.caption(
     "publicaties en lopende projecten binnen Amsterdam UMC."
 )
 
-filter_zoek, filter_afdeling, filter_type = st.columns(
-    [2.2, 1.3, 1.8]
+# Beschikbare afdelingen bepalen
+afdelingen = (
+    personen["department"]
+    .dropna()
+    .astype(str)
+    .str.strip()
 )
+
+afdelingen = sorted(
+    [
+        afdeling
+        for afdeling in afdelingen.unique().tolist()
+        if afdeling
+    ]
+)
+
+# Alleen een afdelingsfilter tonen als er
+# daadwerkelijk meerdere afdelingen zijn.
+if len(afdelingen) > 1:
+
+    filter_zoek, filter_afdeling, filter_type = st.columns(
+        [2.2, 1.3, 2.2]
+    )
+
+else:
+
+    filter_zoek, filter_type = st.columns(
+        [2.2, 2.2]
+    )
 
 with filter_zoek:
     zoekterm = st.text_input(
@@ -268,21 +294,20 @@ with filter_zoek:
         key="kg_zoekterm"
     )
 
-with filter_afdeling:
-    afdelingen = (
-        personen["department"]
-        .dropna()
-        .astype(str)
-        .unique()
-        .tolist()
-    )
+if len(afdelingen) > 1:
 
-    afdeling_filter = st.selectbox(
-        "Afdeling",
-        ["Alle afdelingen"] + sorted(afdelingen),
-        label_visibility="visible",
-        key="kg_afdeling"
-    )
+    with filter_afdeling:
+        afdeling_filter = st.selectbox(
+            "Afdeling",
+            ["Alle afdelingen"] + afdelingen,
+            label_visibility="visible",
+            key="kg_afdeling"
+        )
+
+else:
+
+    # Bij nul of één afdeling is een dropdown niet nodig.
+    afdeling_filter = "Alle afdelingen"
 
 with filter_type:
     zichtbare_types = st.multiselect(

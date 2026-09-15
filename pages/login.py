@@ -461,12 +461,25 @@ def login_pagina():
 
                 st.session_state.ingelogd = True
                 st.session_state.rol = gebruiker["rol"]
-                st.session_state.gebruikersnaam = gebruiker["naam"]
-                st.session_state.person_id = gebruiker["person_id"]
+
+                # Loginnaam, bijvoorbeeld: R.Jonge
+                st.session_state.gebruikersnaam = (
+                    gebruiker["gebruikersnaam"]
+                )
+
+                # Volledige naam, bijvoorbeeld: Robert de jonge
+                st.session_state.naam = (
+                    gebruiker["naam"]
+                )
+
+                # Gekoppelde onderzoeker
+                st.session_state.person_id = (
+                    gebruiker["person_id"]
+                )
 
                 st.switch_page(
                     "app.py"
-                )
+    )
 
             else:
 

@@ -121,11 +121,22 @@ def semantisch_zoeken(zoekterm, top_n=15):
 
 
 def publicaties_van_persoon(relevante_publicaties, naam):
-    """Filter de semantisch relevante publicaties op onderzoeker."""
-    if relevante_publicaties.empty or "authors" not in relevante_publicaties.columns:
+    """
+    Filter semantisch relevante publicaties op onderzoeker
+    en sorteer altijd van hoogste naar laagste relevantie.
+    """
+
+    if (
+        relevante_publicaties.empty
+        or "authors" not in relevante_publicaties.columns
+    ):
         return pd.DataFrame()
 
-    auteurs = relevante_publicaties["authors"].fillna("").astype(str)
+    auteurs = (
+        relevante_publicaties["authors"]
+        .fillna("")
+        .astype(str)
+    )
 
     volledige_naam = auteurs.str.contains(
         str(naam),
@@ -133,10 +144,31 @@ def publicaties_van_persoon(relevante_publicaties, naam):
         regex=False,
     )
 
-    resultaat_persoon = relevante_publicaties[volledige_naam]
+    resultaat_persoon = relevante_publicaties[
+        volledige_naam
+    ].copy()
 
+    # Als de volledige naam resultaten geeft,
+    # altijd expliciet sorteren op de echte similarity-score.
     if not resultaat_persoon.empty:
+
+        if "similarity" in resultaat_persoon.columns:
+            resultaat_persoon["similarity"] = pd.to_numeric(
+                resultaat_persoon["similarity"],
+                errors="coerce",
+            )
+
+            resultaat_persoon = resultaat_persoon.sort_values(
+                by="similarity",
+                ascending=False,
+                na_position="last",
+            )
+
         return resultaat_persoon
+
+    # --------------------------------------------------------
+    # FALLBACK: ACHTERNAAM
+    # --------------------------------------------------------
 
     naamdelen = str(naam).split()
 
@@ -145,14 +177,31 @@ def publicaties_van_persoon(relevante_publicaties, naam):
 
     achternaam = naamdelen[-1]
 
-    return relevante_publicaties[
+    resultaat_persoon = relevante_publicaties[
         auteurs.str.contains(
             achternaam,
             case=False,
             regex=False,
         )
-    ]
+    ].copy()
 
+    # Ook de fallback altijd expliciet sorteren.
+    if (
+        not resultaat_persoon.empty
+        and "similarity" in resultaat_persoon.columns
+    ):
+        resultaat_persoon["similarity"] = pd.to_numeric(
+            resultaat_persoon["similarity"],
+            errors="coerce",
+        )
+
+        resultaat_persoon = resultaat_persoon.sort_values(
+            by="similarity",
+            ascending=False,
+            na_position="last",
+        )
+
+    return resultaat_persoon
 
 def genereer_samenvatting(zoekterm, resultaat, relevante_publicaties):
     """Genereer een concrete AI-uitleg op basis van gevonden publicaties."""
@@ -1013,6 +1062,43 @@ if zoekterm:
             )
 
         else:
+            # --------------------------------------------------------
+            # Onderzoekers sorteren op hun beste relevante publicatie
+            # --------------------------------------------------------
+            resultaat = resultaat.copy()
+
+            beste_scores = []
+
+            for _, persoon in resultaat.iterrows():
+                publicaties_persoon = publicaties_van_persoon(
+                    relevante_publicaties,
+                    persoon["name"],
+                )
+
+                if (
+                    not publicaties_persoon.empty
+                    and "similarity" in publicaties_persoon.columns
+                ):
+                    beste_score = pd.to_numeric(
+                        publicaties_persoon["similarity"],
+                        errors="coerce",
+                    ).max()
+                else:
+                    beste_score = -1
+
+                beste_scores.append(beste_score)
+
+            resultaat["beste_similarity"] = beste_scores
+
+            resultaat = resultaat.sort_values(
+                by="beste_similarity",
+                ascending=False,
+                na_position="last",
+            )
+
+            # --------------------------------------------------------
+            # Onderzoekers tonen
+            # --------------------------------------------------------
             for _, persoon in resultaat.iterrows():
 
                 persoon_id = persoon["id"]

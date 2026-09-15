@@ -326,7 +326,6 @@ with st.container(border=True):
 
                 conn.commit()
 
-                st.session_state.gebruikersnaam = nieuwe_naam
 
                 st.success(
                     "✅ Profiel opgeslagen!"
@@ -347,7 +346,7 @@ with st.container(border=True):
                 )
 
     
-        # ============================================================
+    # ============================================================
     # EXPERTISE
     # ============================================================
 
@@ -424,7 +423,7 @@ with st.container(border=True):
                             st.switch_page(
                                 "pages/expertise.py"
                             )
-        # ============================================================
+    # ============================================================
     # PUBMED AUTEURSNAMEN
     # ============================================================
 
@@ -498,8 +497,13 @@ with st.container(border=True):
 
         nieuwe_author_alias = st.text_input(
             "Auteursnaam",
-            placeholder="Bijvoorbeeld: Ishizuka B",
+            placeholder="Bijvoorbeeld: Anim C",
             key="nieuwe_author_alias"
+        )
+
+        st.caption(
+            "Voor Cecilia Anim kunnen PubMed-auteursnamen "
+            "bijvoorbeeld zijn: Anim C, C Anim of Cecilia Anim."
         )
 
         if st.button(
@@ -756,20 +760,11 @@ with st.container(border=True):
                         if import_resultaat["toegevoegd"] > 0:
 
                             with st.spinner(
-                                "Spider maakt embeddings voor de nieuwe publicaties..."
+                                "Spider verwerkt de nieuwe publicaties..."
                             ):
-
-                                embedding_resultaat = (
-                                    maak_embeddings_voor_nieuwe_publicaties(
-                                        conn
-                                    )
+                                maak_embeddings_voor_nieuwe_publicaties(
+                                    conn
                                 )
-
-                            st.success(
-                                f"🧠 "
-                                f"{embedding_resultaat['toegevoegd']} "
-                                "nieuwe embeddings aangemaakt."
-                            )
 
                         if import_resultaat["overgeslagen"] > 0:
                             with st.spinner(

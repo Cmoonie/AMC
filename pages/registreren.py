@@ -58,6 +58,7 @@ def hash_wachtwoord(wachtwoord):
 
 def registreer_onderzoeker(
     naam,
+    gebruikersnaam,
     wachtwoord
 ):
     """
@@ -81,7 +82,9 @@ def registreer_onderzoeker(
         # ----------------------------------------------------
         # CONTROLEREN OF ACCOUNT AL BESTAAT
         # ----------------------------------------------------
+        gebruikersnaam = gebruikersnaam.strip()
 
+        
         bestaand = cursor.execute(
             """
             SELECT id
@@ -89,7 +92,7 @@ def registreer_onderzoeker(
             WHERE LOWER(gebruikersnaam) = LOWER(?)
             """,
             (
-                naam,
+                gebruikersnaamnaam,
             )
         ).fetchone()
 
@@ -146,7 +149,7 @@ def registreer_onderzoeker(
             """,
             (
                 naam,
-                naam,
+                gebruikersnaam,
                 wachtwoord_hash,
                 "",
                 "gebruiker",
@@ -173,7 +176,7 @@ def registreer_onderzoeker(
             """,
             (
                 person_id,
-                naam,
+                gebruikersnaam,
                 "",
                 "",
                 "",
@@ -274,6 +277,11 @@ with st.container(border=True):
         placeholder="Bijvoorbeeld: Robert de Jonge"
     )
 
+    gebruikersnaam = st.text_input(
+        "Gebruikersnaam *",
+        placeholder="Bijvoorbeeld: R.Jonge"
+    )    
+
     wachtwoord = st.text_input(
         "Wachtwoord *",
         type="password"
@@ -309,6 +317,7 @@ if registreren:
     fouten = []
 
     naam = naam.strip()
+    gebruikersnaam = gebruikersnaam.strip()
 
 
     # --------------------------------------------------------
@@ -319,6 +328,11 @@ if registreren:
         fouten.append(
             "Vul je volledige naam in."
         )
+
+    if not gebruikersnaam:
+        fouten.append(
+            "Vul een gebruikersnaam in."
+        )    
 
 
     if not wachtwoord:
@@ -379,6 +393,7 @@ if registreren:
 
         gelukt, resultaat = registreer_onderzoeker(
             naam=naam,
+            gebruikersnaam=gebruikersnaam,
             wachtwoord=wachtwoord,
             
         )

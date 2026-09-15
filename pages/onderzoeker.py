@@ -46,12 +46,6 @@ def genereer_bio(naam):
     return response.choices[0].message.content
 
 
-# Authenticatie
-if "ingelogd" not in st.session_state or not st.session_state.ingelogd:
-    st.warning("Je moet eerst inloggen!")
-    st.switch_page("app.py")
-    st.stop()
-
 
 
 # Styling

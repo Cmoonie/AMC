@@ -1,4 +1,5 @@
 import os
+import re
 
 import pandas as pd
 from dotenv import load_dotenv
@@ -9,7 +10,19 @@ load_dotenv()
 
 api_key = os.getenv("GROQ_API_KEY")
 client = Groq(api_key=api_key)
+def normaliseer_auteursnaam(tekst):
+    """
+    Maakt auteursnamen vergelijkbaar zonder hoofdletters,
+    spaties en leestekens.
+    """
+    if tekst is None:
+        return ""
 
+    return re.sub(
+        r"[^a-z0-9]",
+        "",
+        str(tekst).lower()
+    )
 
 def genereer_bio(naam, persoon_id, conn):
     """
@@ -49,39 +62,38 @@ def genereer_bio(naam, persoon_id, conn):
     # 2. Publicaties zoeken
     # --------------------------------------------------------
 
-    voorwaarden = []
-    parameters = []
-
-    for auteursnaam in auteursnamen:
-        voorwaarden.append(
-            "LOWER(authors) LIKE LOWER(?)"
-        )
-        parameters.append(
-            f"%{auteursnaam}%"
-        )
-
-    if not voorwaarden:
-        return None
-
-    where_clause = " OR ".join(voorwaarden)
-
-    publicaties = pd.read_sql(
-        f"""
+        publicaties = pd.read_sql(
+        """
         SELECT
             pmid,
             year,
             title,
             abstract,
             keywords,
-            mesh_terms
+            mesh_terms,
+            authors
         FROM publications
-        WHERE {where_clause}
         ORDER BY year DESC
-        LIMIT 10
         """,
-        conn,
-        params=parameters
+        conn
     )
+
+    genormaliseerde_auteursnamen = [
+        normaliseer_auteursnaam(auteursnaam)
+        for auteursnaam in auteursnamen
+        if auteursnaam
+    ]
+
+    publicaties = publicaties[
+        publicaties["authors"].fillna("").apply(
+            lambda authors: any(
+                auteursnaam
+                in normaliseer_auteursnaam(authors)
+                for auteursnaam
+                in genormaliseerde_auteursnamen
+            )
+        )
+    ].head(10)
 
     if publicaties.empty:
         return None

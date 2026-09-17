@@ -217,11 +217,11 @@ if not opgeslagen_bio:
             cursor.execute(
                 """
                 UPDATE profiel_data
-                SET email = ?
+                SET bio = ?
                 WHERE person_id = ?
                 """,
                 (
-                    nieuw_email,
+                    gegenereerde_bio,
                     persoon_id
                 )
             )
@@ -693,6 +693,8 @@ with st.container(border=True):
                         werk_expertise_bij(
                             conn
                         )
+
+
                 gevonden = sync_resultaat.get(
                     "gevonden",
                     0
@@ -719,6 +721,12 @@ with st.container(border=True):
                         f"{overgeslagen} gevonden publicaties "
                         "stonden al in Spider."
                     )
+
+                # Profiel opnieuw laden wanneer nieuwe publicaties
+                # zijn toegevoegd, zodat bio en expertise direct
+                # zichtbaar worden.
+                if toegevoegd > 0:
+                    st.rerun()
 
             except Exception as fout:
 

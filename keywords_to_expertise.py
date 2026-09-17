@@ -1,6 +1,27 @@
+import re
 import sqlite3
+
 import pandas as pd
 
+
+def normaliseer_auteursnaam(tekst):
+    """
+    Maakt auteursnamen vergelijkbaar zonder hoofdletters,
+    spaties en leestekens.
+
+    Voorbeelden:
+    Wolstencroft.K  -> wolstencroftk
+    Wolstencroft K  -> wolstencroftk
+    Wolstencroft, K -> wolstencroftk
+    """
+    if tekst is None:
+        return ""
+
+    return re.sub(
+        r"[^a-z0-9]",
+        "",
+        str(tekst).lower()
+    )
 
 def werk_expertise_bij(conn):
     """
@@ -96,38 +117,33 @@ def werk_expertise_bij(conn):
         # PUBLICATIES VAN DEZE ONDERZOEKER
         # --------------------------------------------------------
 
-        voorwaarden = []
-        params = []
-
-        for auteursnaam in auteursnamen:
-
-            voorwaarden.append(
-                "LOWER(authors) LIKE ?"
-            )
-
-            params.append(
-                f"%{auteursnaam.lower()}%"
-            )
-
-        where_auteurs = " OR ".join(
-            voorwaarden
-        )
-
-        query = f"""
+        publicaties = pd.read_sql(
+            """
             SELECT
+                authors,
                 keywords,
                 mesh_terms
             FROM publications
-            WHERE (
-                {where_auteurs}
-            )
-        """
-
-        publicaties = pd.read_sql(
-            query,
-            conn,
-            params=params
+            """,
+            conn
         )
+
+        genormaliseerde_auteursnamen = [
+            normaliseer_auteursnaam(auteursnaam)
+            for auteursnaam in auteursnamen
+            if auteursnaam
+        ]
+
+        publicaties = publicaties[
+            publicaties["authors"].fillna("").apply(
+                lambda authors: any(
+                    auteursnaam
+                    in normaliseer_auteursnaam(authors)
+                    for auteursnaam
+                    in genormaliseerde_auteursnamen
+                )
+            )
+        ]
 
         if publicaties.empty:
             continue

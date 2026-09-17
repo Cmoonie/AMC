@@ -92,7 +92,7 @@ def registreer_onderzoeker(
             WHERE LOWER(gebruikersnaam) = LOWER(?)
             """,
             (
-                gebruikersnaamnaam,
+                gebruikersnaam,
             )
         ).fetchone()
 

@@ -1,0 +1,94 @@
+PMID- 29196747
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20190716
+LR  - 20240327
+IS  - 2045-2322 (Electronic)
+IS  - 2045-2322 (Linking)
+VI  - 7
+IP  - 1
+DP  - 2017 Dec 1
+TI  - A small cassette enables conditional gene inactivation by CRISPR/Cas9.
+PG  - 16770
+LID - 10.1038/s41598-017-16931-z [doi]
+LID - 16770
+AB  - The availability of CRISPR/Cas9 technology has enabled the rapid establishment of 
+      gene knockouts in many cell types and even whole organisms. However, conditional 
+      inactivation of essential genes remains a challenge. We devised an approach named 
+      DECAI (DEgradation based on Cre-regulated- Artificial Intron). It utilizes a 
+      small cassette of just 201 nucleotides that is inserted into the coding exon of a 
+      target gene using CRISPR/Cas9 technology and homology-directed repair. As its 
+      sequence is derived from an artificial intron, the cassette is removed by the 
+      splicing machinery and thus leaves no trace in the "off-state". Upon activation 
+      with Cre recombinase ("on-state"), the intron is crippled and the target gene is 
+      disrupted by a series of stop codons. We exemplify the utility of this approach 
+      on several non-essential and essential human genes. Clones bearing the 
+      conditional knockout cassette are recovered at frequencies above 5% and cassette 
+      function can be traced at the genomic DNA and the mRNA level. Importantly, 
+      cassette activation leads to loss of gene expression as judged by flow cytometry, 
+      Western blot or immunofluorescence. Altogether, this highlights the broad utility 
+      of the approach for conditional gene inactivation and suggests that this tool 
+      could be used to study the loss-of-function phenotypes of essential genes.
+FAU - Guzzardo, Paloma M
+AU  - Guzzardo PM
+AD  - Horizon Genomics GmbH, Vienna, Austria.
+FAU - Rashkova, Christina
+AU  - Rashkova C
+AD  - Horizon Genomics GmbH, Vienna, Austria.
+FAU - Dos Santos, Rodrigo L
+AU  - Dos Santos RL
+AD  - Horizon Discovery Ltd, Cambridge, UK.
+FAU - Tehrani, Raha
+AU  - Tehrani R
+AD  - Horizon Discovery Ltd, Cambridge, UK.
+FAU - Collin, Philippe
+AU  - Collin P
+AD  - Horizon Discovery Ltd, Cambridge, UK.
+FAU - Bürckstümmer, Tilmann
+AU  - Bürckstümmer T
+AD  - Horizon Genomics GmbH, Vienna, Austria. t.buerckstuemmer@horizondiscovery.com.
+LA  - eng
+PT  - Journal Article
+DEP - 20171201
+PL  - England
+TA  - Sci Rep
+JT  - Scientific reports
+JID - 101563288
+RN  - 0 (Codon, Terminator)
+RN  - EC 2.7.7.- (Cre recombinase)
+RN  - EC 2.7.7.- (Integrases)
+RN  - EC 3.1.- (CRISPR-Associated Protein 9)
+SB  - IM
+MH  - CRISPR-Associated Protein 9/*metabolism
+MH  - CRISPR-Cas Systems
+MH  - Cell Line
+MH  - Codon, Terminator
+MH  - Exons
+MH  - Gene Editing/*methods
+MH  - Gene Expression
+MH  - Gene Knockout Techniques
+MH  - *Genes, Essential
+MH  - HEK293 Cells
+MH  - Humans
+MH  - Integrases/*metabolism
+MH  - Transduction, Genetic
+PMC - PMC5711947
+COIS- Paloma Guzzardo, Christina Rashkova and Tilmann Buerckstuemmer are employees of 
+      Horizon Genomics GmbH. Rodrigo L. dos Santos and Philippe Collin are employees of 
+      Horizon Discover Ltd. Horizon has filed a UK provisional patent covering this 
+      approach.
+EDAT- 2017/12/03 06:00
+MHDA- 2019/07/17 06:00
+PMCR- 2017/12/01
+CRDT- 2017/12/03 06:00
+PHST- 2017/07/18 00:00 [received]
+PHST- 2017/11/20 00:00 [accepted]
+PHST- 2017/12/03 06:00 [entrez]
+PHST- 2017/12/03 06:00 [pubmed]
+PHST- 2019/07/17 06:00 [medline]
+PHST- 2017/12/01 00:00 [pmc-release]
+AID - 10.1038/s41598-017-16931-z [pii]
+AID - 16931 [pii]
+AID - 10.1038/s41598-017-16931-z [doi]
+PST - epublish
+SO  - Sci Rep. 2017 Dec 1;7(1):16770. doi: 10.1038/s41598-017-16931-z.

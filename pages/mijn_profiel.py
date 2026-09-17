@@ -11,6 +11,7 @@ import os
 from datetime import date
 import time
 from sidebar import toon_sidebar
+from pubmed_sync import synchroniseer_onderzoeker
 from document_verwerking import (
     verwerk_document,
     importeer_publicatiebestand
@@ -570,6 +571,80 @@ with st.container(border=True):
                     )
 
                     st.rerun()
+
+        # ============================================================
+    # PUBMED SYNCHRONISEREN
+    # ============================================================
+
+    st.markdown("#### 🔄 Publicaties synchroniseren")
+
+    st.caption(
+        "Spider kan je publicaties rechtstreeks vanuit PubMed "
+        "ophalen op basis van je PubMed-auteursnamen."
+    )
+
+    if auteur_aliases.empty:
+
+        st.info(
+            "Voeg eerst minimaal één PubMed-auteursnaam toe "
+            "om publicaties te kunnen synchroniseren."
+        )
+
+    else:
+
+        if st.button(
+            "🔄 Synchroniseren met PubMed",
+            type="primary",
+            key="pubmed_sync"
+        ):
+
+            try:
+
+                with st.spinner(
+                    "Spider zoekt je publicaties in PubMed..."
+                ):
+
+                    sync_resultaat = (
+                        synchroniseer_onderzoeker(
+                            persoon_id,
+                            conn
+                        )
+                    )
+
+                gevonden = sync_resultaat.get(
+                    "gevonden",
+                    0
+                )
+
+                toegevoegd = sync_resultaat.get(
+                    "toegevoegd",
+                    0
+                )
+
+                overgeslagen = sync_resultaat.get(
+                    "overgeslagen",
+                    0
+                )
+
+                st.success(
+                    f"PubMed-synchronisatie voltooid. "
+                    f"{gevonden} publicaties gevonden, "
+                    f"{toegevoegd} nieuw toegevoegd."
+                )
+
+                if overgeslagen > 0:
+                    st.caption(
+                        f"{overgeslagen} gevonden publicaties "
+                        "stonden al in Spider."
+                    )
+
+            except Exception as fout:
+
+                st.error(
+                    "Het synchroniseren met PubMed is niet gelukt."
+                )
+
+                st.exception(fout)                
 
 
     st.divider()

@@ -1,15 +1,23 @@
 import streamlit as st
 import pandas as pd
-import sqlite3
 import datetime
 
-import os
-db_path = os.path.join(os.path.dirname(__file__),"..", "spider.db")
-conn = sqlite3.connect(db_path)
+from database import get_connection
 
-# Authenticatie
-if "ingelogd" not in st.session_state or not st.session_state.ingelogd:
-    st.warning("Je moet eerst inloggen!")
+conn = get_connection()
+
+
+# ============================================================
+# BEHEERDER TOEGANG
+# ============================================================
+
+if not st.session_state.get("ingelogd", False):
+    st.warning("Je moet eerst inloggen.")
+    st.switch_page("pages/login.py")
+    st.stop()
+
+if st.session_state.get("rol") != "beheerder":
+    st.error("Deze pagina is alleen toegankelijk voor beheerders.")
     st.switch_page("app.py")
     st.stop()
 
@@ -31,8 +39,7 @@ st.markdown("""
     [data-testid="stSidebarNav"] { display: none; }
     </style>
 """, unsafe_allow_html=True)
-from styling import set_background
-set_background("beheer")
+
 
 # Sidebar
 st.sidebar.write(f"👤 **{st.session_state.get('gebruikersnaam', '')}**")
@@ -81,15 +88,10 @@ with tab1:
     st.warning(f"⚠️ Weet je zeker dat je {te_verwijderen} wil verwijderen?")
     bevestig = st.checkbox("Ja, ik weet het zeker")
     if st.button("Verwijderen"):
-        if bevestig:
-            cursor = conn.cursor()
-            cursor.execute("DELETE FROM persons WHERE name = ?", (te_verwijderen,))
-            conn.commit()
-            log_wijziging("Verwijderd", te_verwijderen)
-            st.success(f"{te_verwijderen} is verwijderd!")
-            st.rerun()
-        else:
-            st.error("Vink de bevestiging aan!")
+           st.warning(
+                "Volledig verwijderen van onderzoekers wordt momenteel "
+                "veilig opgebouwd. Gebruik deze functie nog niet."
+            )
 
     st.divider()
     st.subheader("➕ Persoon toevoegen")

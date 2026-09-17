@@ -1,7 +1,9 @@
 import os
 import tempfile
+import time
 import urllib.parse
 import urllib.request
+import urllib.error
 import xml.etree.ElementTree as ET
 
 from document_verwerking import importeer_pubmed_formaat
@@ -19,7 +21,14 @@ def _request(url, params):
     """
     Voert een request uit naar de officiële
     NCBI E-utilities API.
+
+    Spider wacht tussen requests en probeert
+    automatisch opnieuw bij HTTP 429.
     """
+
+    # Kleine pauze zodat Spider PubMed niet
+    # te snel achter elkaar bevraagt.
+    time.sleep(0.4)
 
     query = urllib.parse.urlencode(params)
 
@@ -36,12 +45,39 @@ def _request(url, params):
         }
     )
 
-    with urllib.request.urlopen(
-        request,
-        timeout=30
-    ) as response:
+    maximaal_pogingen = 3
 
-        return response.read()
+    for poging in range(maximaal_pogingen):
+
+        try:
+
+            with urllib.request.urlopen(
+                request,
+                timeout=30
+            ) as response:
+
+                return response.read()
+
+        except urllib.error.HTTPError as fout:
+
+            # PubMed geeft HTTP 429 wanneer
+            # er te veel requests zijn verstuurd.
+            if fout.code == 429:
+
+                if poging < maximaal_pogingen - 1:
+
+                    wachttijd = 2 * (poging + 1)
+
+                    time.sleep(wachttijd)
+
+                    continue
+
+            raise
+
+    raise RuntimeError(
+        "PubMed kon na meerdere pogingen "
+        "niet worden bereikt."
+    )
 
 
 def zoek_pubmed_pmids(

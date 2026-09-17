@@ -1183,13 +1183,31 @@ if zoekterm:
                             type="primary",
                             use_container_width=True,
                         ):
-                            st.session_state.geselecteerde_persoon = (
-                                persoon_id
+
+                            # Is dit het profiel van de ingelogde onderzoeker?
+                            eigen_person_id = st.session_state.get(
+                                "person_id"
                             )
 
-                            st.switch_page(
-                                "pages/onderzoeker.py"
-                            )
+                            if (
+                                st.session_state.get("ingelogd", False)
+                                and eigen_person_id is not None
+                                and int(eigen_person_id) == int(persoon_id)
+                            ):
+                                # Eigen profiel → Mijn profiel
+                                st.switch_page(
+                                    "pages/mijn_profiel.py"
+                                )
+
+                            else:
+                                # Andere onderzoeker / bezoeker → openbaar profiel
+                                st.session_state.geselecteerde_persoon = (
+                                    persoon_id
+                                )
+
+                                st.switch_page(
+                                    "pages/onderzoeker.py"
+                                )
 
                     with knop_project:
                         if actief:

@@ -1,4 +1,5 @@
 import streamlit as st
+from bio_generator import genereer_bio
 
 st.set_page_config(
     page_title="Mijn profiel - Spider",
@@ -12,6 +13,7 @@ from datetime import date
 import time
 from sidebar import toon_sidebar
 from pubmed_sync import synchroniseer_onderzoeker
+
 from document_verwerking import (
     verwerk_document,
     importeer_publicatiebestand
@@ -185,16 +187,62 @@ if profiel is None:
 
 
 
-
 # ============================================================
-# PAGINA INHOUD - ÉÉN GROOT "PAPIER"
+# BIO
 # ============================================================
 
-bio_tekst = (
+opgeslagen_bio = (
     profiel[3]
     if profiel and profiel[3]
+    else ""
+)
+
+# Als er nog geen opgeslagen bio bestaat,
+# maakt Spider één keer een basisbio op basis
+# van de publicaties van deze onderzoeker.
+if not opgeslagen_bio:
+
+    try:
+        with st.spinner(
+            "Spider stelt je onderzoeksbio samen..."
+        ):
+            gegenereerde_bio = genereer_bio(
+                gebruikersnaam,
+                persoon_id,
+                conn
+            )
+
+        if gegenereerde_bio:
+
+            cursor.execute(
+                """
+                UPDATE profiel_data
+                SET email = ?
+                WHERE person_id = ?
+                """,
+                (
+                    nieuw_email,
+                    persoon_id
+                )
+            )
+
+            conn.commit()
+
+            opgeslagen_bio = gegenereerde_bio
+
+    except Exception as e:
+        print(
+            f"Bio kon niet automatisch worden gegenereerd: {e}"
+        )
+
+
+bio_tekst = (
+    opgeslagen_bio
+    if opgeslagen_bio
     else "Geen bio beschikbaar."
 )
+
+
 
 email_tekst = (
     profiel[2]
@@ -214,8 +262,8 @@ initialen = "".join(
 with st.container(border=True):
 
     # ========================================================
-    # PROFIEL HEADER
-    # ========================================================
+# PROFIEL HEADER
+# ========================================================
 
     col1, col2 = st.columns([3, 1])
 
@@ -231,13 +279,74 @@ with st.container(border=True):
 
     with col2:
         st.markdown(
-            f"""<div style="width:160px;height:160px;border-radius:50%;background-color:#003741;display:flex;align-items:center;justify-content:center;margin:10px auto;border:5px solid #FFFFFF;box-shadow:0 4px 14px rgba(0,55,65,0.12);">
-            <span style="color:white;font-size:52px;font-weight:700;">{initialen}</span>
-            </div>""",
+            f"""
+            <div style="
+                width:160px;
+                height:160px;
+                border-radius:50%;
+                background-color:#003741;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                margin:10px auto;
+                border:5px solid #FFFFFF;
+                box-shadow:0 4px 14px rgba(0,55,65,0.12);
+            ">
+                <span style="
+                    color:white;
+                    font-size:52px;
+                    font-weight:700;
+                ">
+                    {initialen}
+                </span>
+            </div>
+            """,
             unsafe_allow_html=True
         )
 
+    with st.expander("✏️ Bio aanpassen"):
+
+        nieuwe_bio = st.text_area(
+            "Bio",
+            value=(
+                ""
+                if bio_tekst == "Geen bio beschikbaar."
+                else bio_tekst
+            ),
+            height=180,
+            key="bio_bewerken"
+        )
+
+        if st.button(
+            "💾 Bio opslaan",
+            type="primary",
+            key="bio_opslaan"
+        ):
+
+            nieuwe_bio = nieuwe_bio.strip()
+
+            cursor.execute(
+                """
+                UPDATE profiel_data
+                SET bio = ?
+                WHERE person_id = ?
+                """,
+                (
+                    nieuwe_bio,
+                    persoon_id
+                )
+            )
+
+            conn.commit()
+
+            st.success(
+                "✅ Bio opgeslagen!"
+            )
+
+            st.rerun()
+
     st.divider()
+
 
     # ========================================================
     # CONTACT
@@ -246,105 +355,58 @@ with st.container(border=True):
     st.subheader("📧 Contact")
     st.write(f"📧 {email_tekst}")
 
-    with st.expander("Klik om aan te passen"):
+    with st.expander("✏️ E-mail aanpassen"):
 
-        nieuwe_naam = st.text_input(
-            "Naam",
-            value=gebruikersnaam
-        )
-
-        nieuw_email = st.text_input(
-            "Email",
-            value=(
-                email_tekst
-                if email_tekst != "Geen email beschikbaar."
-                else ""
-            )
-        )
-
-        nieuwe_bio = st.text_area(
-            "Bio",
+        nieuwe_email = st.text_area(
+            "email",
             value=(
                 ""
-                if bio_tekst == "Geen bio beschikbaar."
-                else bio_tekst
-            )
+                if email_tekst == "Geen Email beschikbaar."
+                else email_tekst
+            ),
+            height=180,
+            key="email_bewerken"
         )
 
-        if st.button(
-            "💾 Opslaan",
-            type="primary",
-            key="profiel_opslaan"
-        ):
+    if st.button(
+        "💾 email opslaan",
+        type="primary",
+        key="Email_opslaan"
+    ):
 
-            nieuwe_naam = nieuwe_naam.strip()
-            nieuw_email = nieuw_email.strip()
-            nieuwe_bio = nieuwe_bio.strip()
+        nieuwe_email = nieuwe_email.strip()
 
-            try:
-
-                # Naam wijzigen in persons
-                cursor.execute(
-                    """
-                    UPDATE persons
-                    SET name = ?
-                    WHERE id = ?
-                    """,
-                    (
-                        nieuwe_naam,
-                        persoon_id
-                    )
+        try:
+            cursor.execute(
+                """
+                UPDATE profiel_data
+                SET email = ?
+                WHERE person_id = ?
+                """,
+                (
+                    nieuwe_email,
+                    persoon_id
                 )
+            )
 
-                # Naam ook wijzigen in gebruikers
-                cursor.execute(
-                    """
-                    UPDATE gebruikers
-                    SET naam = ?
-                    WHERE person_id = ?
-                    """,
-                    (
-                        nieuwe_naam,
-                        persoon_id
-                    )
-                )
+            conn.commit()
 
-                # Profielgegevens wijzigen
-                cursor.execute(
-                    """
-                    UPDATE profiel_data
-                    SET
-                        email = ?,
-                        bio = ?
-                    WHERE person_id = ?
-                    """,
-                    (
-                        nieuw_email,
-                        nieuwe_bio,
-                        persoon_id
-                    )
-                )
+            st.success(
+                "✅ email opgeslagen!"
+            )
 
-                conn.commit()
+            st.rerun()
 
+        except Exception as e:
+            conn.rollback()
 
-                st.success(
-                    "✅ Profiel opgeslagen!"
-                )
+            st.error(
+                "De email kon niet worden opgeslagen."
+            )
 
-                st.rerun()
-
-            except Exception as e:
-
-                conn.rollback()
-
-                st.error(
-                    "Het profiel kon niet worden opgeslagen."
-                )
-
-                st.caption(
-                    f"Technische melding: {e}"
-                )
+            st.caption(
+                f"Technische melding: {e}"
+            )
 
     
     # ============================================================
@@ -572,7 +634,7 @@ with st.container(border=True):
 
                     st.rerun()
 
-        # ============================================================
+   # ============================================================
     # PUBMED SYNCHRONISEREN
     # ============================================================
 
@@ -610,7 +672,27 @@ with st.container(border=True):
                             conn
                         )
                     )
+                # Alleen wanneer PubMed nieuwe publicaties
+                # heeft toegevoegd, verdere verwerking uitvoeren.
+                if sync_resultaat.get("toegevoegd", 0) > 0:
 
+                    # Nieuwe publicaties geschikt maken
+                    # voor de semantische zoekfunctie.
+                    with st.spinner(
+                        "Spider verwerkt de nieuwe publicaties..."
+                    ):
+                        maak_embeddings_voor_nieuwe_publicaties(
+                            conn
+                        )
+
+                    # Expertise opnieuw bepalen op basis van
+                    # de beschikbare publicaties.
+                    with st.spinner(
+                        "Spider werkt expertise bij..."
+                    ):
+                        werk_expertise_bij(
+                            conn
+                        )
                 gevonden = sync_resultaat.get(
                     "gevonden",
                     0
@@ -1552,308 +1634,3 @@ with st.container(border=True):
         st.switch_page(
             "app.py"
         )
-
-
-# # ============================================================
-# # OPGESLAGEN BESTANDEN TONEN
-# # ============================================================
-
-# mijn_bestanden = pd.read_sql(
-#     """
-#     SELECT *
-#     FROM onderzoeker_bestanden
-#     WHERE person_id = ?
-#     ORDER BY toegevoegd_op DESC
-#     """,
-#     conn,
-#     params=(persoon_id,)
-# )
-
-# if mijn_bestanden.empty:
-
-#     st.info(
-#         "Je hebt nog geen bestanden toegevoegd."
-#     )
-
-# else:
-
-#     st.markdown("#### Opgeslagen bestanden")
-
-# for _, bestand in mijn_bestanden.iterrows():
-
-#     col_bestand, col_download, col_verwijder = st.columns(
-#         [4, 1, 1]
-#     )
-
-#     with col_bestand:
-
-#         st.write(
-#             f"📄 **{bestand['bestandsnaam']}**"
-#         )
-
-#         st.caption(
-#             f"Toegevoegd: {bestand['toegevoegd_op']}"
-#         )
-
-#     with col_download:
-
-#         bestandspad = bestand["bestandspad"]
-
-#         if os.path.exists(bestandspad):
-
-#             with open(bestandspad, "rb") as opgeslagen_bestand:
-
-#                 bestand_bytes = opgeslagen_bestand.read()
-
-#             st.download_button(
-#                 "⬇️",
-#                 data=bestand_bytes,
-#                 file_name=bestand["bestandsnaam"],
-#                 mime=bestand["bestandstype"] or "application/octet-stream",
-#                 key=f"download_bestand_{bestand['id']}"
-#             )
-
-#         else:
-
-#             st.caption("Bestand ontbreekt")
-
-#     with col_verwijder:
-
-#         if st.button(
-#             "🗑️",
-#             key=f"verwijder_bestand_{bestand['id']}"
-#         ):
-
-#                 try:
-#                     # Bestand van schijf verwijderen
-#                     if os.path.exists(
-#                         bestand["bestandspad"]
-#                     ):
-#                         os.remove(
-#                             bestand["bestandspad"]
-#                         )
-
-#                     # Database-record verwijderen
-#                     cursor.execute(
-#                         """
-#                         DELETE FROM onderzoeker_bestanden
-#                         WHERE id = ?
-#                         AND person_id = ?
-#                         """,
-#                         (
-#                             int(bestand["id"]),
-#                             persoon_id
-#                         )
-#                     )
-
-#                     conn.commit()
-
-#                     st.success(
-#                         "✅ Bestand verwijderd."
-#                     )
-
-#                     st.rerun()
-
-#                 except Exception as e:
-
-#                     conn.rollback()
-
-#                     st.error(
-#                         "Het bestand kon niet worden verwijderd."
-#                     )
-
-#                     st.caption(
-#                         f"Technische melding: {e}"
-#                     )
-
-#     # Laad opgeslagen links
-#     opgeslagen_links = profiel[6] if profiel and len(profiel) > 6 and profiel[6] else ""
-#     links_dict = {}
-#     if opgeslagen_links:
-#         import json
-#         try:
-#             links_dict = json.loads(opgeslagen_links)
-#         except:
-#             links_dict = {}
-
-#     # Toon opgeslagen links
-#     if links_dict:
-#         st.divider()
-#         st.subheader("🔗 Mijn links")
-#         st.caption("Opgeslagen externe bronnen die bij jouw profiel horen.")
-    
-#         for key, emoji, label in [
-#             ("google", "📄", "Google Docs"),
-#             ("teams", "📹", "Teams Recording"),
-#             ("podcast", "🎙️", "Podcast"),
-#             ("opname", "📺", "Seminar opname"),
-#         ]:
-#             if links_dict.get(key):
-#                 col1, col2 = st.columns([4, 1])
-#                 with col1:
-#                     st.markdown(f"{emoji} [{label}]({links_dict[key]})")
-#                 with col2:
-#                     if st.button("🗑️", key=f"verwijder_{key}"):
-#                         links_dict[key] = ""
-#                         cursor.execute(
-#                             """
-#                             UPDATE profiel_data
-#                             SET links = ?
-#                             WHERE person_id = ?
-#                             """,
-#                             (
-#                                 __import__("json").dumps(links_dict),
-#                                 persoon_id
-#                             )
-#                         )
-#                         conn.commit()
-#                         st.rerun()
-
-#     # Links invoeren
-#     st.divider()
-#     st.subheader("🔗 Externe links toevoegen")
-#     st.caption("Beheer hier links naar documenten, opnames, podcasts en seminars.")
-
-#     with st.expander("➕ Externe links beheren"):
-#         google_link = st.text_input("📄 Google Docs link", value=links_dict.get("google", ""), key="google_link")
-#         teams_link = st.text_input("📹 Teams Recording link", value=links_dict.get("teams", ""), key="teams_link")
-#         podcast_link = st.text_input("🎙️ Podcast link", value=links_dict.get("podcast", ""), key="podcast_link")
-#         opname_link = st.text_input("📺 Seminar opname link", value=links_dict.get("opname", ""), key="opname_link")
-
-#         if st.button("💾 Links opslaan", key="save_links", type="primary"):
-#             import json
-#             nieuwe_links = {
-#                 "google": google_link,
-#                 "teams": teams_link,
-#                 "podcast": podcast_link,
-#                 "opname": opname_link,
-#             }
-#             cursor.execute(
-#                 """
-#                 UPDATE profiel_data
-#                 SET links = ?
-#                 WHERE person_id = ?
-#                 """,
-#                 (
-#                     json.dumps(nieuwe_links),
-#                     persoon_id
-#                 )
-#             )
-#             conn.commit()
-#             st.success("✅ Links opgeslagen!")
-#             st.rerun()
-
-#     st.divider()
-#     st.subheader("🔬 Lopend project starten")
-#     st.caption("Start een nieuw onderzoek en voeg later deelnemers toe.")
-
-#     with st.expander("➕ Nieuw project starten"):
-#         project_naam = st.text_input("Projectnaam", key="nieuw_project_naam")
-#         project_beschrijving = st.text_area("Beschrijving", key="nieuw_project_beschrijving")
-#         project_begindatum = st.date_input("Begindatum", key="nieuw_project_begindatum")
-#         project_einddatum = st.date_input("Einddatum", key="nieuw_project_einddatum")
-
-
-#         if st.button("💾 Project starten", key="start_project", type="primary"):
-#             if project_naam:
-#                 cursor = conn.cursor()
-#                 cursor.execute("""
-#                     INSERT INTO lopende_projecten (
-#                         naam,
-#                         beschrijving,
-#                         leider_id,
-#                         datum,
-#                         einddatum
-#                     )
-#                     VALUES (?, ?, ?, ?, ?)
-#                 """, (
-#                     project_naam,
-#                     project_beschrijving,
-#                     persoon_id,
-#                     str(project_begindatum),
-#                     str(project_einddatum)
-# ))
-
-#                 conn.commit()
-#                 st.success(f"✅ Project '{project_naam}' gestart!")
-#                 time.sleep(1.5)
-#                 st.rerun()
-#             else:
-#                 st.error("Vul een projectnaam in!")
-
-#     # Toon eigen lopende projecten
-#     st.divider()
-#     st.subheader("📋 Mijn lopende projecten")
-#     st.caption("Projecten waarvan jij de leider bent.")
-
-#     mijn_projecten = pd.read_sql(f"SELECT * FROM lopende_projecten WHERE leider_id = {persoon_id}", conn) if persoon_id else pd.DataFrame()
-
-#     if mijn_projecten.empty:
-#         st.info("Je hebt nog geen lopende projecten.")
-#     else:
-#         for _, project in mijn_projecten.iterrows():
-#             st.write(f"🔬 **{project['naam']}** — {project['beschrijving'][:50]}...")
-
-#             col1, col2, col3 = st.columns([2, 1, 1])
-#             with col1:
-#                 if st.button("🔗 Bekijk project", key=f"bekijk_{project['id']}"):
-#                     st.session_state.geselecteerd_lopend_project = int(project["id"])
-#                     st.switch_page("pages/lopend_project.py")
-#             with col2:
-#                 if st.button("✏️ Aanpassen", key=f"aanpas_{project['id']}"):
-#                     st.session_state.aanpassen_project_id = project["id"]
-#             with col3:
-#                 if st.button("🗑️ Verwijderen", key=f"verwijder_{project['id']}"):
-#                     cursor.execute("DELETE FROM lopende_projecten WHERE id = ?", (project["id"],))
-#                     cursor.execute("DELETE FROM project_deelnemers WHERE project_id = ?", (project["id"],))
-#                     conn.commit()
-#                     st.success("✅ Project verwijderd!")
-#                     st.rerun()
-
-#                     # Projecten waar je deelnemer van bent
-#     st.divider()
-#     st.subheader("📋 Projecten waar ik aan deelneem")
-#     st.caption("Onderzoeken waarin je als deelnemer bent gekoppeld.")
-
-#     if persoon_id:
-#         deelname_projecten = pd.read_sql(f"""
-#             SELECT lp.* FROM lopende_projecten lp
-#             JOIN project_deelnemers pd ON lp.id = pd.project_id
-#             WHERE pd.persoon_id = {persoon_id}
-#             AND lp.leider_id != {persoon_id}
-#         """, conn)
-    
-#         if deelname_projecten.empty:
-#             st.info("Je neemt nog niet deel aan projecten van anderen.")
-#         else:
-#             for _, project in deelname_projecten.iterrows():
-#                 if st.button(f"🔬 {project['naam']}", key=f"deelname_{project['id']}"):
-#                     st.session_state.geselecteerd_lopend_project = int(project["id"])
-#                     st.switch_page("pages/lopend_project.py")
-#     else:
-#         st.info("Log in als onderzoeker om je deelname te zien.")
-
-#     # Aanpassen formulier
-#     if "aanpassen_project_id" in st.session_state and st.session_state.aanpassen_project_id:
-#         project_id = st.session_state.aanpassen_project_id
-#         huidig_df = pd.read_sql(f"SELECT * FROM lopende_projecten WHERE id = {project_id}", conn)
-#         if not huidig_df.empty:
-#             huidig = huidig_df.iloc[0]
-#             st.divider()
-#             st.subheader("✏️ Project aanpassen")
-#             nieuwe_naam = st.text_input("Naam", value=huidig["naam"], key="aanpas_naam")
-#             nieuwe_beschrijving = st.text_area("Beschrijving", value=huidig["beschrijving"], key="aanpas_beschrijving")
-#             if st.button("💾 Opslaan", key="opslaan_project", type="primary"):
-#                 cursor.execute("UPDATE lopende_projecten SET naam = ?, beschrijving = ? WHERE id = ?",
-#                                (nieuwe_naam, nieuwe_beschrijving, project_id))
-#                 conn.commit()
-#                 st.session_state.aanpassen_project_id = None
-#                 st.success("✅ Project bijgewerkt!")
-#                 st.rerun()
-
-#     st.divider()
-#     if st.button("← Terug naar zoeken", key="terug_onder"):
-#         st.switch_page("app.py")
-
-
-

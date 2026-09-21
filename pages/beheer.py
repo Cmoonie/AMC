@@ -54,161 +54,498 @@ if st.sidebar.button("🚪 Uitloggen"):
     st.session_state.rol = None
     st.rerun()
 
+# ============================================================
+# BEHEER
+# ============================================================
+
 st.title("⚙️ Beheer")
-st.subheader("Voeg toe, pas aan of verwijder gegevens")
-
-tab1, tab2, tab3 = st.tabs(["👤 Personen", "📁 Projecten", "🔬 Expertise"])
-
-with tab1:
-    st.subheader("Personen beheren")
-    personen = pd.read_sql("SELECT * FROM persons", conn)
-    st.write("**Huidige personen:**")
-    st.dataframe(personen)
-
-    st.divider()
-    st.subheader("✏️ Persoon aanpassen")
-    persoon_opties2 = personen["name"].tolist()
-    te_aanpassen = st.selectbox("Selecteer persoon om aan te passen", persoon_opties2, key="aanpassen_selectbox")
-    huidige = personen[personen["name"] == te_aanpassen].iloc[0]
-    nieuwe_naam_update = st.text_input("Nieuwe naam", value=huidige["name"], key="update_naam")
-    nieuwe_dept_update = st.text_input("Nieuwe department", value=huidige["department"], key="update_dept")
-    if st.button("Opslaan"):
-        cursor = conn.cursor()
-        cursor.execute("UPDATE persons SET name = ?, department = ? WHERE name = ?",
-                       (nieuwe_naam_update, nieuwe_dept_update, te_aanpassen))
-        conn.commit()
-        log_wijziging("Aangepast", te_aanpassen)
-        st.success(f"{te_aanpassen} is aangepast!")
-        st.rerun()
-
-    st.divider()
-    st.subheader("🗑️ Persoon verwijderen")
-    persoon_opties = personen["name"].tolist()
-    te_verwijderen = st.selectbox("Selecteer persoon", persoon_opties)
-    st.warning(f"⚠️ Weet je zeker dat je {te_verwijderen} wil verwijderen?")
-    bevestig = st.checkbox("Ja, ik weet het zeker")
-    if st.button("Verwijderen"):
-           st.warning(
-                "Volledig verwijderen van onderzoekers wordt momenteel "
-                "veilig opgebouwd. Gebruik deze functie nog niet."
-            )
-
-    st.divider()
-    st.subheader("➕ Persoon toevoegen")
-    nieuwe_naam = st.text_input("Naam")
-    nieuwe_department = st.text_input("Department")
-    if st.button("Toevoegen"):
-        if nieuwe_naam and nieuwe_department:
-            cursor = conn.cursor()
-            cursor.execute("INSERT INTO persons (name, department) VALUES (?, ?)",
-                           (nieuwe_naam, nieuwe_department))
-            conn.commit()
-            log_wijziging("Toegevoegd", nieuwe_naam)
-            st.success(f"{nieuwe_naam} is toegevoegd!")
-            st.rerun()
-        else:
-            st.error("Vul alle velden in!")
-
-with tab2:
-    st.subheader("Projecten beheren")
-    projecten = pd.read_sql("SELECT * FROM projects", conn)
-    st.write("**Huidige projecten:**")
-    st.dataframe(projecten)
-
-    st.divider()
-    st.subheader("🗑️ Project verwijderen")
-    project_opties = projecten["title"].tolist()
-    te_verwijderen_project = st.selectbox("Selecteer project", project_opties, key="project_verwijderen_select")
-    st.warning(f"⚠️ Weet je zeker dat je {te_verwijderen_project} wil verwijderen?")
-    bevestig_project = st.checkbox("Ja, ik weet het zeker", key="project_bevestig")
-    if st.button("Verwijderen", key="project_verwijderen"):
-        if bevestig_project:
-            cursor = conn.cursor()
-            cursor.execute("DELETE FROM projects WHERE title = ?", (te_verwijderen_project,))
-            conn.commit()
-            log_wijziging("Verwijderd", te_verwijderen_project)
-            st.success(f"{te_verwijderen_project} is verwijderd!")
-            st.rerun()
-        else:
-            st.error("Vink de bevestiging aan!")
-            
-if len(projecten) > 0:
-    st.divider()
-    st.subheader("✏️ Project aanpassen")
-    project_opties2 = projecten["title"].tolist()
-    te_aanpassen_project = st.selectbox("Selecteer project", project_opties2, key="project_aanpassen_select")
-    huidig_project = projecten[projecten["title"] == te_aanpassen_project].iloc[0]
-    nieuwe_titel_update = st.text_input("Nieuwe titel", value=huidig_project["title"], key="update_titel")
-    nieuwe_desc_update = st.text_input("Nieuwe beschrijving", value=huidig_project["description"], key="update_desc")
-    if st.button("Opslaan", key="project_opslaan"):
-        cursor = conn.cursor()
-        cursor.execute("UPDATE projects SET title = ?, description = ? WHERE title = ?",
-                       (nieuwe_titel_update, nieuwe_desc_update, te_aanpassen_project))
-        conn.commit()
-        log_wijziging("Aangepast", te_aanpassen_project)
-        st.success(f"{te_aanpassen_project} is aangepast!")
-        st.rerun()
-
-    st.divider()
-
-
-with tab3:
-    st.subheader("Expertise beheren")
-    expertise = pd.read_sql("SELECT * FROM expertise", conn)
-    st.write("**Huidige expertise:**")
-    st.dataframe(expertise)
-
-    st.divider()
-    st.subheader("➕ Expertise toevoegen")
-    nieuwe_expertise = st.text_input("Expertise label", key="expertise_input")
-    if st.button("Toevoegen", key="expertise_toevoegen"):
-        if nieuwe_expertise:
-            cursor = conn.cursor()
-            cursor.execute("INSERT INTO expertise (label) VALUES (?)", (nieuwe_expertise,))
-            conn.commit()
-            log_wijziging("Toegevoegd", nieuwe_expertise)
-            st.success(f"{nieuwe_expertise} is toegevoegd!")
-            st.rerun()
-        else:
-            st.error("Vul een expertise in!")
-
-    st.divider()
-    st.subheader("🗑️ Expertise verwijderen")
-    expertise_opties = expertise["label"].tolist()
-    te_verwijderen_exp = st.selectbox("Selecteer expertise", expertise_opties, key="expertise_verwijderen_select")
-    st.warning(f"⚠️ Weet je zeker dat je {te_verwijderen_exp} wil verwijderen?")
-    bevestig_exp = st.checkbox("Ja, ik weet het zeker", key="expertise_bevestig")
-    if st.button("Verwijderen", key="expertise_verwijderen"):
-        if bevestig_exp:
-            cursor = conn.cursor()
-            cursor.execute("DELETE FROM expertise WHERE label = ?", (te_verwijderen_exp,))
-            conn.commit()
-            log_wijziging("Verwijderd", te_verwijderen_exp)
-            st.success(f"{te_verwijderen_exp} is verwijderd!")
-            st.rerun()
-        else:
-            st.error("Vink de bevestiging aan!")
-
-if len(projecten) > 0:
-    st.divider()
-    st.subheader("✏️ Expertise aanpassen")
-    expertise_opties2 = expertise["label"].tolist()
-    te_aanpassen_exp = st.selectbox("Selecteer expertise", expertise_opties2, key="expertise_aanpassen_select")
-    huidige_exp = expertise[expertise["label"] == te_aanpassen_exp].iloc[0]
-    nieuwe_exp_update = st.text_input("Nieuw label", value=huidige_exp["label"], key="update_exp")
-    if st.button("Opslaan", key="expertise_opslaan"):
-        cursor = conn.cursor()
-        cursor.execute("UPDATE expertise SET label = ? WHERE label = ?",
-                       (nieuwe_exp_update, te_aanpassen_exp))
-        conn.commit()
-        log_wijziging("Aangepast", te_aanpassen_exp)
-        st.success(f"{te_aanpassen_exp} is aangepast!")
-        st.rerun()
+st.caption(
+    "Beheer onderzoekersaccounts en instellingen van Spider."
+)
 
 st.divider()
-st.subheader("📋 Wijzigingsgeschiedenis")
-wijzigingen = pd.read_sql("SELECT * FROM wijzigingen", conn)
-if wijzigingen.empty:
-    st.info("Nog geen wijzigingen geregistreerd.")
+
+
+# ============================================================
+# ONDERZOEKERS BEHEREN
+# ============================================================
+
+st.subheader("👤 Onderzoekers beheren")
+
+onderzoekers = pd.read_sql(
+    """
+    SELECT
+        p.id,
+        p.name,
+        p.department,
+        g.gebruikersnaam,
+        g.rol
+    FROM persons p
+    LEFT JOIN gebruikers g
+        ON g.person_id = p.id
+    ORDER BY p.name
+    """,
+    conn
+)
+
+
+# ============================================================
+# ZOEKEN EN FILTEREN
+# ============================================================
+
+kolom_zoek, kolom_filter = st.columns([2, 1])
+
+with kolom_zoek:
+    zoekterm = st.text_input(
+        "Onderzoeker zoeken",
+        placeholder="Zoek op naam...",
+        key="beheer_onderzoeker_zoeken"
+    )
+
+with kolom_filter:
+    account_filter = st.selectbox(
+        "Filter",
+        [
+            "Alle onderzoekers",
+            "Met account",
+            "Zonder account"
+        ],
+        key="beheer_account_filter"
+    )
+
+
+gefilterde_onderzoekers = onderzoekers.copy()
+
+if zoekterm.strip():
+    gefilterde_onderzoekers = gefilterde_onderzoekers[
+        gefilterde_onderzoekers["name"]
+        .fillna("")
+        .str.contains(
+            zoekterm.strip(),
+            case=False,
+            regex=False
+        )
+    ]
+
+if account_filter == "Met account":
+    gefilterde_onderzoekers = gefilterde_onderzoekers[
+        gefilterde_onderzoekers["gebruikersnaam"].notna()
+    ]
+
+elif account_filter == "Zonder account":
+    gefilterde_onderzoekers = gefilterde_onderzoekers[
+        gefilterde_onderzoekers["gebruikersnaam"].isna()
+    ]
+
+
+# ============================================================
+# ONDERZOEKER SELECTEREN
+# ============================================================
+
+if gefilterde_onderzoekers.empty:
+
+    st.info(
+        "Geen onderzoekers gevonden met deze zoekopdracht "
+        "en dit filter."
+    )
+
 else:
-    st.dataframe(wijzigingen[::-1])
+
+    onderzoeker_opties = {
+        f"{rij['name']} — ID {rij['id']}": rij["id"]
+        for _, rij in gefilterde_onderzoekers.iterrows()
+    }
+
+    geselecteerde_optie = st.selectbox(
+        "Selecteer onderzoeker",
+        list(onderzoeker_opties.keys()),
+        key="beheer_onderzoeker_selecteren"
+    )
+
+    geselecteerde_id = onderzoeker_opties[
+        geselecteerde_optie
+    ]
+
+    onderzoeker = onderzoekers[
+        onderzoekers["id"] == geselecteerde_id
+    ].iloc[0]
+
+
+    # ========================================================
+    # DETAILS
+    # ========================================================
+
+    st.divider()
+    st.subheader(onderzoeker["name"])
+
+    kolom1, kolom2, kolom3 = st.columns(3)
+
+    with kolom1:
+        st.caption("Person ID")
+        st.write(onderzoeker["id"])
+
+    with kolom2:
+        st.caption("Afdeling")
+        st.write(
+            onderzoeker["department"]
+            if pd.notna(onderzoeker["department"])
+            else "Niet ingevuld"
+        )
+
+    with kolom3:
+        st.caption("Account")
+        st.write(
+            "Aanwezig"
+            if pd.notna(onderzoeker["gebruikersnaam"])
+            else "Geen account"
+        )
+
+    if pd.notna(onderzoeker["gebruikersnaam"]):
+        st.caption("Gebruikersnaam")
+        st.write(onderzoeker["gebruikersnaam"])
+
+        st.caption("Rol")
+        st.write(
+            onderzoeker["rol"]
+            if pd.notna(onderzoeker["rol"])
+            else "Niet ingesteld"
+        )
+
+
+    # ========================================================
+    # GEKOPPELDE GEGEVENS
+    # ========================================================
+
+    aantal_aliasen = conn.execute(
+        """
+        SELECT COUNT(*)
+        FROM person_author_aliases
+        WHERE person_id = ?
+        """,
+        (geselecteerde_id,)
+    ).fetchone()[0]
+
+    aantal_expertise = conn.execute(
+        """
+        SELECT COUNT(*)
+        FROM persons_expertise
+        WHERE person_id = ?
+        """,
+        (geselecteerde_id,)
+    ).fetchone()[0]
+
+    aantal_projecten = conn.execute(
+        """
+        SELECT COUNT(*)
+        FROM persons_projects
+        WHERE person_id = ?
+        """,
+        (geselecteerde_id,)
+    ).fetchone()[0]
+
+    st.markdown("#### Gekoppelde gegevens")
+
+    info1, info2, info3 = st.columns(3)
+
+    with info1:
+        st.metric(
+            "Auteursaliassen",
+            aantal_aliasen
+        )
+
+    with info2:
+        st.metric(
+            "Expertisegebieden",
+            aantal_expertise
+        )
+
+    with info3:
+        st.metric(
+            "Projecten",
+            aantal_projecten
+        )
+
+
+# ========================================================
+# ONDERZOEKER VERWIJDEREN
+# ========================================================
+
+st.divider()
+st.markdown("#### Onderzoeker verwijderen")
+
+st.warning(
+    "Hiermee wordt de onderzoeker uit Spider verwijderd. "
+    "Gedeelde PubMed-publicaties blijven behouden."
+)
+
+bevestigd = st.checkbox(
+    f"Ik begrijp dat '{onderzoeker['name']}' definitief "
+    "uit Spider wordt verwijderd.",
+    key=f"verwijder_bevestiging_{geselecteerde_id}"
+)
+
+if st.button(
+    "🗑️ Onderzoeker definitief verwijderen",
+    type="primary",
+    disabled=not bevestigd,
+    key=f"verwijder_onderzoeker_{geselecteerde_id}"
+):
+
+    try:
+        cursor = conn.cursor()
+
+        # Account verwijderen
+        cursor.execute(
+            """
+            DELETE FROM gebruikers
+            WHERE person_id = ?
+            """,
+            (geselecteerde_id,)
+        )
+
+        # Profielgegevens verwijderen
+        cursor.execute(
+            """
+            DELETE FROM profiel_data
+            WHERE person_id = ?
+            """,
+            (geselecteerde_id,)
+        )
+
+        # Auteursaliassen verwijderen
+        cursor.execute(
+            """
+            DELETE FROM person_author_aliases
+            WHERE person_id = ?
+            """,
+            (geselecteerde_id,)
+        )
+
+        # Expertise-koppelingen verwijderen
+        cursor.execute(
+            """
+            DELETE FROM persons_expertise
+            WHERE person_id = ?
+            """,
+            (geselecteerde_id,)
+        )
+
+        # Projectkoppelingen verwijderen
+        cursor.execute(
+            """
+            DELETE FROM persons_projects
+            WHERE person_id = ?
+            """,
+            (geselecteerde_id,)
+        )
+
+        # Onderzoekerbestanden verwijderen uit database
+        cursor.execute(
+            """
+            DELETE FROM onderzoeker_bestanden
+            WHERE person_id = ?
+            """,
+            (geselecteerde_id,)
+        )
+
+        # Naam bewaren voor de geschiedenis
+        verwijderde_naam = onderzoeker["name"]
+
+        # Onderzoeker zelf als laatste verwijderen
+        cursor.execute(
+            """
+            DELETE FROM persons
+            WHERE id = ?
+            """,
+            (geselecteerde_id,)
+        )
+
+        # Wijziging registreren
+        cursor.execute(
+            """
+            INSERT INTO wijzigingen (
+                datum,
+                actie,
+                wat,
+                door_wie
+            )
+            VALUES (?, ?, ?, ?)
+            """,
+            (
+                datetime.datetime.now().strftime("%d-%m-%Y %H:%M"),
+                "Onderzoeker verwijderd",
+                verwijderde_naam,
+                st.session_state.get("gebruikersnaam", "Onbekend")
+            )
+        )
+
+        conn.commit()
+
+        st.success(
+            f"{onderzoeker['name']} is verwijderd uit Spider. "
+            "PubMed-publicaties zijn behouden."
+        )
+
+        st.rerun()
+
+    except Exception as fout:
+
+        conn.rollback()
+
+        st.error(
+            f"Verwijderen is mislukt. "
+            f"Er is niets definitief gewijzigd: {fout}"
+        )
+# ============================================================
+# KENNISGRAAF
+# ============================================================
+
+st.divider()
+st.subheader("🕸️ Kennisgraaf")
+
+st.caption(
+    "De categorieën van de kennisgraaf worden centraal door Spider "
+    "beheerd. Afgeleide categorieën worden automatisch opgebouwd "
+    "uit onderzoeksdata en kunnen hier niet handmatig worden "
+    "toegevoegd, hernoemd of verwijderd."
+)
+
+
+# ============================================================
+# AANTALLEN OPHALEN
+# ============================================================
+
+aantal_onderzoekers = conn.execute(
+    """
+    SELECT COUNT(*)
+    FROM persons
+    """
+).fetchone()[0]
+
+aantal_expertise = conn.execute(
+    """
+    SELECT COUNT(*)
+    FROM expertise
+    """
+).fetchone()[0]
+
+aantal_projecten = conn.execute(
+    """
+    SELECT COUNT(*)
+    FROM lopende_projecten
+    """
+).fetchone()[0]
+
+aantal_publicaties = conn.execute(
+    """
+    SELECT COUNT(*)
+    FROM publications
+    """
+).fetchone()[0]
+
+aantal_methoden = conn.execute(
+    """
+    SELECT COUNT(DISTINCT waarde)
+    FROM publicatie_verrijkingen
+    WHERE categorie = ?
+    """,
+    ("Onderzoeksmethode",)
+).fetchone()[0]
+
+aantal_methode_koppelingen = conn.execute(
+    """
+    SELECT COUNT(*)
+    FROM publicatie_verrijkingen
+    WHERE categorie = ?
+    """,
+    ("Onderzoeksmethode",)
+).fetchone()[0]
+
+
+# ============================================================
+# VASTE BASISCATEGORIEËN
+# ============================================================
+
+st.markdown("#### Vaste basiscategorieën")
+
+st.caption(
+    "Deze categorieën vormen de basis van de kennisgraaf."
+)
+
+basis1, basis2, basis3, basis4 = st.columns(4)
+
+with basis1:
+    st.metric(
+        "👤 Onderzoekers",
+        aantal_onderzoekers
+    )
+
+with basis2:
+    st.metric(
+        "🔬 Expertise",
+        aantal_expertise
+    )
+
+with basis3:
+    st.metric(
+        "🧪 Lopende projecten",
+        aantal_projecten
+    )
+
+with basis4:
+    st.metric(
+        "📚 Publicaties",
+        aantal_publicaties
+    )
+
+
+# ============================================================
+# AUTOMATISCH AFGELEIDE CATEGORIEËN
+# ============================================================
+
+st.markdown("#### Automatisch afgeleide categorieën")
+
+st.caption(
+    "Deze categorieën worden uit publicatiegegevens afgeleid. "
+    "De bron van iedere koppeling wordt opgeslagen zodat "
+    "de classificatie herleidbaar blijft."
+)
+
+with st.container(border=True):
+
+    methode1, methode2, methode3 = st.columns([2, 1, 1])
+
+    with methode1:
+        st.markdown("##### 🟡 Onderzoeksmethoden")
+        st.write(
+            "Automatisch herkend op basis van titel, "
+            "keywords en MeSH-termen van publicaties."
+        )
+
+    with methode2:
+        st.metric(
+            "Unieke methoden",
+            aantal_methoden
+        )
+
+    with methode3:
+        st.metric(
+            "Koppelingen",
+            aantal_methode_koppelingen
+        )
+
+
+# ============================================================
+# TOEKOMSTIGE UITBREIDINGEN
+# ============================================================
+
+st.markdown("#### Mogelijke uitbreidingen")
+
+st.caption(
+    "Dezelfde verrijkingsstructuur kan later worden gebruikt "
+    "voor aanvullende dimensies."
+)
+
+st.info(
+    "Onderwerpen • Ziekten/aandoeningen • Populaties • Technologieën"
+)

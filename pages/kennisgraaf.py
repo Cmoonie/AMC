@@ -220,6 +220,25 @@ publicaties = pd.read_sql(
 )
 
 try:
+    publicatie_verrijkingen = pd.read_sql(
+        """
+        SELECT pmid, categorie, waarde, bron
+        FROM publicatie_verrijkingen
+        WHERE categorie = 'Onderzoeksmethode'
+        """,
+        conn
+    )
+except Exception:
+    publicatie_verrijkingen = pd.DataFrame(
+        columns=[
+            "pmid",
+            "categorie",
+            "waarde",
+            "bron"
+        ]
+    )
+
+try:
     auteur_aliases = pd.read_sql(
         "SELECT * FROM person_author_aliases",
         conn
@@ -316,7 +335,8 @@ with filter_type:
             "🔵 Onderzoekers",
             "🟠 Expertise",
             "🟢 Lopende projecten",
-            "🟣 Publicaties"
+            "🟣 Publicaties",
+            "🟡 Onderzoeksmethoden"
         ],
         default=[
             "🔵 Onderzoekers",
@@ -333,6 +353,7 @@ zichtbare_types = [
              .replace("🟠 ", "")
              .replace("🟢 ", "")
              .replace("🟣 ", "")
+             .replace("🟡 ", "")
     for type_naam in zichtbare_types
 ]
 
@@ -580,6 +601,38 @@ publicatie_df = pd.DataFrame(
     publicatie_koppelingen
 )
 
+# ============================================================
+# ONDERZOEKSMETHODEN KOPPELEN
+# ============================================================
+
+if (
+    not publicatie_df.empty
+    and not publicatie_verrijkingen.empty
+):
+    zichtbare_pmids = (
+        publicatie_df["pmid"]
+        .astype(str)
+        .unique()
+        .tolist()
+    )
+
+    gefilterde_methoden = (
+        publicatie_verrijkingen[
+            publicatie_verrijkingen["pmid"]
+            .astype(str)
+            .isin(zichtbare_pmids)
+        ]
+        .copy()
+    )
+else:
+    gefilterde_methoden = pd.DataFrame(
+        columns=[
+            "pmid",
+            "categorie",
+            "waarde",
+            "bron"
+        ]
+    )
 
 # ============================================================
 # GEDEELDE ITEMS BEREKENEN
@@ -854,7 +907,25 @@ with nav_publicatie:
 # LEGENDA
 # ============================================================
 
-st.markdown(
+legenda_nodes = (
+    '<span><b style="color:#69A9F5;font-size:20px;">●</b> Onderzoeker</span>'
+    '<span><b style="color:#F07814;font-size:20px;">●</b> Expertise</span>'
+    '<span><b style="color:#61C574;font-size:20px;">●</b> Lopend project</span>'
+    '<span><b style="color:#8B5CF6;font-size:20px;">●</b> Publicatie</span>'
+)
+
+# Extra typen alleen aan de legenda toevoegen
+# wanneer ze daadwerkelijk zijn geselecteerd.
+if "Onderzoeksmethoden" in zichtbare_types:
+    legenda_nodes += (
+        '<span>'
+        '<b style="color:#E5B93F;font-size:20px;">●</b> '
+        'Onderzoeksmethode'
+        '</span>'
+    )
+
+
+legenda_html = (
     '<div style="'
     'background:white;'
     'border:1px solid #DCE8F1;'
@@ -880,12 +951,7 @@ st.markdown(
     'flex-wrap:wrap;'
     'margin-bottom:12px;'
     '">'
-
-    '<span><b style="color:#69A9F5;font-size:20px;">●</b> Onderzoeker</span>'
-    '<span><b style="color:#F07814;font-size:20px;">●</b> Expertise</span>'
-    '<span><b style="color:#61C574;font-size:20px;">●</b> Lopend project</span>'
-    '<span><b style="color:#8B5CF6;font-size:20px;">●</b> Publicatie</span>'
-
+    + legenda_nodes +
     '</div>'
 
     '<div style="'
@@ -942,7 +1008,11 @@ st.markdown(
     '</span>'
 
     '</div>'
-    '</div>',
+    '</div>'
+)
+
+st.markdown(
+    legenda_html,
     unsafe_allow_html=True
 )
 
@@ -1114,6 +1184,76 @@ if (
             title=titel
         )
 
+# Onderzoeksmethoden
+if (
+    "Onderzoeksmethoden" in zichtbare_types
+    and not gefilterde_methoden.empty
+):
+    unieke_methoden = (
+        gefilterde_methoden["waarde"]
+        .dropna()
+        .astype(str)
+        .drop_duplicates()
+        .sort_values()
+    )
+
+    for methode in unieke_methoden:
+        methode_id = (
+            methode.lower()
+            .replace(" ", "_")
+            .replace("-", "_")
+        )
+
+        net.add_node(
+            f"methode_{methode_id}",
+            label=methode,
+            color={
+                "background": "#E5B93F",
+                "border": "#C89A20"
+            },
+            size=21,
+            shape="dot",
+            font={
+                "size": 14,
+                "color": "#0B1F3A"
+            },
+            title=(
+                f"Onderzoeksmethode: {methode}"
+            )
+        )
+
+
+# Relaties: publicatie ↔ onderzoeksmethode
+if (
+    "Onderzoeksmethoden" in zichtbare_types
+    and "Publicaties" in zichtbare_types
+    and not gefilterde_methoden.empty
+):
+    for _, koppeling in gefilterde_methoden.iterrows():
+
+        methode = str(
+            koppeling["waarde"]
+        )
+
+        methode_id = (
+            methode.lower()
+            .replace(" ", "_")
+            .replace("-", "_")
+        )
+
+        bron = str(
+            koppeling["bron"]
+        )
+
+        net.add_edge(
+            f"pub_{koppeling['pmid']}",
+            f"methode_{methode_id}",
+            color="#AFC4D6",
+            width=1.6,
+            title=(
+                f"Onderzoeksmethode uit: {bron}"
+            )
+        )
 
 # Relaties: persoon ↔ expertise
 if (
@@ -1284,11 +1424,28 @@ aantal_publicaties = (
     else 0
 )
 
-st.caption(
+statistieken = (
     f"👤 {aantal_onderzoekers} onderzoekers   •   "
     f"🔬 {aantal_expertise} expertisegebieden   •   "
     f"🧪 {aantal_projecten} lopende projecten   •   "
     f"📚 {aantal_publicaties} publicaties"
+)
+
+if (
+    "Onderzoeksmethoden" in zichtbare_types
+    and not gefilterde_methoden.empty
+):
+    aantal_methoden = (
+        gefilterde_methoden["waarde"]
+        .nunique()
+    )
+
+    statistieken += (
+        f"   •   🟡 {aantal_methoden} onderzoeksmethoden"
+    )
+
+st.caption(
+    statistieken
 )
 
 conn.close()

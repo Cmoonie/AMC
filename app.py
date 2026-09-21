@@ -21,6 +21,10 @@ import re
 
 
 from styling import apply_styling
+from coauteur_netwerk import (
+    bouw_coauteur_netwerk,
+    vind_publicatieconnectie,
+)
 
 
 
@@ -1044,8 +1048,26 @@ if zoekterm:
     # ========================================================
     # LINKERKOLOM — ONDERZOEKERS
     # ========================================================
+    
     with col_links:
         st.subheader("Gevonden onderzoekers")
+
+        # Publicatienetwerk één keer opbouwen.
+        # Alleen nodig wanneer iemand is ingelogd en
+        # gekoppeld is aan een Spider-onderzoeker.
+        eigen_person_id = st.session_state.get(
+            "person_id"
+        )
+
+        coauteur_netwerk = None
+
+        if (
+            st.session_state.get("ingelogd", False)
+            and eigen_person_id is not None
+        ):
+            coauteur_netwerk = (
+                bouw_coauteur_netwerk()
+            )
 
         lopende = pd.read_sql(
             "SELECT leider_id FROM lopende_projecten",
@@ -1054,304 +1076,465 @@ if zoekterm:
 
         actieve_leiders = set(
             lopende["leider_id"].tolist()
-        )
+        )   
 
         if resultaat.empty:
-            st.info(
-                "Geen onderzoekers gevonden voor deze zoekterm."
-            )
-
-        else:
-            # --------------------------------------------------------
-            # Onderzoekers sorteren op hun beste relevante publicatie
-            # --------------------------------------------------------
-            resultaat = resultaat.copy()
-
-            beste_scores = []
-
-            for _, persoon in resultaat.iterrows():
-                publicaties_persoon = publicaties_van_persoon(
-                    relevante_publicaties,
-                    persoon["name"],
+                st.info(
+                    "Geen onderzoekers gevonden voor deze zoekterm."
                 )
 
-                if (
-                    not publicaties_persoon.empty
-                    and "similarity" in publicaties_persoon.columns
-                ):
-                    beste_score = pd.to_numeric(
-                        publicaties_persoon["similarity"],
-                        errors="coerce",
-                    ).max()
-                else:
-                    beste_score = -1
+        else:
+                # --------------------------------------------------------
+                # Onderzoekers sorteren op hun beste relevante publicatie
+                # --------------------------------------------------------
+                resultaat = resultaat.copy()
 
-                beste_scores.append(beste_score)
+                beste_scores = []
 
-            resultaat["beste_similarity"] = beste_scores
-
-            resultaat = resultaat.sort_values(
-                by="beste_similarity",
-                ascending=False,
-                na_position="last",
-            )
-
-            # --------------------------------------------------------
-            # Onderzoekers tonen
-            # --------------------------------------------------------
-            for _, persoon in resultaat.iterrows():
-
-                persoon_id = persoon["id"]
-                actief = persoon_id in actieve_leiders
-
-                with st.container(border=True):
-
-                    # ----------------------------------------
-                    # Naam
-                    # ----------------------------------------
-                    st.markdown(
-                        f"### 👤 {persoon['name']}"
-                    )
-
-                    # ----------------------------------------
-                    # Status
-                    # ----------------------------------------
-                    if actief:
-                        st.caption("🟢 Lopend project")
-                    else:
-                        st.caption("Onderzoeker")
-
-                    # ----------------------------------------
-                    # Expertise
-                    # ----------------------------------------
-                    expertise_links = haal_expertise_op(
-                        persoon_id
-                    )
-
-                    if expertise_links:
-                        st.markdown("**Expertise**")
-
-                        aantal_kolommen = min(
-                            len(expertise_links),
-                            3,
-                        )
-
-                        expertise_kolommen = st.columns(
-                            aantal_kolommen
-                        )
-
-                        for index, exp in enumerate(
-                            expertise_links
-                        ):
-                            kolom = expertise_kolommen[
-                                index % aantal_kolommen
-                            ]
-
-                            with kolom:
-                                if st.button(
-                                    f"🔬 {exp['naam']}",
-                                    key=(
-                                        f"expertise_"
-                                        f"{persoon_id}_"
-                                        f"{exp['id']}"
-                                    ),
-                                    use_container_width=True,
-                                ):
-
-                                    st.session_state[
-                                        "geselecteerde_expertise_id"
-                                    ] = exp["id"]
-
-                                    st.switch_page(
-                                        "pages/expertise.py"
-                                    )   
-
-                    # Kleine ruimte vóór actieknoppen
-                    st.write("")
-
-                    # ----------------------------------------
-                    # Actieknoppen
-                    # ----------------------------------------
-                    knop_profiel, knop_project = st.columns(
-                        [2, 1]
-                    )
-
-                    with knop_profiel:
-                        if st.button(
-                            "Bekijk profiel",
-                            key=f"persoon_{persoon_id}",
-                            type="primary",
-                            use_container_width=True,
-                        ):
-
-                            # Is dit het profiel van de ingelogde onderzoeker?
-                            eigen_person_id = st.session_state.get(
-                                "person_id"
-                            )
-
-                            if (
-                                st.session_state.get("ingelogd", False)
-                                and eigen_person_id is not None
-                                and int(eigen_person_id) == int(persoon_id)
-                            ):
-                                # Eigen profiel → Mijn profiel
-                                st.switch_page(
-                                    "pages/mijn_profiel.py"
-                                )
-
-                            else:
-                                # Andere onderzoeker / bezoeker → openbaar profiel
-                                st.session_state.geselecteerde_persoon = (
-                                    persoon_id
-                                )
-
-                                st.switch_page(
-                                    "pages/onderzoeker.py"
-                                )
-
-                    with knop_project:
-                        if actief:
-                            if st.button(
-                                "🔬 Project",
-                                key=f"project_{persoon_id}",
-                                use_container_width=True,
-                            ):
-                                open_projecten_van_persoon(
-                                    persoon_id
-                                )
-
-                    # ----------------------------------------
-                    # Relevante publicaties van deze onderzoeker
-                    # ----------------------------------------
+                for _, persoon in resultaat.iterrows():
                     publicaties_persoon = publicaties_van_persoon(
                         relevante_publicaties,
                         persoon["name"],
                     )
 
-                    if not publicaties_persoon.empty:
-                        st.divider()
-                        st.markdown("**📚 Relevante publicaties**")
+                    if (
+                        not publicaties_persoon.empty
+                        and "similarity" in publicaties_persoon.columns
+                    ):
+                        beste_score = pd.to_numeric(
+                            publicaties_persoon["similarity"],
+                            errors="coerce",
+                        ).max()
+                    else:
+                        beste_score = -1
 
-                        for _, publicatie in (
-                            publicaties_persoon
-                            .head(3)
-                            .iterrows()
+                    beste_scores.append(beste_score)
+
+                resultaat["beste_similarity"] = beste_scores
+
+                resultaat = resultaat.sort_values(
+                    by="beste_similarity",
+                    ascending=False,
+                    na_position="last",
+                )
+
+                # --------------------------------------------------------
+                # Onderzoekers tonen
+                # --------------------------------------------------------
+                for _, persoon in resultaat.iterrows():
+
+                    persoon_id = persoon["id"]
+                    actief = persoon_id in actieve_leiders
+
+                    with st.container(border=True):
+
+                        # ----------------------------------------
+                        # Naam
+                        # ----------------------------------------
+                        st.markdown(
+                            f"### 👤 {persoon['name']}"
+                        )
+
+                        # ----------------------------------------
+                        # Status
+                        # ----------------------------------------
+                        if actief:
+                            st.caption("🟢 Lopend project")
+                        else:
+                            st.caption("Onderzoeker")
+
+                        # ----------------------------------------
+                        # Publicatieconnectie
+                        # ----------------------------------------
+                        connectie = None
+
+                        if (
+                            coauteur_netwerk is not None
+                            and eigen_person_id is not None
+                            and int(eigen_person_id) != int(persoon_id)
                         ):
-                            titel = publicatie.get(
-                                "title",
-                                "Publicatie zonder titel",
+                            connectie = vind_publicatieconnectie(
+                                int(eigen_person_id),
+                                int(persoon_id),
+                                coauteur_netwerk,
                             )
 
-                            score = publicatie.get(
-                                "similarity",
-                                None,
+                        
+
+                        # ----------------------------------------
+                        # Expertise
+                        # ----------------------------------------
+                        expertise_links = haal_expertise_op(
+                            persoon_id
+                        )
+
+                        if expertise_links:
+                            st.markdown("**Expertise**")
+
+                            aantal_kolommen = min(
+                                len(expertise_links),
+                                3,
                             )
 
-                            if score is None or pd.isna(score):
-                                st.caption(
-                                    "Relevantie kon niet worden berekend."
+                            expertise_kolommen = st.columns(
+                                aantal_kolommen
+                            )
+
+                            for index, exp in enumerate(
+                                expertise_links
+                            ):
+                                kolom = expertise_kolommen[
+                                    index % aantal_kolommen
+                                ]
+
+                                with kolom:
+                                    if st.button(
+                                        f"🔬 {exp['naam']}",
+                                        key=(
+                                            f"expertise_"
+                                            f"{persoon_id}_"
+                                            f"{exp['id']}"
+                                        ),
+                                        use_container_width=True,
+                                    ):
+
+                                        st.session_state[
+                                            "geselecteerde_expertise_id"
+                                        ] = exp["id"]
+
+                                        st.switch_page(
+                                            "pages/expertise.py"
+                                        )   
+
+                        # Kleine ruimte vóór actieknoppen
+                        st.write("")
+
+                        # ----------------------------------------
+                        # Actieknoppen
+                        # ----------------------------------------
+                        knop_profiel, knop_project = st.columns(
+                            [2, 1]
+                        )
+
+                        with knop_profiel:
+                            if st.button(
+                                "Bekijk profiel",
+                                key=f"persoon_{persoon_id}",
+                                type="primary",
+                                use_container_width=True,
+                            ):
+
+                                # Is dit het profiel van de ingelogde onderzoeker?
+                                eigen_person_id = st.session_state.get(
+                                    "person_id"
                                 )
-                                continue
 
-                            # Dit is een indicatie van semantische overeenkomst,
-                            # geen wetenschappelijke accuracy-score.
-                            percentage = max(
-                                0,
-                                min(100, round(float(score) * 100)),
-                            )
+                                if (
+                                    st.session_state.get("ingelogd", False)
+                                    and eigen_person_id is not None
+                                    and int(eigen_person_id) == int(persoon_id)
+                                ):
+                                    # Eigen profiel → Mijn profiel
+                                    st.switch_page(
+                                        "pages/mijn_profiel.py"
+                                    )
 
-                            st.markdown(f"**{titel}**")
-                            st.caption(
-                                f"Relevantie voor zoekvraag: {percentage}%"
-                            )
-                            st.progress(percentage / 100)
+                                else:
+                                    # Andere onderzoeker / bezoeker → openbaar profiel
+                                    st.session_state.geselecteerde_persoon = (
+                                        persoon_id
+                                    )
 
-                            # Link naar PubMed
-                            pmid = publicatie["pmid"]
+                                    st.switch_page(
+                                        "pages/onderzoeker.py"
+                                    )
 
-                            if pd.notna(pmid):
-                                pmid = str(pmid).strip()
+                        with knop_project:
+                            if actief:
+                                if st.button(
+                                    "🔬 Project",
+                                    key=f"project_{persoon_id}",
+                                    use_container_width=True,
+                                ):
+                                    open_projecten_van_persoon(
+                                        persoon_id
+                                    )
+
+                        # ----------------------------------------
+                        # Relevante publicaties van deze onderzoeker
+                        # ----------------------------------------
+                        publicaties_persoon = publicaties_van_persoon(
+                            relevante_publicaties,
+                            persoon["name"],
+                        )
+                        if connectie is not None:
+                            if connectie["type"] == "direct":
+                                aantal = connectie["aantal_publicaties"]
+
+                                if aantal == 1:
+                                    st.info(
+                                        "🔗 Directe publicatieconnectie · "
+                                        "1 gezamenlijke publicatie"
+                                    )
+                                else:
+                                    st.info(
+                                        "🔗 Directe publicatieconnectie · "
+                                        f"{aantal} gezamenlijke publicaties"
+                                    )
+
+                            elif connectie["type"] == "indirect":
+                                tussenpersoon = connectie["via"].title()
+
+                                st.info(
+                                    "🔗 Publicatieconnectie via\n\n"
+                                    f"**{tussenpersoon}**"
+                                )
+
+                                pmid_1 = str(connectie["pmid_1"]).strip()
+                                pmid_2 = str(connectie["pmid_2"]).strip()
+
+                                connectie_publicaties = pd.read_sql(
+                                    """
+                                    SELECT pmid, title
+                                    FROM publications
+                                    WHERE pmid IN (?, ?)
+                                    """,
+                                    conn,
+                                    params=(pmid_1, pmid_2),
+                                )
+
+                                titels_per_pmid = {
+                                    str(rij["pmid"]): rij["title"]
+                                    for _, rij in connectie_publicaties.iterrows()
+                                }
+
+                                titel_1 = titels_per_pmid.get(
+                                    pmid_1,
+                                    f"PubMed-publicatie {pmid_1}",
+                                )
+
+                                titel_2 = titels_per_pmid.get(
+                                    pmid_2,
+                                    f"PubMed-publicatie {pmid_2}",
+                                )
+
+                                # Eerste publicatie in de connectie
+                                st.markdown(
+                                    f"**Jij ↔ {tussenpersoon}**"
+                                )
+                                st.markdown(titel_1)
 
                                 st.link_button(
                                     "🔗 Bekijk publicatie op PubMed",
-                                    f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/",
-                                    use_container_width=True
+                                    f"https://pubmed.ncbi.nlm.nih.gov/{pmid_1}/",
+                                    key=f"connectie_1_{persoon_id}_{pmid_1}",
+                                    use_container_width=True,
+    )
+
+                                if "pmid" in relevante_publicaties.columns:
+                                    match_1 = relevante_publicaties[
+                                        relevante_publicaties["pmid"].astype(str) == pmid_1
+                                    ]
+                                else:
+                                    match_1 = pd.DataFrame()
+
+                                if (
+                                    not match_1.empty
+                                    and "similarity" in match_1.columns
+                                    and pd.notna(match_1.iloc[0]["similarity"])
+                                ):
+                                    percentage_1 = max(
+                                        0,
+                                        min(
+                                            100,
+                                            round(
+                                                float(
+                                                    match_1.iloc[0]["similarity"]
+                                                ) * 100
+                                            ),
+                                        ),
+                                    )
+
+                                    st.caption(
+                                        f"Relevantie voor zoekvraag: "
+                                        f"{percentage_1}%"
+                                    )
+                                    st.progress(percentage_1 / 100)
+
+                                
+
+                                st.divider()
+
+                                # Tweede publicatie in de connectie
+                                st.markdown(
+                                    f"**{tussenpersoon} ↔ "
+                                    f"{persoon['name']}**"
                                 )
-            # ====================================================
-        # LOPENDE PROJECTEN
-        # ====================================================
+                                st.markdown(titel_2)
 
-        st.divider()
-        st.subheader("📁 Gevonden lopende projecten")
+                                if "pmid" in relevante_publicaties.columns:
+                                    match_2 = relevante_publicaties[
+                                        relevante_publicaties["pmid"].astype(str) == pmid_2
+                                    ]
+                                else:
+                                    match_2 = pd.DataFrame()
 
-        if project_resultaat.empty:
+                                if (
+                                    not match_2.empty
+                                    and "similarity" in match_2.columns
+                                    and pd.notna(match_2.iloc[0]["similarity"])
+                                ):
+                                    percentage_2 = max(
+                                        0,
+                                        min(
+                                            100,
+                                            round(
+                                                float(
+                                                    match_2.iloc[0]["similarity"]
+                                                ) * 100
+                                            ),
+                                        ),
+                                    )
 
-            st.info(
-                "Geen lopende projecten gevonden "
-                "voor deze zoekterm."
-            )
+                                    st.caption(
+                                        f"Relevantie voor zoekvraag: "
+                                        f"{percentage_2}%"
+                                    )
+                                    st.progress(percentage_2 / 100)
 
-        else:
+                                st.link_button(
+                                    "🔗 Bekijk publicatie op PubMed",
+                                    f"https://pubmed.ncbi.nlm.nih.gov/{pmid_2}/",
+                                    key=f"connectie_2_{persoon_id}_{pmid_2}",
+                                    use_container_width=True,
+                                )
+                                                        
 
-            for _, project in project_resultaat.iterrows():
+                                
+                                
+                        if not publicaties_persoon.empty:
+                            st.divider()
+                            st.markdown("**📚 Relevante publicaties**")
 
-                project_id = int(project["id"])
+                            for _, publicatie in (
+                                publicaties_persoon
+                                .head(3)
+                                .iterrows()
+                            ):
+                                titel = publicatie.get(
+                                    "title",
+                                    "Publicatie zonder titel",
+                                )
 
-                with st.container(border=True):
+                                score = publicatie.get(
+                                    "similarity",
+                                    None,
+                                )
 
-                    st.markdown(
-                        f"### 📁 {project['naam']}"
+                                if score is None or pd.isna(score):
+                                    st.caption(
+                                        "Relevantie kon niet worden berekend."
+                                    )
+                                    continue
+
+                                # Dit is een indicatie van semantische overeenkomst,
+                                # geen wetenschappelijke accuracy-score.
+                                percentage = max(
+                                    0,
+                                    min(100, round(float(score) * 100)),
+                                )
+
+                                st.markdown(f"**{titel}**")
+                                st.caption(
+                                    f"Relevantie voor zoekvraag: {percentage}%"
+                                )
+                                st.progress(percentage / 100)
+
+                                # Link naar PubMed
+                                pmid = publicatie["pmid"]
+
+                                if pd.notna(pmid):
+                                    pmid = str(pmid).strip()
+
+                                    st.link_button(
+                                        "🔗 Bekijk publicatie op PubMed",
+                                        f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/",
+                                        use_container_width=True
+
+                                    )
+                # ====================================================
+                # LOPENDE PROJECTEN
+                # ====================================================
+
+                st.divider()
+                st.subheader("📁 Gevonden lopende projecten")
+
+                if project_resultaat.empty:
+                    st.info(
+                        "Geen lopende projecten gevonden "
+                        "voor deze zoekterm."
                     )
 
-                    if (
-                        pd.notna(project["leider_naam"])
-                        and str(project["leider_naam"]).strip()
-                    ):
-                        st.caption(
-                            f"Projectleider: "
-                            f"{project['leider_naam']}"
-                        )
+                else:
+                    for _, project in project_resultaat.iterrows():
 
-                    beschrijving = project["beschrijving"]
+                        project_id = int(project["id"])
 
-                    if (
-                        pd.notna(beschrijving)
-                        and str(beschrijving).strip()
-                    ):
+                        with st.container(border=True):
 
-                        beschrijving = str(
-                            beschrijving
-                        ).strip()
-
-                        if len(beschrijving) > 250:
-                            beschrijving = (
-                                beschrijving[:250]
-                                + "..."
+                            st.markdown(
+                                f"### 📁 {project['naam']}"
                             )
 
-                        st.write(
-                            beschrijving
-                        )
+                            if (
+                                pd.notna(project["leider_naam"])
+                                and str(project["leider_naam"]).strip()
+                            ):
+                                st.caption(
+                                    f"Projectleider: "
+                                    f"{project['leider_naam']}"
+                                )
 
-                    if st.button(
-                        "Bekijk project",
-                        key=f"zoek_project_{project_id}",
-                        type="primary",
-                        use_container_width=True,
-                    ):
+                            beschrijving = project["beschrijving"]
 
-                        st.session_state[
-                            "geselecteerd_lopend_project"
-                        ] = project_id
+                            if (
+                                pd.notna(beschrijving)
+                                and str(beschrijving).strip()
+                            ):
+                                beschrijving = str(
+                                    beschrijving
+                                ).strip()
 
-                        st.switch_page(
-                            "pages/lopend_project.py"
-                        )
+                                if len(beschrijving) > 250:
+                                    beschrijving = (
+                                        beschrijving[:250]
+                                        + "..."
+                                    )
+
+                                st.write(
+                                    beschrijving
+                                )
+
+                            if st.button(
+                                "Bekijk project",
+                                key=f"zoek_project_{project_id}",
+                                type="primary",
+                                use_container_width=True,
+                            ):
+                                st.session_state[
+                                    "geselecteerd_lopend_project"
+                                ] = project_id
+
+                                st.switch_page(
+                                    "pages/lopend_project.py"
+                                )
 
     # ========================================================
     # RECHTERKOLOM — AI-UITLEG
     # ========================================================
+
     with col_rechts:
+
         st.subheader("✨ AI-uitleg")
 
         if resultaat.empty:
@@ -1385,4 +1568,6 @@ if zoekterm:
                         "De AI-samenvatting kon op dit moment "
                         "niet worden gegenereerd."
                     )
-                    st.caption(str(fout))
+
+                    st.caption(str(fout))                        
+       

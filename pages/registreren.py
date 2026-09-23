@@ -1,4 +1,4 @@
-import hashlib
+﻿import hashlib
 import hmac
 import secrets
 import streamlit as st
@@ -84,7 +84,7 @@ def registreer_onderzoeker(
         # ----------------------------------------------------
         gebruikersnaam = gebruikersnaam.strip()
 
-        
+
         bestaand = cursor.execute(
             """
             SELECT id
@@ -280,7 +280,7 @@ with st.container(border=True):
     gebruikersnaam = st.text_input(
         "Gebruikersnaam *",
         placeholder="Bijvoorbeeld: R.Jonge"
-    )    
+    )
 
     wachtwoord = st.text_input(
         "Wachtwoord *",
@@ -332,25 +332,13 @@ if registreren:
     if not gebruikersnaam:
         fouten.append(
             "Vul een gebruikersnaam in."
-        )    
+        )
 
 
     if not wachtwoord:
         fouten.append(
             "Vul een wachtwoord in."
         )
-
-    # # --------------------------------------------------------
-    # # EMAIL EENVOUDIG CONTROLEREN
-    # # --------------------------------------------------------
-
-    # if email and (
-    #     "@" not in email
-    #     or "." not in email.split("@")[-1]
-    # ):
-    #     fouten.append(
-    #         "Vul een geldig e-mailadres in."
-    #     )
 
     # --------------------------------------------------------
     # WACHTWOORD
@@ -366,19 +354,6 @@ if registreren:
             "De wachtwoorden zijn niet hetzelfde."
         )
 
-    # --------------------------------------------------------
-    # GEBRUIKERSNAAM BESTAAT AL
-    # --------------------------------------------------------
-
-    # if (
-    #     gebruikersnaam
-    #     and gebruikersnaam_bestaat(
-    #         gebruikersnaam
-    #     )
-    # ):
-    #     fouten.append(
-    #         "Deze gebruikersnaam bestaat al."
-    #     )
 
     # --------------------------------------------------------
     # FOUTEN TONEN
@@ -395,7 +370,7 @@ if registreren:
             naam=naam,
             gebruikersnaam=gebruikersnaam,
             wachtwoord=wachtwoord,
-            
+
         )
 
         if gelukt:

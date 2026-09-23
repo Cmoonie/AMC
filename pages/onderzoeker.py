@@ -7,8 +7,9 @@ from styling import apply_styling
 
 
 
-
+# --------------------------------------------------------
 # set_page_config MOET de allereerste Streamlit-aanroep zijn in het bestand
+# --------------------------------------------------------
 st.set_page_config(layout="wide")
 
 apply_styling("kennisgraaf")
@@ -196,16 +197,18 @@ st.markdown("""
     [data-testid="stSidebarNav"] { display: none; }
     </style>
 """, unsafe_allow_html=True)
-
+# --------------------------------------------------------
 # Laad data
+# --------------------------------------------------------
 personen = pd.read_sql("SELECT * FROM persons", conn)
 expertise = pd.read_sql("SELECT * FROM expertise", conn)
 personen_expertise = pd.read_sql("SELECT * FROM persons_expertise", conn)
 
 
 
-
+# --------------------------------------------------------
 # Check session state
+# --------------------------------------------------------
 if "geselecteerde_persoon" not in st.session_state or st.session_state.geselecteerde_persoon is None:
     st.warning("Geen onderzoeker geselecteerd.")
     if st.button("← Terug naar zoeken", key="terug_leeg"):

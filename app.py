@@ -13,7 +13,6 @@ import sqlite3
 
 import numpy as np
 import pandas as pd
-import streamlit as st
 from dotenv import load_dotenv
 from groq import Groq
 from sentence_transformers import SentenceTransformer
@@ -392,6 +391,8 @@ def haal_expertise_op(persoon_id):
     return expertise_links
 
 
+
+
 def open_projecten_van_persoon(persoon_id):
     """Open direct één project of een overzicht bij meerdere projecten."""
     projecten_persoon = pd.read_sql(
@@ -414,48 +415,8 @@ def open_projecten_van_persoon(persoon_id):
         st.session_state.lopende_projecten_persoon = persoon_id
         st.switch_page("pages/lopende_projecten_overzicht.py")
 
-def open_projecten_van_persoon(persoon_id):
-    """Open direct één project of een overzicht bij meerdere projecten."""
-    projecten_persoon = pd.read_sql(
-        """
-        SELECT id
-        FROM lopende_projecten
-        WHERE leider_id = ?
-        """,
-        conn,
-        params=(persoon_id,),
-    )
-
-    if len(projecten_persoon) == 1:
-        st.session_state.geselecteerd_lopend_project = int(
-            projecten_persoon.iloc[0]["id"]
-        )
-        st.switch_page("pages/lopend_project.py")
-
-    elif len(projecten_persoon) > 1:
-        st.session_state.lopende_projecten_persoon = persoon_id
-        st.switch_page("pages/lopende_projecten_overzicht.py")
 
 
-def verwerk_project_zoekvraag(zoekterm):
-    """
-    Herkent of een gebruiker specifiek naar lopende projecten zoekt.
-
-    Voorbeelden:
-    - "Welke lopende onderzoeken zijn er?"
-      -> project_intentie = True
-      -> project_zoekterm = ""
-
-    - "Welke lopende onderzoeken zijn er over Alzheimer?"
-      -> project_intentie = True
-      -> project_zoekterm = "alzheimer"
-
-    - "machine learning"
-      -> project_intentie = False
-      -> project_zoekterm = "machine learning"
-    """
-
-    tekst = str(zoekterm).strip().lower()
 
 def verwerk_project_zoekvraag(zoekterm):
     """
@@ -608,12 +569,6 @@ with hero_rechts:
             hero_afbeelding,
             use_container_width=True
         )
-
-# # ============================================================
-# # PAGINAKOP
-# # ============================================================
-# st.title("Spider")
-# st.subheader("Zoek onderzoeksexpertise binnen Division 9")
 
 
 # ============================================================

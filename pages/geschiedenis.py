@@ -1,41 +1,41 @@
 import streamlit as st
 import pandas as pd
-import sqlite3
-import os
-db_path = os.path.join(os.path.dirname(__file__),"..", "spider.db")
-conn = sqlite3.connect(db_path)
 
-# Authenticatie
-if "ingelogd" not in st.session_state or not st.session_state.ingelogd:
-    st.warning("Je moet eerst inloggen!")
+from database import get_connection
+from sidebar import toon_sidebar
+
+
+# ============================================================
+# TOEGANGSCONTROLE
+# ============================================================
+
+if (
+    not st.session_state.get("ingelogd", False)
+    or st.session_state.get("rol") != "beheerder"
+):
+    st.error(
+        "Deze pagina is alleen beschikbaar voor beheerders."
+    )
     st.switch_page("app.py")
     st.stop()
 
-# Alleen voor beheerder
-if st.session_state.get("rol") != "beheerder":
-    st.error("Je hebt geen toegang tot deze pagina!")
-    st.switch_page("app.py")
-    st.stop()
 
-# CSS
-st.markdown("""
-    <style>
-    [data-testid="stSidebarNav"] { display: none; }
-    </style>
-""", unsafe_allow_html=True)
+# ============================================================
+# SIDEBAR
+# ============================================================
+
+toon_sidebar()
 
 
-# Sidebar
-st.sidebar.write(f"👤 **{st.session_state.get('gebruikersnaam', '')}**")
-st.sidebar.divider()
-if st.sidebar.button("⚙️ Beheer"):
-    st.switch_page("pages/beheer.py")
-if st.sidebar.button("🚪 Uitloggen"):
-    st.session_state.ingelogd = False
-    st.session_state.rol = None
-    st.rerun()
+# ============================================================
+# DATABASE
+# ============================================================
 
+conn = get_connection()
+
+# ----------------------
 # Pagina inhoud
+# ----------------------
 st.title("📋 Wijzigingsgeschiedenis")
 st.subheader("Alle wijzigingen door beheerders")
 

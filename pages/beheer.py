@@ -3,6 +3,7 @@ import pandas as pd
 import datetime
 
 from database import get_connection
+from sidebar import toon_sidebar
 
 conn = get_connection()
 
@@ -41,19 +42,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# Sidebar
-st.sidebar.write(f"👤 **{st.session_state.get('gebruikersnaam', '')}**")
-st.sidebar.divider()
-if st.sidebar.button("📋 Geschiedenis"):
-    st.switch_page("pages/geschiedenis.py")
-st.sidebar.divider()
-if st.sidebar.button("🏠 Home"):
-    st.switch_page("app.py")
-if st.sidebar.button("🚪 Uitloggen"):
-    st.session_state.ingelogd = False
-    st.session_state.rol = None
-    st.rerun()
+# ============================================================
+# SIDEBAR
+# ============================================================
 
+toon_sidebar()
 # ============================================================
 # BEHEER
 # ============================================================

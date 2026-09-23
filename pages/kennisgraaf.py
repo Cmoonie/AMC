@@ -916,6 +916,7 @@ legenda_nodes = (
 
 # Extra typen alleen aan de legenda toevoegen
 # wanneer ze daadwerkelijk zijn geselecteerd.
+
 if "Onderzoeksmethoden" in zichtbare_types:
     legenda_nodes += (
         '<span>'
@@ -1076,8 +1077,9 @@ net.set_options(
     """
 )
 
-
+# --------------------------------------------------------
 # Onderzoekers
+# --------------------------------------------------------
 if "Onderzoekers" in zichtbare_types:
     for _, persoon in gefilterde_personen.iterrows():
         net.add_node(
@@ -1103,8 +1105,9 @@ if "Onderzoekers" in zichtbare_types:
             )
         )
 
-
+# --------------------------------------------------------
 # Expertise
+# --------------------------------------------------------
 if "Expertise" in zichtbare_types:
     for _, exp in gefilterde_expertise.iterrows():
         net.add_node(
@@ -1125,8 +1128,9 @@ if "Expertise" in zichtbare_types:
             )
         )
 
-
+# --------------------------------------------------------
 # Lopende projecten
+# --------------------------------------------------------
 if "Lopende projecten" in zichtbare_types:
     for _, project in gefilterde_projecten.iterrows():
         net.add_node(
@@ -1147,8 +1151,9 @@ if "Lopende projecten" in zichtbare_types:
             )
         )
 
-
+# --------------------------------------------------------
 # Publicaties
+# --------------------------------------------------------
 if (
     "Publicaties" in zichtbare_types
     and not publicatie_df.empty
@@ -1183,8 +1188,9 @@ if (
             },
             title=titel
         )
-
+# --------------------------------------------------------
 # Onderzoeksmethoden
+# --------------------------------------------------------
 if (
     "Onderzoeksmethoden" in zichtbare_types
     and not gefilterde_methoden.empty
@@ -1222,8 +1228,9 @@ if (
             )
         )
 
-
+# --------------------------------------------------------
 # Relaties: publicatie ↔ onderzoeksmethode
+# --------------------------------------------------------
 if (
     "Onderzoeksmethoden" in zichtbare_types
     and "Publicaties" in zichtbare_types
@@ -1254,8 +1261,9 @@ if (
                 f"Onderzoeksmethode uit: {bron}"
             )
         )
-
+# --------------------------------------------------------
 # Relaties: persoon ↔ expertise
+# --------------------------------------------------------
 if (
     "Onderzoekers" in zichtbare_types
     and "Expertise" in zichtbare_types
@@ -1289,8 +1297,9 @@ if (
             )
         )
 
-
+# --------------------------------------------------------
 # Relaties: onderzoeker ↔ lopend project
+# --------------------------------------------------------
 if (
     "Onderzoekers" in zichtbare_types
     and "Lopende projecten" in zichtbare_types

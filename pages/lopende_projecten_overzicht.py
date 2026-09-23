@@ -26,17 +26,6 @@ db_path = os.path.join(
 conn = sqlite3.connect(db_path)
 
 
-# ============================================================
-# AUTHENTICATIE
-# ============================================================
-
-# if (
-#     "ingelogd" not in st.session_state
-#     or not st.session_state.ingelogd
-# ):
-#     st.warning("Je moet eerst inloggen!")
-#     st.switch_page("app.py")
-#     st.stop()
 
 
 # ============================================================

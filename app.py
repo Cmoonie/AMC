@@ -650,26 +650,39 @@ else:
 # ============================================================
 # ZOEKBALK
 # ============================================================
+
+# De zoekbalk zelf gebruikt één vaste session-state key.
+# Daardoor gebruikt Spider bij iedere rerun direct de actuele
+# waarde uit het tekstveld.
+if "zoekterm_input" not in st.session_state:
+    st.session_state.zoekterm_input = (
+        st.session_state.get("laatste_zoekterm", "")
+    )
+
 zoek_col, knop_col = st.columns([5, 1])
 
 with zoek_col:
-    zoekterm = st.text_input(
+    st.text_input(
         "Zoek op naam, project of expertise",
-        value=st.session_state.laatste_zoekterm,
+        key="zoekterm_input",
         placeholder="Waar ben je naar op zoek?",
         label_visibility="collapsed",
     )
 
 with knop_col:
-    if st.button(
+    st.button(
         "🔍",
         type="primary",
         use_container_width=True,
-    ):
-        pass
+    )
 
-if zoekterm:
-    st.session_state.laatste_zoekterm = zoekterm
+# Vanaf hier gebruikt alle zoeklogica exact de huidige
+# waarde van het tekstveld.
+zoekterm = st.session_state.zoekterm_input.strip()
+
+# Laatste zoekterm bewaren zolang er daadwerkelijk
+# een zoekopdracht staat.
+st.session_state.laatste_zoekterm = zoekterm
 
 
 # ============================================================

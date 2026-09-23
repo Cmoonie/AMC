@@ -98,10 +98,23 @@ def toon_sidebar():
             key="sidebar_logout"
         ):
 
+                        # Loginstatus wissen
             st.session_state.ingelogd = False
             st.session_state.rol = None
             st.session_state.gebruikersnaam = ""
+            st.session_state.naam = ""
             st.session_state.person_id = None
+
+            # Zoekstatus wissen zodat een volgende gebruiker
+            # niet de zoekopdracht van de vorige gebruiker ziet.
+            st.session_state.pop(
+                "zoekterm_input",
+                None,
+            )
+            st.session_state.pop(
+                "laatste_zoekterm",
+                None,
+            )
 
             st.switch_page(
                 "app.py"

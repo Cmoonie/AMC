@@ -171,6 +171,10 @@ Regels:
 - Noem geen informatie die niet uit de aangeleverde gegevens blijkt.
 - Schrijf ongeveer 3 tot 5 zinnen.
 - Schrijf in helder en professioneel Nederlands.
+- Als de publicatiegegevens onvoldoende zijn voor een betrouwbare bio,
+  antwoord dan uitsluitend met: ONVOLDOENDE_INFORMATIE
+- Gebruik uitsluitend Nederlands en vermijd Engelse formuleringen
+  wanneer een gangbare Nederlandse formulering beschikbaar is.
 
 PUBLICATIEGEGEVENS:
 
@@ -189,7 +193,39 @@ PUBLICATIEGEGEVENS:
 
     bio = response.choices[0].message.content
 
-    if not bio:
-        return None
+    fallback_bio = (
+        "Er is nog onvoldoende publicatie-informatie beschikbaar "
+        "om automatisch een betrouwbare onderzoeksbio op te stellen. "
+        "De onderzoeker kan deze bio via het eigen profiel aanvullen."
+    )
 
-    return bio.strip()
+    if not bio:
+        return fallback_bio
+
+    bio = bio.strip()
+
+    # Soms weigert het taalmodel terecht een bio te schrijven
+    # wanneer de publicatiegegevens onvoldoende informatie geven.
+    # Zo'n technische/Engelse weigering tonen we niet rechtstreeks
+    # op het publieke onderzoeksprofiel.
+    bio_lager = bio.lower()
+
+    onvoldoende_informatie_signalen = [
+        "i'm sorry",
+        "i’m sorry",
+        "i don't have enough information",
+        "i don’t have enough information",
+        "not enough information",
+        "insufficient information",
+        "onvoldoende informatie",
+        "onvoldoende gegevens",
+        "niet genoeg informatie",
+    ]
+
+    if any(
+        signaal in bio_lager
+        for signaal in onvoldoende_informatie_signalen
+    ):
+        return fallback_bio
+
+    return bio

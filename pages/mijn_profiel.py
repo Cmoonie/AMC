@@ -931,22 +931,22 @@ with st.container(border=True):
                                     conn
                                 )
 
-                        if import_resultaat["overgeslagen"] > 0:
                             with st.spinner(
-                                    "Spider werkt expertise bij..."
-                                ):
-
-                                    expertise_resultaat = (
-                                        werk_expertise_bij(
-                                            conn
-                                        )
+                                "Spider werkt expertise bij..."
+                            ):
+                                expertise_resultaat = (
+                                    werk_expertise_bij(
+                                        conn
                                     )
+                                )
 
                             st.success(
-                                    f"🔬 "
-                                    f"{expertise_resultaat['nieuwe_koppelingen']} "
-                                    "nieuwe expertise-koppelingen toegevoegd."
-                                )
+                                f"🔬 "
+                                f"{expertise_resultaat['nieuwe_koppelingen']} "
+                                "nieuwe expertise-koppelingen toegevoegd."
+                            )
+
+                        if import_resultaat["overgeslagen"] > 0:
 
                             st.info(
                                 f"ℹ️ "

@@ -330,9 +330,26 @@ def login_pagina():
             transform: translateY(-1px);
         }}
 
-        /* Foutmeldingen */
+                /* Meldingen duidelijk leesbaar maken */
         [data-testid="stAlert"] {{
+            background: #FFFFFF !important;
+            border: 2px solid #E6000F !important;
             border-radius: 12px !important;
+            box-shadow: 0 6px 18px rgba(11, 31, 58, 0.12) !important;
+        }}
+
+        /* Tekst van foutmeldingen */
+        [data-testid="stAlert"] p,
+        [data-testid="stAlert"] span,
+        [data-testid="stAlert"] div {{
+            color: #0B1F3A !important;
+            font-weight: 650 !important;
+        }}
+
+        /* Icoon van foutmelding */
+        [data-testid="stAlert"] svg {{
+            fill: #E6000F !important;
+            color: #E6000F !important;
         }}
 
         /* Tekst registratie */

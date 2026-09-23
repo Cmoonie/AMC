@@ -496,7 +496,7 @@ gefilterde_projecten = lopende_projecten[
 # ============================================================
 
 publicatie_koppelingen = []
-max_publicaties = 300
+max_publicaties = 400
 
 
 def onderzoeker_in_auteurs(auteurs, namen):

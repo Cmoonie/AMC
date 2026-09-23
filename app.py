@@ -79,7 +79,7 @@ st.markdown(
 # ============================================================
 @st.cache_resource
 def laad_model():
-    return SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
+    return SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2",local_files_only=True, )
 
 
 model = laad_model()
@@ -122,6 +122,50 @@ def semantisch_zoeken(zoekterm, top_n=15):
     )
 
     return scores[:top_n]
+
+def publicatie_similarity(zoekterm, pmid):
+    """
+    Bereken de semantische overeenkomst tussen een zoekterm
+    en één specifieke publicatie.
+
+    Gebruikt dezelfde embeddings en cosine similarity
+    als semantisch_zoeken().
+    """
+
+    resultaat = pd.read_sql(
+        """
+        SELECT embedding
+        FROM publication_embeddings
+        WHERE CAST(pmid AS TEXT) = ?
+        LIMIT 1
+        """,
+        conn,
+        params=(str(pmid).strip(),),
+    )
+
+    if resultaat.empty:
+        return None
+
+    zoek_embedding = model.encode(zoekterm)
+
+    pub_embedding = np.array(
+        json.loads(resultaat.iloc[0]["embedding"])
+    )
+
+    noemer = (
+        np.linalg.norm(zoek_embedding)
+        * np.linalg.norm(pub_embedding)
+    )
+
+    if noemer == 0:
+        return None
+
+    score = (
+        np.dot(zoek_embedding, pub_embedding)
+        / noemer
+    )
+
+    return float(score)
 
 
 def publicaties_van_persoon(relevante_publicaties, naam):
@@ -792,7 +836,7 @@ if zoekterm:
 
 
 
-        # --------------------------------------------------------
+    # --------------------------------------------------------
     # Semantisch zoeken via publicaties
     #
     # Alleen uitvoeren bij een normale zoekopdracht.
@@ -802,6 +846,7 @@ if zoekterm:
     relevante_publicaties = pd.DataFrame()
     semantische_scores = []
     top_pmids = []
+    naamzoekactie = False
 
     if not project_intentie:
 
@@ -1092,6 +1137,9 @@ if zoekterm:
                 beste_scores = []
 
                 for _, persoon in resultaat.iterrows():
+
+                    # Alleen publicaties waarop deze onderzoeker zelf wordt gevonden
+                    # bepalen de inhoudelijke relevantie van de onderzoeker.
                     publicaties_persoon = publicaties_van_persoon(
                         relevante_publicaties,
                         persoon["name"],
@@ -1105,6 +1153,9 @@ if zoekterm:
                             publicaties_persoon["similarity"],
                             errors="coerce",
                         ).max()
+
+                        if pd.isna(beste_score):
+                            beste_score = -1
                     else:
                         beste_score = -1
 
@@ -1117,6 +1168,7 @@ if zoekterm:
                     ascending=False,
                     na_position="last",
                 )
+                
 
                 # --------------------------------------------------------
                 # Onderzoekers tonen
@@ -1149,7 +1201,8 @@ if zoekterm:
                         connectie = None
 
                         if (
-                            coauteur_netwerk is not None
+                            not naamzoekactie
+                            and coauteur_netwerk is not None
                             and eigen_person_id is not None
                             and int(eigen_person_id) != int(persoon_id)
                         ):
@@ -1267,157 +1320,275 @@ if zoekterm:
                             relevante_publicaties,
                             persoon["name"],
                         )
-                        if connectie is not None:
-                            if connectie["type"] == "direct":
-                                aantal = connectie["aantal_publicaties"]
+                    if connectie is not None:
+                                if connectie["type"] == "direct":
+                                    top_pmids_tekst = {
+                                        str(pmid).strip()
+                                        for pmid in top_pmids
+                                    }
 
-                                if aantal == 1:
-                                    st.info(
-                                        "🔗 Directe publicatieconnectie · "
-                                        "1 gezamenlijke publicatie"
-                                    )
-                                else:
-                                    st.info(
-                                        "🔗 Directe publicatieconnectie · "
-                                        f"{aantal} gezamenlijke publicaties"
-                                    )
+                                    relevante_directe_pmids = [
+                                        str(pmid).strip()
+                                        for pmid in connectie.get("pmids", [])
+                                        if str(pmid).strip() in top_pmids_tekst
+                                    ]
 
-                            elif connectie["type"] == "indirect":
-                                tussenpersoon = connectie["via"].title()
+                                    if relevante_directe_pmids:
+                                        directe_publicaties = pd.read_sql(
+                                            f"""
+                                            SELECT pmid, title
+                                            FROM publications
+                                            WHERE pmid IN (
+                                                {",".join(["?"] * len(relevante_directe_pmids))}
+                                            )
+                                            """,
+                                            conn,
+                                            params=relevante_directe_pmids,
+                                        )
 
-                                st.info(
-                                    "🔗 Publicatieconnectie via\n\n"
-                                    f"**{tussenpersoon}**"
-                                )
+                                        # Dezelfde semantische scores gebruiken
+                                        # als de normale zoekresultaten.
+                                        score_lookup = {
+                                            str(item["pmid"]).strip(): item["score"]
+                                            for item in semantische_scores
+                                        }
 
-                                pmid_1 = str(connectie["pmid_1"]).strip()
-                                pmid_2 = str(connectie["pmid_2"]).strip()
+                                        directe_publicaties["pmid_match"] = (
+                                            directe_publicaties["pmid"]
+                                            .astype(str)
+                                            .str.strip()
+                                        )
 
-                                connectie_publicaties = pd.read_sql(
-                                    """
-                                    SELECT pmid, title
-                                    FROM publications
-                                    WHERE pmid IN (?, ?)
-                                    """,
-                                    conn,
-                                    params=(pmid_1, pmid_2),
-                                )
+                                        directe_publicaties["similarity"] = (
+                                            directe_publicaties["pmid_match"]
+                                            .map(score_lookup)
+                                        )
 
-                                titels_per_pmid = {
-                                    str(rij["pmid"]): rij["title"]
-                                    for _, rij in connectie_publicaties.iterrows()
+                                        directe_publicaties = directe_publicaties.sort_values(
+                                            by="similarity",
+                                            ascending=False,
+                                            na_position="last",
+                                        )
+
+                                        aantal_relevant = len(directe_publicaties)
+
+                                        if aantal_relevant == 1:
+                                            st.info(
+                                                "🔗 Directe publicatieconnectie met jou · "
+                                                "1 relevante gezamenlijke publicatie"
+                                            )
+                                        else:
+                                            st.info(
+                                                "🔗 Directe publicatieconnectie met jou · "
+                                                f"{aantal_relevant} relevante gezamenlijke publicaties"
+                                            )
+
+                                        for direct_index, (_, gezamenlijke_publicatie) in enumerate(
+                                            directe_publicaties
+                                            .head(3)
+                                            .iterrows()
+                                        ):
+                                            pmid_direct = str(
+                                                gezamenlijke_publicatie["pmid"]
+                                            ).strip()
+
+                                            titel_direct = gezamenlijke_publicatie.get(
+                                                "title",
+                                                f"PubMed-publicatie {pmid_direct}",
+                                            )
+
+                                            score_direct = gezamenlijke_publicatie.get(
+                                                "similarity",
+                                                None,
+                                            )
+
+                                            st.markdown(f"**{titel_direct}**")
+
+                                            if (
+                                                score_direct is not None
+                                                and pd.notna(score_direct)
+                                            ):
+                                                percentage_direct = max(
+                                                    0,
+                                                    min(
+                                                        100,
+                                                        round(float(score_direct) * 100),
+                                                    ),
+                                                )
+
+                                                st.caption(
+                                                    "Relevantie voor zoekvraag: "
+                                                    f"{percentage_direct}%"
+                                                )
+                                                st.progress(
+                                                    percentage_direct / 100
+                                                )
+
+                                            st.link_button(
+                                                "🔗 Bekijk publicatie op PubMed",
+                                                f"https://pubmed.ncbi.nlm.nih.gov/"
+                                                f"{pmid_direct}/",
+                                                key=(
+                                                    f"directe_connectie_"
+                                                    f"{persoon_id}_{pmid_direct}_{direct_index}"
+                                                ),
+                                                use_container_width=True,
+                                            )
+
+                                elif connectie["type"] == "indirect":
+                          
+                                    tussenpersoon = connectie["via"].title()
+
+                                    pmid_1 = str(connectie["pmid_1"]).strip()
+                                    pmid_2 = str(connectie["pmid_2"]).strip()
+
+                                    # Bij een indirecte connectie bepaalt de publicatie
+                                    # aan de kant van de gevonden onderzoeker of het
+                                    # netwerkpad relevant is voor de huidige zoekvraag.
+                                    top_pmids_tekst = {
+                                        str(pmid).strip()
+                                        for pmid in top_pmids
+                                    }
+
+                                    connectie_relevant = pmid_2 in top_pmids_tekst
+
+                                    if connectie_relevant:
+                                        st.info(
+                                            "🔗 Publicatieconnectie via\n\n"
+                                            f"**{tussenpersoon}**"
+                                        )
+
+                                        connectie_publicaties = pd.read_sql(
+                                            """
+                                            SELECT pmid, title
+                                            FROM publications
+                                            WHERE pmid IN (?, ?)
+                                            """,
+                                            conn,
+                                            params=(pmid_1, pmid_2),
+                                        )
+
+                                        titels_per_pmid = {
+                                            str(rij["pmid"]).strip(): rij["title"]
+                                            for _, rij in connectie_publicaties.iterrows()
+                                        }
+
+                                        titel_1 = titels_per_pmid.get(
+                                            pmid_1,
+                                            f"PubMed-publicatie {pmid_1}",
+                                        )
+
+                                        titel_2 = titels_per_pmid.get(
+                                            pmid_2,
+                                            f"PubMed-publicatie {pmid_2}",
+                                        )
+
+                                        # Eerste publicatie:
+                                        # ingelogde onderzoeker ↔ tussenpersoon
+                                        st.markdown(
+                                            f"**Jij ↔ {tussenpersoon}**"
+                                        )
+                                        st.markdown(titel_1)
+
+                                        score_1 = publicatie_similarity(
+                                            zoekterm,
+                                            pmid_1,
+                                        )
+
+                                        if score_1 is not None:
+                                            percentage_1 = max(
+                                                0,
+                                                min(
+                                                    100,
+                                                    round(score_1 * 100),
+                                                ),
+                                            )
+
+                                            st.caption(
+                                                f"Relevantie voor zoekvraag: "
+                                                f"{percentage_1}%"
+                                            )
+                                            st.progress(percentage_1 / 100)
+
+                                        st.link_button(
+                                            "🔗 Bekijk publicatie op PubMed",
+                                            f"https://pubmed.ncbi.nlm.nih.gov/{pmid_1}/",
+                                            key=f"connectie_1_{persoon_id}_{pmid_1}",
+                                            use_container_width=True,
+                                        )
+
+                                        st.divider()
+
+                                        # Tweede publicatie:
+                                        # tussenpersoon ↔ gevonden onderzoeker
+                                        st.markdown(
+                                            f"**{tussenpersoon} ↔ "
+                                            f"{persoon['name']}**"
+                                        )
+                                        st.markdown(titel_2)
+
+                                        score_2 = publicatie_similarity(
+                                            zoekterm,
+                                            pmid_2,
+                                        )
+
+                                        if score_2 is not None:
+                                            percentage_2 = max(
+                                                0,
+                                                min(
+                                                    100,
+                                                    round(score_2 * 100),
+                                                ),
+                                            )
+
+                                            st.caption(
+                                                f"Relevantie voor zoekvraag: "
+                                                f"{percentage_2}%"
+                                            )
+                                            st.progress(percentage_2 / 100)
+
+                                        st.link_button(
+                                            "🔗 Bekijk publicatie op PubMed",
+                                            f"https://pubmed.ncbi.nlm.nih.gov/{pmid_2}/",
+                                            key=f"connectie_2_{persoon_id}_{pmid_2}",
+                                            use_container_width=True,
+            )
+                    if not publicaties_persoon.empty:
+                            st.divider()
+                                                        # Maak een aparte lijst voor de weergave.
+                            # Publicaties die hierboven al als directe
+                            # connectie zijn getoond, hoeven hier niet
+                            # nogmaals te verschijnen.
+                            publicaties_weergave = publicaties_persoon.copy()
+
+                            if (
+                                connectie is not None
+                                and connectie["type"] == "direct"
+                                and relevante_directe_pmids
+                                and not publicaties_weergave.empty
+                            ):
+                                directe_pmids_set = {
+                                    str(pmid).strip()
+                                    for pmid in relevante_directe_pmids
                                 }
 
-                                titel_1 = titels_per_pmid.get(
-                                    pmid_1,
-                                    f"PubMed-publicatie {pmid_1}",
-                                )
-
-                                titel_2 = titels_per_pmid.get(
-                                    pmid_2,
-                                    f"PubMed-publicatie {pmid_2}",
-                                )
-
-                                # Eerste publicatie in de connectie
-                                st.markdown(
-                                    f"**Jij ↔ {tussenpersoon}**"
-                                )
-                                st.markdown(titel_1)
-
-                                st.link_button(
-                                    "🔗 Bekijk publicatie op PubMed",
-                                    f"https://pubmed.ncbi.nlm.nih.gov/{pmid_1}/",
-                                    key=f"connectie_1_{persoon_id}_{pmid_1}",
-                                    use_container_width=True,
-    )
-
-                                if "pmid" in relevante_publicaties.columns:
-                                    match_1 = relevante_publicaties[
-                                        relevante_publicaties["pmid"].astype(str) == pmid_1
+                                publicaties_weergave = (
+                                    publicaties_weergave[
+                                        ~publicaties_weergave["pmid"]
+                                        .astype(str)
+                                        .str.strip()
+                                        .isin(directe_pmids_set)
                                     ]
-                                else:
-                                    match_1 = pd.DataFrame()
+                                    .copy()
+                                )
 
-                                if (
-                                    not match_1.empty
-                                    and "similarity" in match_1.columns
-                                    and pd.notna(match_1.iloc[0]["similarity"])
-                                ):
-                                    percentage_1 = max(
-                                        0,
-                                        min(
-                                            100,
-                                            round(
-                                                float(
-                                                    match_1.iloc[0]["similarity"]
-                                                ) * 100
-                                            ),
-                                        ),
-                                    )
-
-                                    st.caption(
-                                        f"Relevantie voor zoekvraag: "
-                                        f"{percentage_1}%"
-                                    )
-                                    st.progress(percentage_1 / 100)
-
-                                
-
-                                st.divider()
-
-                                # Tweede publicatie in de connectie
+                            if not publicaties_weergave.empty:
                                 st.markdown(
-                                    f"**{tussenpersoon} ↔ "
-                                    f"{persoon['name']}**"
+                                    "**📚 Relevante publicaties**"
                                 )
-                                st.markdown(titel_2)
-
-                                if "pmid" in relevante_publicaties.columns:
-                                    match_2 = relevante_publicaties[
-                                        relevante_publicaties["pmid"].astype(str) == pmid_2
-                                    ]
-                                else:
-                                    match_2 = pd.DataFrame()
-
-                                if (
-                                    not match_2.empty
-                                    and "similarity" in match_2.columns
-                                    and pd.notna(match_2.iloc[0]["similarity"])
-                                ):
-                                    percentage_2 = max(
-                                        0,
-                                        min(
-                                            100,
-                                            round(
-                                                float(
-                                                    match_2.iloc[0]["similarity"]
-                                                ) * 100
-                                            ),
-                                        ),
-                                    )
-
-                                    st.caption(
-                                        f"Relevantie voor zoekvraag: "
-                                        f"{percentage_2}%"
-                                    )
-                                    st.progress(percentage_2 / 100)
-
-                                st.link_button(
-                                    "🔗 Bekijk publicatie op PubMed",
-                                    f"https://pubmed.ncbi.nlm.nih.gov/{pmid_2}/",
-                                    key=f"connectie_2_{persoon_id}_{pmid_2}",
-                                    use_container_width=True,
-                                )
-                                                        
-
-                                
-                                
-                        if not publicaties_persoon.empty:
-                            st.divider()
-                            st.markdown("**📚 Relevante publicaties**")
 
                             for _, publicatie in (
-                                publicaties_persoon
+                                publicaties_weergave
                                 .head(3)
                                 .iterrows()
                             ):

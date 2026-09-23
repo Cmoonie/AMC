@@ -203,7 +203,7 @@ def importeer_publicaties_csv(bestandspad, conn):
 
         cursor.execute(
             """
-            INSERT INTO publications (
+            INSERT OR IGNORE INTO publications (
                 pmid,
                 year,
                 title,

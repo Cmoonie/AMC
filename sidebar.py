@@ -58,22 +58,30 @@ def toon_sidebar():
 
 
     # ========================================================
-    # ALLEEN INGELOGD
+    # INGELOGDE GEBRUIKERS
     # ========================================================
 
     if ingelogd:
 
-        if st.sidebar.button(
-            "👤 Profiel",
-            use_container_width=True,
-            key="sidebar_profiel"
-        ):
-            st.switch_page(
-                "pages/mijn_profiel.py"
-            )
+        # ----------------------------------------------------
+        # NORMALE ONDERZOEKER
+        # ----------------------------------------------------
 
-        # Volledig beheer
-        # Alleen beschikbaar voor beheerders.
+        if rol != "beheerder":
+
+            if st.sidebar.button(
+                "👤 Mijn profiel",
+                use_container_width=True,
+                key="sidebar_profiel"
+            ):
+                st.switch_page(
+                    "pages/mijn_profiel.py"
+                )
+
+        # ----------------------------------------------------
+        # BEHEERDER
+        # ----------------------------------------------------
+
         if rol == "beheerder":
 
             if st.sidebar.button(
@@ -84,6 +92,16 @@ def toon_sidebar():
                 st.switch_page(
                     "pages/beheer.py"
                 )
+
+            if st.sidebar.button(
+                "📋 Geschiedenis",
+                use_container_width=True,
+                key="sidebar_geschiedenis"
+            ):
+                st.switch_page(
+                    "pages/geschiedenis.py"
+                )
+       
 
 
     # ========================================================

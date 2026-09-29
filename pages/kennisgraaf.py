@@ -491,12 +491,15 @@ gefilterde_projecten = lopende_projecten[
 ]
 
 
-#============================================================
+# ============================================================
 # PUBLICATIES KOPPELEN
 # ============================================================
 
 publicatie_koppelingen = []
-max_publicaties = 400
+
+# Maximale hoeveelheid unieke publicaties die de
+# kennisgraaf tegelijkertijd visualiseert.
+max_publicaties = 1500
 
 
 def onderzoeker_in_auteurs(auteurs, namen):
@@ -520,65 +523,69 @@ def onderzoeker_in_auteurs(auteurs, namen):
         if not naam:
             continue
 
-        # Exacte naam/alias komt voor
         if naam in auteurs:
             return True
 
     return False
 
 
-aantal_unieke_publicaties = 0
+# ------------------------------------------------------------
+# PUBLICATIES EERLIJK VERDELEN OVER ZICHTBARE ONDERZOEKERS
+# ------------------------------------------------------------
 
-for _, publicatie in publicaties.iterrows():
+aantal_onderzoekers = len(
+    gefilterde_personen
+)
 
-    gekoppelde_onderzoekers = []
+if aantal_onderzoekers > 0:
 
-    auteurs = publicatie.get(
-        "authors",
-        ""
+    max_per_onderzoeker = max(
+        1,
+        max_publicaties // aantal_onderzoekers
     )
 
-    for _, persoon in gefilterde_personen.iterrows():
+else:
+    max_per_onderzoeker = 0
 
-        persoon_id = int(
-            persoon["id"]
+
+for _, persoon in gefilterde_personen.iterrows():
+
+    persoon_id = int(
+        persoon["id"]
+    )
+
+    mogelijke_namen = [
+        str(persoon["name"])
+    ]
+
+    aliases_persoon = auteur_aliases[
+        auteur_aliases["person_id"] == persoon_id
+    ]
+
+    for _, alias in aliases_persoon.iterrows():
+
+        author_name = str(
+            alias["author_name"]
+        ).strip()
+
+        if author_name:
+            mogelijke_namen.append(
+                author_name
+            )
+
+    aantal_persoon = 0
+
+    for _, publicatie in publicaties.iterrows():
+
+        auteurs = publicatie.get(
+            "authors",
+            ""
         )
 
-        # Begin altijd met de gewone naam uit persons
-        mogelijke_namen = [
-            str(persoon["name"])
-        ]
-
-        # Voeg alle PubMed-auteursnamen van deze persoon toe
-        aliases_persoon = auteur_aliases[
-            auteur_aliases["person_id"] == persoon_id
-        ]
-
-        for _, alias in aliases_persoon.iterrows():
-
-            author_name = str(
-                alias["author_name"]
-            ).strip()
-
-            if author_name:
-                mogelijke_namen.append(
-                    author_name
-                )
-
-        # Controleer gewone naam + alle aliassen
         if onderzoeker_in_auteurs(
             auteurs,
             mogelijke_namen
         ):
-            gekoppelde_onderzoekers.append(
-                persoon_id
-            )
-
-    # Alleen publicaties toevoegen wanneer minimaal
-    # één zichtbare onderzoeker eraan gekoppeld is
-    if gekoppelde_onderzoekers:
-
-        for gekoppeld_persoon_id in gekoppelde_onderzoekers:
 
             publicatie_koppelingen.append(
                 {
@@ -587,14 +594,14 @@ for _, publicatie in publicaties.iterrows():
                         "title",
                         "Publicatie"
                     ),
-                    "persoon_id": gekoppeld_persoon_id
+                    "persoon_id": persoon_id
                 }
             )
 
-        aantal_unieke_publicaties += 1
+            aantal_persoon += 1
 
-    if aantal_unieke_publicaties >= max_publicaties:
-        break
+        if aantal_persoon >= max_per_onderzoeker:
+            break
 
 
 publicatie_df = pd.DataFrame(

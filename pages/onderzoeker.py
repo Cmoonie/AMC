@@ -341,14 +341,16 @@ else:
                         st.switch_page(
                             "pages/expertise.py"
                         )
-
+    # ============================================================
     # Lopende projecten
+    # ============================================================
     st.divider()
     st.subheader("🔬 Lopende projecten")
 
     lopende = pd.read_sql(f"SELECT * FROM lopende_projecten WHERE leider_id = {persoon_id}", conn)
-    
+    # ============================================================
     # Haal eigen persoon_id op
+    # ============================================================
     eigen_gebruikersnaam = st.session_state.get("gebruikersnaam", "")
     cursor = conn.cursor()
     cursor.execute("SELECT id FROM persons WHERE name = ?", (eigen_gebruikersnaam,))
@@ -382,24 +384,96 @@ else:
             st.session_state.lopende_projecten_persoon = persoon_id
             st.switch_page("pages/lopende_projecten_overzicht.py")
         
-    # Publicaties
+    # ============================================================
+    # PUBLICATIES
+    # ============================================================
+
     st.divider()
     st.subheader("📄 Publicaties")
 
-    naam_sql = persoon["name"].replace("'", "''")
-    publicaties = pd.read_sql(f"""
-        SELECT title, year, pubmed_url 
-        FROM publications 
-        WHERE authors LIKE '%{naam_sql}%'
+    # Normale naam + PubMed-auteursaliassen verzamelen
+    auteursnamen = [
+        str(persoon["name"]).strip()
+    ]
+
+    aliases_publicaties = pd.read_sql(
+        """
+        SELECT author_name
+        FROM person_author_aliases
+        WHERE person_id = ?
+        """,
+        conn,
+        params=(int(persoon_id),)
+    )
+
+    for alias in aliases_publicaties["author_name"].dropna().tolist():
+
+        alias = str(alias).strip()
+
+        if (
+            alias
+            and alias.lower()
+            not in [
+                naam.lower()
+                for naam in auteursnamen
+            ]
+        ):
+            auteursnamen.append(alias)
+
+    # SQL-voorwaarden veilig opbouwen
+    voorwaarden = []
+    parameters = []
+
+    for auteursnaam in auteursnamen:
+
+        voorwaarden.append(
+            "LOWER(authors) LIKE LOWER(?)"
+        )
+
+        parameters.append(
+            f"%{auteursnaam}%"
+        )
+
+    where_clause = " OR ".join(
+        voorwaarden
+    )
+
+    publicaties = pd.read_sql(
+        f"""
+        SELECT
+            title,
+            year,
+            pubmed_url
+        FROM publications
+        WHERE {where_clause}
         ORDER BY year DESC
         LIMIT 10
-    """, conn)
+        """,
+        conn,
+        params=parameters
+    )
 
     if publicaties.empty:
-        st.write("Geen publicaties gevonden.")
+
+        st.write(
+            "Geen publicaties gevonden."
+        )
+
     else:
+
         for _, pub in publicaties.iterrows():
+
             if pub["pubmed_url"]:
-                st.markdown(f"📄 [{pub['title'][:80]}...]({pub['pubmed_url']}) — *{pub['year']}*")
+
+                st.markdown(
+                    f"📄 [{pub['title'][:80]}...]"
+                    f"({pub['pubmed_url']}) — "
+                    f"*{pub['year']}*"
+                )
+
             else:
-                st.write(f"📄 {pub['title'][:80]}... — *{pub['year']}*")
+
+                st.write(
+                    f"📄 {pub['title'][:80]}... "
+                    f"— {pub['year']}"
+                )

@@ -78,7 +78,7 @@ st.markdown(
 # ============================================================
 @st.cache_resource
 def laad_model():
-    return SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2",local_files_only=True, )
+    return SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2" )
 
 
 model = laad_model()

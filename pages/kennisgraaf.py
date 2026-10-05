@@ -275,6 +275,13 @@ st.caption(
     "publicaties en lopende projecten binnen Amsterdam UMC."
 )
 
+st.info(
+    "Spider is momenteel een proof-of-concept en gebruikt een "
+    "beperkte demonstratiedataset voor Division 9. Niet alle "
+    "onderzoekers en onderzoeksgegevens van Amsterdam UMC zijn "
+    "in deze versie opgenomen."
+)
+
 # Beschikbare afdelingen bepalen
 afdelingen = (
     personen["department"]
@@ -307,7 +314,7 @@ else:
 
 with filter_zoek:
     zoekterm = st.text_input(
-        "Zoek in de kennisgraaf",
+        "Zoek op onderzoeker of expertise",
         placeholder="Bijvoorbeeld Robert of Amyloid",
         label_visibility="visible",
         key="kg_zoekterm"
@@ -357,7 +364,7 @@ zichtbare_types = [
     for type_naam in zichtbare_types
 ]
 
-st.markdown("#### 👥 Onderzoekers tonen")
+st.markdown("#### 👥 Filter op onderzoekers")
 
 onderzoeker_namen = (
     personen["name"]
@@ -499,7 +506,7 @@ publicatie_koppelingen = []
 
 # Maximale hoeveelheid unieke publicaties die de
 # kennisgraaf tegelijkertijd visualiseert.
-max_publicaties = 1500
+max_publicaties = 50
 
 
 def onderzoeker_in_auteurs(auteurs, namen):
@@ -543,6 +550,8 @@ if aantal_onderzoekers > 0:
         1,
         max_publicaties // aantal_onderzoekers
     )
+
+
 
 else:
     max_per_onderzoeker = 0
@@ -913,7 +922,12 @@ with nav_publicatie:
 # ============================================================
 # LEGENDA
 # ============================================================
-
+st.caption(
+    "💡 Tip: gebruik de zoek- en filteropties om de kennisgraaf "
+    "te verkleinen. Gekleurde nodes stellen onderzoekers, expertise, "
+    "projecten en publicaties voor. Dikkere gekleurde lijnen geven "
+    "gedeelde relaties tussen zichtbare onderzoekers aan."
+)
 legenda_nodes = (
     '<span><b style="color:#69A9F5;font-size:20px;">●</b> Onderzoeker</span>'
     '<span><b style="color:#F07814;font-size:20px;">●</b> Expertise</span>'

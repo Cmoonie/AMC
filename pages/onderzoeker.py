@@ -274,11 +274,34 @@ else:
                     ">{initialen}</span>
                 </div>
             """, unsafe_allow_html=True)
-
+  
     st.divider()
     st.subheader("📧 Contact")
-    st.write(f"📧 emailadres@amsterdamumc.nl")
-    st.write(f"🔗 [Zoek op PubMed](https://pubmed.ncbi.nlm.nih.gov/?term={persoon['name'].replace(' ', '+')})")
+
+    email_data = pd.read_sql(
+        """
+        SELECT email
+        FROM profiel_data
+        WHERE person_id = ?
+        """,
+        conn,
+        params=(int(persoon_id),)
+    )
+
+    if (
+        not email_data.empty
+        and pd.notna(email_data.iloc[0]["email"])
+        and str(email_data.iloc[0]["email"]).strip()
+    ):
+        email_tekst = str(email_data.iloc[0]["email"]).strip()
+        st.write(f"📧 {email_tekst}")
+    else:
+        st.info("Geen e-mailadres beschikbaar.")
+
+    st.write(
+        f"🔗 [Zoek op PubMed]"
+        f"(https://pubmed.ncbi.nlm.nih.gov/?term={persoon['name'].replace(' ', '+')})"
+    )
 
     # ============================================================
     # EXPERTISE
@@ -358,7 +381,10 @@ else:
     eigen_id = result[0] if result else None
 
     if lopende.empty:
-        st.write("Geen lopende projecten.")
+        st.info(
+        "Er is momenteel geen informatie over lopende projecten "
+        "beschikbaar voor deze onderzoeker."
+    )
     elif len(lopende) == 1:
         project = lopende.iloc[0]
         col1, col2 = st.columns([3, 1])

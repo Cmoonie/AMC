@@ -247,7 +247,7 @@ bio_tekst = (
 email_tekst = (
     profiel[2]
     if profiel and profiel[2]
-    else "Geen email beschikbaar."
+    else "Geen e-mailadres beschikbaar."
 )
 
 initialen = "".join(
@@ -358,10 +358,10 @@ with st.container(border=True):
     with st.expander("✏️ E-mail aanpassen"):
 
         nieuwe_email = st.text_area(
-            "email",
+            "E-mail",
             value=(
                 ""
-                if email_tekst == "Geen Email beschikbaar."
+                if email_tekst == "Geen E-mailadres beschikbaar."
                 else email_tekst
             ),
             height=180,
@@ -392,7 +392,7 @@ with st.container(border=True):
             conn.commit()
 
             st.success(
-                "✅ email opgeslagen!"
+                "✅ E-mail opgeslagen!"
             )
 
             st.rerun()
@@ -401,7 +401,7 @@ with st.container(border=True):
             conn.rollback()
 
             st.error(
-                "De email kon niet worden opgeslagen."
+                "Het e-mail kon niet worden opgeslagen."
             )
 
             st.caption(

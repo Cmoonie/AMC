@@ -18,6 +18,7 @@ Een AI-gestuurde zoektool voor onderzoeksexpertise binnen Division 9 van Amsterd
 - Sentence-transformers (paraphrase-multilingual-MiniLM-L12-v2)
 - Groq AI (llama-3.3-70b)
 - Pandas
+- Pyvis
 
 ## Installatie
 
